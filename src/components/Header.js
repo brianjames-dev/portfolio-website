@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { scrollToId } from "../utils/scrollToId";
+import { cancelScrollAnimation } from "../utils/scrollToPosition";
 import menuIcon from '../images/menu.svg';
 import closeIcon from '../images/close.svg';
 
@@ -31,7 +33,16 @@ function Header() {
     <header className="site-header">
       <div className="container">
         <h1 className="logo">
-          <a href="#home">brianjames.dev</a>
+          <a
+            href="#home"
+            onClick={(e) => {
+              e.preventDefault();
+              cancelScrollAnimation();
+              scrollToId('home');
+            }}
+          >
+            brianjames.dev
+          </a>
         </h1>
 
         {/* Menu button for mobile */}
@@ -46,10 +57,50 @@ function Header() {
         </div>
 
         <nav className={menuOpen ? 'active' : ''}>
-          <a href="#home" onClick={() => setMenuOpen(false)}>Home</a>
-          <a href="#about" onClick={() => setMenuOpen(false)}>About</a>
-          <a href="#projects" onClick={() => setMenuOpen(false)}>Projects</a>
-          <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
+          <a
+            href="#home"
+            onClick={(e) => {
+              e.preventDefault();
+              cancelScrollAnimation();
+              scrollToId('home');
+              setMenuOpen(false);
+            }}
+          >
+            Home
+          </a>
+          <a
+            href="#about"
+            onClick={(e) => {
+              e.preventDefault();
+              cancelScrollAnimation();
+              scrollToId('about');
+              setMenuOpen(false);
+            }}
+          >
+            About
+          </a>
+          <a
+            href="#projects"
+            onClick={(e) => {
+              e.preventDefault();
+              cancelScrollAnimation();
+              scrollToId('projects');
+              setMenuOpen(false);
+            }}
+          >
+            Projects
+          </a>
+          <a
+            href="#contact"
+            onClick={(e) => {
+              e.preventDefault();
+              cancelScrollAnimation();
+              scrollToId('contact');
+              setMenuOpen(false);
+            }}
+          >
+            Contact
+          </a>
         </nav>
       </div>
     </header>

@@ -1,16 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;700&display=swap');
+
+
+main{
+  overflow-y: scroll;
+
+  /* dynamic scaling */
+  /* transform: scale(var(--layout-scale));
+  transform-origin: top center;
+  transition: transform 0.3s ease-out; */
+}
+
 html, body {
-  font-family: Helvetica, sans-serif;
+  font-family: 'Mulish', sans-serif;
+  font-weight: 400;
 
   height: 100%;
   margin: 0;
-  scroll-snap-type: y mandatory;
-  overflow-y: scroll;
+}
+
+button {
+  font-weight: 500;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
 }
 
 .container {
   max-width: 800px;
   margin: auto;
   padding: 20px;
+
+
 }
 
 :root {
@@ -21,20 +42,20 @@ section {
   background: #F8F3D9;
   color: #504B38;
 
-  min-height: 100vh;
+  min-height: 100dvh;
   padding-top: var(--header-height);
   box-sizing: border-box;
 
-  scroll-snap-align: start;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  outline: 2px dashed red;
+  /* outline: 1px dashed red; */
 }
 
 section.home {
-  height: calc(var(--vh) * 100);
+  min-height: 100dvh;
+  height: 100dvh;
 }
 
 section.home.scaled {
@@ -48,6 +69,7 @@ section.about {
 section.projects {
   overflow-y: auto;
   align-items: flex-start;
+  padding-bottom: 300px;
 }
 
 section.contact {
@@ -73,7 +95,7 @@ section.contact {
 
 .site-header .logo {
   font-size: 1.3rem;
-  font-weight: bold;
+  font-weight: 700;
   position: absolute;
   left: 20px;
   top: 25%;
@@ -129,7 +151,7 @@ section.contact {
   transform: scale(var(--home-scale));
   transform-origin: center;
 
-  outline: 2px dashed blue;
+  /* outline: 1px dashed blue; */
 }
 
 .home-card.scaled {
@@ -355,8 +377,8 @@ section.contact {
 }
 
 .github-link-icon {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
 }
 
 .project-stack {
@@ -499,5 +521,9 @@ section.contact {
     justify-content: center;
     gap: 30px;
     margin-top: 50px;
+  }
+
+  section.projects {
+    padding-bottom: 250px;
   }
 }

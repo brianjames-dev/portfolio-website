@@ -2,7 +2,7 @@ import React from 'react';
 
 function About() {
   return (
-    <section id="about" className="about">
+    <section id="about" className="about" data-snap-target>
       <div className="container">
         <h2>About Me</h2>
         <p>

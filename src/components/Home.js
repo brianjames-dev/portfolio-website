@@ -11,17 +11,11 @@ import InstagramIconHover from '../images/instagram_themed_hover.svg';
 
 function Home() {
   useEffect(() => {
-    let ticking = false;
-  
     function adjustHomeScale() {
-      // 1️⃣ Fix iOS viewport height quirks
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-  
       const availableHeight = window.innerHeight;
       const availableWidth = window.innerWidth;
   
-      const referenceHeight = 820;
+      const referenceHeight = 840;
       const scale = Math.min(1, availableHeight / referenceHeight);
   
       document.documentElement.style.setProperty('--home-scale', scale);
@@ -33,53 +27,24 @@ function Home() {
       if (scale < 1 && availableWidth <= 600) {
         homeCard.classList.add('scaled');
         homeSection.classList.add('scaled');
-      
-        requestAnimationFrame(() => {
-          const cardHeight = homeCard.getBoundingClientRect().height;
-          const headerHeight =
-            parseFloat(
-              getComputedStyle(document.documentElement).getPropertyValue(
-                '--header-height'
-              )
-            ) || 60;
-      
-          const totalHeight = cardHeight + headerHeight;
-          const maxHeight = window.innerHeight;
-      
-          homeSection.style.height = `${Math.max(totalHeight, maxHeight)}px`;
-        });
       } else {
         homeCard.classList.remove('scaled');
         homeSection.classList.remove('scaled');
-        homeSection.style.height = `calc(var(--vh) * 100)`;
-      }      
-  
-      ticking = false;
-    }
-  
-    function requestTick() {
-      if (!ticking) {
-        requestAnimationFrame(adjustHomeScale);
-        ticking = true;
       }
     }
   
     adjustHomeScale();
-  
-    window.addEventListener('resize', requestTick);
-    window.addEventListener('orientationchange', requestTick);
-    window.addEventListener('scroll', requestTick);
+    window.addEventListener('resize', adjustHomeScale);
   
     return () => {
-      window.removeEventListener('resize', requestTick);
-      window.removeEventListener('orientationchange', requestTick);
-      window.removeEventListener('scroll', requestTick);
+      window.removeEventListener('resize', adjustHomeScale);
     };
   }, []);
   
+  
 
   return (
-    <section id="home" className="home">
+    <section id="home" className="home" data-snap-target>
       <div className="container home-card">
 
         {/* Row 1: Image + Intro */}
@@ -98,7 +63,7 @@ function Home() {
             <p className="subtitle">Full Stack Developer</p>
             <p className="description">
               Former touring musician and upcoming CS graduate from OSU (Winter 2025).
-              I enjoy solving problems, building creative tech, and learning for life.
+              I enjoy solving problems, building creative tech, and lifelong learning.
             </p>
           </div>
         </div>

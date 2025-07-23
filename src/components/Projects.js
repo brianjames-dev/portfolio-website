@@ -9,7 +9,7 @@ import downloadIcon from '../images/download.svg';
 import expressIcon from '../images/express.svg';
 import flaskIcon from '../images/flask.svg';
 import gitIcon from '../images/git.svg';
-import githubIcon from '../images/github_themed.svg';
+import githubIcon from '../images/github.svg';
 import htmlIcon from '../images/html.svg';
 import instagramIcon from '../images/instagram.svg';
 import javaIcon from '../images/java.svg';
@@ -117,7 +117,7 @@ function Projects() {
   
   
   return (
-    <section id="projects" className="projects">
+    <section id="projects" className="projects" data-snap-target>
       <div className="container">
         <h2>Projects</h2>
         {projects.map((proj, idx) => (

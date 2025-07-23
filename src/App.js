@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { smartSnap } from './utils/smartSnap';
+
 import Header from './components/Header';
 import Home from './components/Home';
 import About from './components/About';
@@ -32,8 +34,19 @@ function App() {
     adjustHeaderAndNavScale();
     window.addEventListener('resize', adjustHeaderAndNavScale);
 
+    let scrollTimeout;
+    const handleScroll = () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        smartSnap();
+      }, 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
     return () => {
       window.removeEventListener('resize', adjustHeaderAndNavScale);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 function Contact() {
   return (
-    <section id="contact" className="contact">
+    <section id="contact" className="contact" data-snap-target>
       <div className="container contact-content">
         <div>
           <h2>Get In Touch</h2>
