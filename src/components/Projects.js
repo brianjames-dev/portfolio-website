@@ -9,7 +9,7 @@ import downloadIcon from '../images/download.svg';
 import expressIcon from '../images/express.svg';
 import flaskIcon from '../images/flask.svg';
 import gitIcon from '../images/git.svg';
-import githubIcon from '../images/github.svg';
+import githubIcon from '../images/github_themed.svg';
 import htmlIcon from '../images/html.svg';
 import instagramIcon from '../images/instagram.svg';
 import javaIcon from '../images/java.svg';
@@ -69,7 +69,7 @@ function Projects() {
       title: 'Serverless Portfolio & Contact Form',
       description:
         'Personal portfolio website with a serverless architecture: React frontend deployed on CloudFront and S3, integrated with a cloud-native contact form powered by AWS Lambda, S3, and SES for email delivery.',
-      stack: ['React', 'JavaScript', 'AWS Lambda', 'S3', 'SES', 'CloudFront', 'HTML', 'CSS'],
+      stack: ['React', 'JavaScript', 'HTML', 'CSS', 'AWS Lambda', 'S3', 'SES', 'CloudFront'],
     },
     {
       title: 'BookieBot',
@@ -96,7 +96,7 @@ function Projects() {
       title: 'Task Checklist',
       description:
         'Full-stack MERN web app with CRUD functionality and user-friendly React components, backed by a Node/Express/MongoDB stack.',
-      stack: ['JavaScript', 'MongoDB', 'Express.js', 'React', 'Node.js', 'HTML', 'CSS'],
+      stack: ['React', 'JavaScript', 'Node.js', 'Express.js', 'MongoDB', 'HTML', 'CSS'],
       github: 'https://github.com/brianjames-dev/Full-stack-Website-MERN',
     },
   ];
