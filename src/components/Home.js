@@ -10,50 +10,6 @@ import LinkedInIconHover from '../images/linkedin_themed_hover.svg';
 import InstagramIconHover from '../images/instagram_themed_hover.svg';
 
 function Home() {
-  useEffect(() => {
-    function adjustHomeScale() {
-      const checker = document.getElementById('dvh-checker');
-      const fullDvh = checker?.offsetHeight ?? window.innerHeight;
-      const headerHeight = 60;
-      const availableHeight = fullDvh - headerHeight;
-    
-      const homeCard = document.querySelector('.home-card');
-      if (!homeCard) return;
-    
-      // Remove scale to measure true height
-      homeCard.style.transform = 'none';
-      const actualCardHeight = homeCard.offsetHeight;
-      
-      const scale = Math.min(1, availableHeight / actualCardHeight);
-    
-      document.documentElement.style.setProperty('--home-scale', scale);
-      document.documentElement.style.setProperty('--dvh', `${fullDvh / 100}px`);
-    
-      homeCard.style.transform = `scale(${scale})`;
-    
-      const homeSection = document.querySelector('section.home');
-      const availableWidth = window.innerWidth;
-    
-      if (scale < 1 && availableWidth <= 600) {
-        homeCard.classList.add('scaled');
-        homeSection?.classList.add('scaled');
-      } else {
-        homeCard.classList.remove('scaled');
-        homeSection?.classList.remove('scaled');
-      }
-    }
-  
-    adjustHomeScale();
-    window.addEventListener('resize', adjustHomeScale);
-  
-    return () => {
-      window.removeEventListener('resize', adjustHomeScale);
-    };
-  }, []);
-  
-  
-  
-
   return (
     <section id="home" className="home" data-snap-target>
       <div className="container home-card">
