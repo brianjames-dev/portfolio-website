@@ -1,6 +1,9 @@
 import { scrollToPosition } from "./scrollToPosition";
+import { FEATURE_FLAGS } from './featureFlags';
 
 export const smartSnap = (threshold = 100) => {
+  if (!FEATURE_FLAGS.enableSmartSnap) return;
+
   const sections = document.querySelectorAll("[data-snap-target]");
   const scrollY = window.scrollY;
   const windowHeight = window.innerHeight;
@@ -28,7 +31,7 @@ export const smartSnap = (threshold = 100) => {
     }
 
     if (shouldSnap) {
-      scrollToPosition(targetPosition, 900); // 👈 Adjust duration here
+      scrollToPosition(targetPosition, 800); // 👈 Adjust duration here
       break;
     }
   }

@@ -1,3 +1,6 @@
+import { FEATURE_FLAGS } from './featureFlags';
+
+
 let isUserInteracting = false;
 let currentAnimation = null;
 
@@ -10,6 +13,8 @@ export function cancelScrollAnimation() {
 }
 
 export function scrollToPosition(targetY, duration = 800) {
+  if (!FEATURE_FLAGS.enableScrollToPosition) return;
+  
   cancelScrollAnimation(); // cancel any previous animation
 
   const startY = window.scrollY;

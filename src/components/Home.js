@@ -12,24 +12,34 @@ import InstagramIconHover from '../images/instagram_themed_hover.svg';
 function Home() {
   useEffect(() => {
     function adjustHomeScale() {
-      const availableHeight = window.innerHeight;
-      const availableWidth = window.innerWidth;
-  
-      const referenceHeight = 840;
-      const scale = Math.min(1, availableHeight / referenceHeight);
-  
-      document.documentElement.style.setProperty('--home-scale', scale);
-  
+      const checker = document.getElementById('dvh-checker');
+      const fullDvh = checker?.offsetHeight ?? window.innerHeight;
+      const headerHeight = 60;
+      const availableHeight = fullDvh - headerHeight;
+    
       const homeCard = document.querySelector('.home-card');
+      if (!homeCard) return;
+    
+      // Remove scale to measure true height
+      homeCard.style.transform = 'none';
+      const actualCardHeight = homeCard.offsetHeight;
+      
+      const scale = Math.min(1, availableHeight / actualCardHeight);
+    
+      document.documentElement.style.setProperty('--home-scale', scale);
+      document.documentElement.style.setProperty('--dvh', `${fullDvh / 100}px`);
+    
+      homeCard.style.transform = `scale(${scale})`;
+    
       const homeSection = document.querySelector('section.home');
-      if (!homeCard || !homeSection) return;
-  
+      const availableWidth = window.innerWidth;
+    
       if (scale < 1 && availableWidth <= 600) {
         homeCard.classList.add('scaled');
-        homeSection.classList.add('scaled');
+        homeSection?.classList.add('scaled');
       } else {
         homeCard.classList.remove('scaled');
-        homeSection.classList.remove('scaled');
+        homeSection?.classList.remove('scaled');
       }
     }
   
@@ -40,6 +50,7 @@ function Home() {
       window.removeEventListener('resize', adjustHomeScale);
     };
   }, []);
+  
   
   
 

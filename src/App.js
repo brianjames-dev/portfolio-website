@@ -10,30 +10,6 @@ import './App.css';
 
 function App() {
   useEffect(() => {
-    function adjustHeaderAndNavScale() {
-      const availableHeight = window.innerHeight - 60;
-
-      const referenceHeight = 760;
-      const minHeaderHeight = 40;
-      const maxHeaderHeight = 60;
-
-      const scale = Math.min(1, availableHeight / referenceHeight);
-
-      const headerHeight =
-        minHeaderHeight + (maxHeaderHeight - minHeaderHeight) * scale;
-      document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
-      document.documentElement.style.setProperty('--nav-top', `${headerHeight / 2}px`);
-
-      const navFontSize = 0.85 + 0.15 * scale;
-      document.documentElement.style.setProperty(
-        '--nav-font-size',
-        `${navFontSize}rem`
-      );
-    }
-
-    adjustHeaderAndNavScale();
-    window.addEventListener('resize', adjustHeaderAndNavScale);
-
     let scrollTimeout;
     const handleScroll = () => {
       clearTimeout(scrollTimeout);
@@ -45,7 +21,6 @@ function App() {
     window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener('resize', adjustHeaderAndNavScale);
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
