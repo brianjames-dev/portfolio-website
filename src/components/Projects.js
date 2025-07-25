@@ -57,27 +57,60 @@ import skinpro10 from '../images/skinpro_imgs/rx_generator.jpg';
 import skinpro11 from '../images/skinpro_imgs/rx_preview.jpg';
 import skinpro12 from '../images/skinpro_imgs/alerts_tab.jpg';
 
+const iconMap = {
+  'React': reactIcon,
+  'AWS': awsIcon,
+  'C++': cplusplusIcon,
+  'CPlusPlus': cplusplusIcon,
+  'CSS': cssIcon,
+  'HTML': htmlIcon,
+  'JavaScript': javascriptIcon,
+  'Node.js': nodejsIcon,
+  'MongoDB': mongodbIcon,
+  'SQLite': sqliteIcon,
+  'Flask': flaskIcon,
+  'Python': pythonIcon,
+  'Git': gitIcon,
+  'GitHub': githubIcon,
+  'Java': javaIcon,
+  'LinkedIn': linkedinIcon,
+  'MariaDB': mariadbIcon,
+  'Matplotlib': matplotlibIcon,
+  'Menu': menuIcon,
+  'NumPy': numpyIcon,
+  'Pandas': pandasIcon,
+  'Power BI': powerbiIcon,
+  'Scikit-learn': scikitlearnIcon,
+  'Seaborn': seabornIcon,
+  'Instagram': instagramIcon,
+  'Close': closeIcon,
+  'Download': downloadIcon,
+  'Express.js': expressIcon,
+  'Discord.py': discordIcon,
+}
+
 
 function Projects() {
   const [expandedProjectIndex, setExpandedProjectIndex] = useState(null);
   const [pendingGalleryIndex, setPendingGalleryIndex] = useState(null);
-  const [fullscreenImage, setFullscreenImage] = useState(null);
+  const [fullscreenIndex, setFullscreenIndex] = useState(null);
+  const [fullscreenImages, setFullscreenImages] = useState([]);
 
   const toggleGallery = (index) => {
     if (expandedProjectIndex !== null && expandedProjectIndex !== index) {
-      // Collapse current gallery first, then open new one after layout settles
       setExpandedProjectIndex(null);
       setPendingGalleryIndex(index);
     } else {
-      // Toggle normally (open or close)
       setExpandedProjectIndex(prev => (prev === index ? null : index));
     }
   };
-  
 
   useEffect(() => {
     const handleEsc = (e) => {
-      if (e.key === 'Escape') setFullscreenImage(null);
+      if (e.key === 'Escape') {
+        setFullscreenIndex(null);
+        setFullscreenImages([]);
+      }
     };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
@@ -85,48 +118,60 @@ function Projects() {
 
   useEffect(() => {
     if (expandedProjectIndex === null && pendingGalleryIndex !== null) {
-      // Delay to wait for DOM layout to settle after closing previous gallery
       setTimeout(() => {
         scrollToId(`project-${projects[pendingGalleryIndex].title.replace(/\s+/g, '-')}`);
         setExpandedProjectIndex(pendingGalleryIndex);
         setPendingGalleryIndex(null);
-      }, 0); // Match this delay with your CSS transition if you have one
+      }, 0);
     }
   }, [expandedProjectIndex, pendingGalleryIndex]);
-  
-  
-  const iconMap = {
-    'React': reactIcon,
-    'AWS': awsIcon,
-    'C++': cplusplusIcon,
-    'CPlusPlus': cplusplusIcon,
-    'CSS': cssIcon,
-    'HTML': htmlIcon,
-    'JavaScript': javascriptIcon,
-    'Node.js': nodejsIcon,
-    'Node': nodejsIcon,
-    'MongoDB': mongodbIcon,
-    'SQLite': sqliteIcon,
-    'Flask': flaskIcon,
-    'Python': pythonIcon,
-    'Git': gitIcon,
-    'GitHub': githubIcon,
-    'Java': javaIcon,
-    'LinkedIn': linkedinIcon,
-    'MariaDB': mariadbIcon,
-    'Matplotlib': matplotlibIcon,
-    'Menu': menuIcon,
-    'NumPy': numpyIcon,
-    'Pandas': pandasIcon,
-    'Power BI': powerbiIcon,
-    'Scikit-learn': scikitlearnIcon,
-    'Seaborn': seabornIcon,
-    'Instagram': instagramIcon,
-    'Close': closeIcon,
-    'Download': downloadIcon,
-    'Express.js': expressIcon,
-    'Discord.py': discordIcon,
-  }
+
+  // preload adjacent images
+  useEffect(() => {
+    if (fullscreenIndex !== null) {
+      const preload = (idx) => {
+        if (fullscreenImages[idx]) {
+          const img = new Image();
+          img.src = fullscreenImages[idx].src;
+        }
+      };
+      preload(fullscreenIndex + 1);
+      preload(fullscreenIndex - 1);
+    }
+  }, [fullscreenIndex, fullscreenImages]);
+
+  // mobile swipe gesture support
+  useEffect(() => {
+    const overlay = document.querySelector('.fullscreen-overlay');
+    if (!overlay) return;
+
+    let startX = null;
+
+    const handleTouchStart = (e) => {
+      startX = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e) => {
+      if (!startX) return;
+      const deltaX = e.touches[0].clientX - startX;
+      if (deltaX > 80 && fullscreenIndex > 0) {
+        setFullscreenIndex((prev) => prev - 1);
+        startX = null;
+      } else if (deltaX < -80 && fullscreenIndex < fullscreenImages.length - 1) {
+        setFullscreenIndex((prev) => prev + 1);
+        startX = null;
+      }
+    };
+
+    overlay.addEventListener('touchstart', handleTouchStart, { passive: true });
+    overlay.addEventListener('touchmove', handleTouchMove, { passive: true });
+
+    return () => {
+      overlay.removeEventListener('touchstart', handleTouchStart);
+      overlay.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, [fullscreenIndex, fullscreenImages]);
+
 
   const projects = [
     {
@@ -228,22 +273,21 @@ function Projects() {
                 <img src={githubIcon} alt="GitHub" className="github-link-icon" />
               </a>
             </div>
-  
+
             <div className="project-subheader">
               <p>{proj.team}</p>
             </div>
-  
+
             <div className="project-stack">
-              {proj.stack.flatMap((tech, i) => renderTag(tech, i))}
+              {proj.stack.map((tech, i) => renderTag(tech, i))}
             </div>
-  
+
             <hr className="project-divider" />
-  
+
             <p className="project-description">{proj.description}</p>
-  
+
             {proj.images && proj.images.length > 0 && (
               <>
-                {/* TOP BUTTON */}
                 <button
                   className="gallery-toggle-btn"
                   onClick={() => toggleGallery(idx)}
@@ -255,24 +299,26 @@ function Projects() {
                     className="arrow-icon"
                   />
                 </button>
-  
                 {expandedProjectIndex === idx && (
                   <>
                     <div className="project-gallery">
                       {proj.images.map((img, i) => (
                         <div className="gallery-item" key={i}>
                           <img
+                            loading="lazy"
                             src={img.src}
                             alt={img.caption || `Screenshot ${i + 1}`}
                             className="clickable-gallery-image"
-                            onClick={() => setFullscreenImage(img.src)}
+                            onClick={() => {
+                              setFullscreenImages(proj.images);
+                              setFullscreenIndex(i);
+                            }}
                           />
                           {img.caption && <p>{img.caption}</p>}
                         </div>
                       ))}
                     </div>
-  
-                    {/* BOTTOM BUTTON */}
+
                     <button
                       className="gallery-toggle-btn"
                       onClick={() => {
@@ -295,28 +341,68 @@ function Projects() {
         ))}
       </div>
 
-            {/* FULLSCREEN OVERLAY FEATURE */}
-            {fullscreenImage && (
+      {fullscreenIndex !== null && (
         <div
-          className={`fullscreen-overlay ${fullscreenImage ? 'visible' : ''}`}
-          onClick={() => setFullscreenImage(null)}
+          className="fullscreen-overlay visible"
+          onClick={() => {
+            setFullscreenIndex(null);
+            setFullscreenImages([]);
+          }}
         >
           <img
-            src={fullscreenImage}
-            alt="Fullscreen"
+            loading="lazy"
+            src={fullscreenImages[fullscreenIndex]?.src}
+            alt={fullscreenImages[fullscreenIndex]?.caption || "Fullscreen"}
             className="fullscreen-image"
           />
+
+          {/* Caption */}
+          {fullscreenImages[fullscreenIndex]?.caption && (
+            <p className="fullscreen-caption">
+              {fullscreenImages[fullscreenIndex].caption}
+            </p>
+          )}
+
+          {/* Close Button */}
           <button
             className="fullscreen-close-btn"
-            onClick={() => setFullscreenImage(null)}
-            onMouseDown={(e) => e.stopPropagation()} // Prevents double trigger
+            onClick={(e) => {
+              e.stopPropagation();
+              setFullscreenIndex(null);
+              setFullscreenImages([]);
+            }}
+            onMouseDown={(e) => e.stopPropagation()}
           >
             <img src={closeIcon} alt="Close" />
           </button>
+
+          {/* Arrows */}
+          {fullscreenIndex > 0 && (
+            <button
+              className="carousel-arrow left"
+              onClick={(e) => {
+                e.stopPropagation();
+                setFullscreenIndex((prev) => prev - 1);
+              }}
+            >
+              <span className="arrow-inner">‹</span>
+            </button>
+          )}
+          {fullscreenIndex < fullscreenImages.length - 1 && (
+            <button
+              className="carousel-arrow right"
+              onClick={(e) => {
+                e.stopPropagation();
+                setFullscreenIndex((prev) => prev + 1);
+              }}
+            >
+              <span className="arrow-inner">›</span>
+            </button>
+          )}
         </div>
       )}
     </section>
-  );  
+  );
 }
 
 export default Projects;

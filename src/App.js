@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { smartSnap } from './utils/smartSnap';
 
 import Header from './components/Header';
 import Home from './components/Home';
@@ -27,24 +26,6 @@ function App() {
     sections.forEach((section) => observer.observe(section));
     return () => sections.forEach((section) => observer.unobserve(section));
   }, []);
-  
-  
-  useEffect(() => {
-    let scrollTimeout;
-    const handleScroll = () => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        smartSnap();
-      }, 100);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
 
   return (
     <div className="App">
