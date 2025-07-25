@@ -54,7 +54,6 @@ section {
   max-width: 800px;
   margin: 0;
 
-
   /* outline: 1px dashed blue; */
 }
 
@@ -115,6 +114,9 @@ section.contact {
   color: #F8F3D9;
   font-weight: 500;
   font-size: var(--nav-font-size, 1rem);
+
+  position: relative; /* Required to appear above bubble */
+  z-index: 1;          /* Ensures text sits above the indicator */
 }
 
 .site-header nav a:hover {
@@ -123,6 +125,26 @@ section.contact {
 
 .site-header nav.hidden-on-load {
   display: none;
+}
+
+.bubble-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 32px;
+  border-radius: 10px;
+  background-color: #EBE5C2;
+  width: 0;
+  left: 0;
+  transition: left 0.3s ease, width 0.3s ease;
+  z-index: 0;
+}
+
+
+/* Optional: Active link style */
+.site-header nav a.active {
+  color: #504B38;
+  font-weight: 600;
 }
 
 .menu-button {
@@ -549,7 +571,6 @@ section.contact {
   flex-wrap: wrap;
   gap: 40px;
   position: relative;
-
 }
 
 .contact-left, .contact-right {
@@ -621,8 +642,32 @@ button:hover {
   align-items: center;
 }
 
+.contact-submit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Push items to opposite ends */
+  width: 100%;
+  margin: 20px 0 0 0;
+}
+
+.contact-submit-row button {
+  margin-top: 0;
+}
+
 .contact-right p {
+  margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.contact-email a {
+  color: #504B38;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.contact-email a:hover {
+  text-decoration: underline;
+  color: #B9B28A;
 }
 
 .contact-links-row {
@@ -633,7 +678,7 @@ button:hover {
 }
 
 .contact-links-row p {
-  margin: 0;
+  margin: 16px 0 0 0;
   font-weight: bold;
   text-align: right;
 }
@@ -671,17 +716,7 @@ button:hover {
   opacity: 0;
 }
 
-.contact-submit-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* Push items to opposite ends */
-  width: 100%;
-  margin: 20px 0 0 0;
-}
 
-.contact-submit-row button {
-  margin-top: 0;
-}
 
 /* ---------------------------- */
 /* ---------- MOBILE ---------- */
@@ -740,9 +775,18 @@ button:hover {
     font-weight: 500;
   }
 
+  .site-header nav a.active {
+    color: #F8F3D9;
+  }
+
+  .bubble-indicator {
+    display: none;
+  }
+
   .home-card {
     margin-top: 0;
     scroll-margin-top: 60px;
+    
   }
 
   .home-content {

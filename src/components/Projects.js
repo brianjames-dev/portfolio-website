@@ -60,11 +60,20 @@ import skinpro12 from '../images/skinpro_imgs/alerts_tab.jpg';
 
 function Projects() {
   const [expandedProjectIndex, setExpandedProjectIndex] = useState(null);
+  const [pendingGalleryIndex, setPendingGalleryIndex] = useState(null);
   const [fullscreenImage, setFullscreenImage] = useState(null);
 
   const toggleGallery = (index) => {
-    setExpandedProjectIndex(prev => (prev === index ? null : index));
+    if (expandedProjectIndex !== null && expandedProjectIndex !== index) {
+      // Collapse current gallery first, then open new one after layout settles
+      setExpandedProjectIndex(null);
+      setPendingGalleryIndex(index);
+    } else {
+      // Toggle normally (open or close)
+      setExpandedProjectIndex(prev => (prev === index ? null : index));
+    }
   };
+  
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -73,6 +82,18 @@ function Projects() {
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
+
+  useEffect(() => {
+    if (expandedProjectIndex === null && pendingGalleryIndex !== null) {
+      // Delay to wait for DOM layout to settle after closing previous gallery
+      setTimeout(() => {
+        scrollToId(`project-${projects[pendingGalleryIndex].title.replace(/\s+/g, '-')}`);
+        setExpandedProjectIndex(pendingGalleryIndex);
+        setPendingGalleryIndex(null);
+      }, 0); // Match this delay with your CSS transition if you have one
+    }
+  }, [expandedProjectIndex, pendingGalleryIndex]);
+  
   
   const iconMap = {
     'React': reactIcon,

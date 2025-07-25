@@ -94,7 +94,10 @@ function Contact() {
         </div>
 
         <div className="contact-right">
-          <p><strong>Email</strong><br /><a href="mailto:brianjames.dev@gmail.com">brianjames.dev@gmail.com</a></p>
+          <p className="contact-email">
+            <strong>Email</strong><br />
+            <a href="mailto:brianjames.dev@gmail.com">brianjames.dev@gmail.com</a>
+          </p>
           <p><strong>Address</strong><br />Somewhere in Sacramento, CA</p>
 
           <div className="contact-links-row">
