@@ -30,7 +30,7 @@ function Home() {
             <p className="subtitle">Full Stack Developer</p>
             <p className="description">
               Former touring musician and upcoming CS graduate from OSU (Winter 2025).
-              I enjoy solving problems, building creative tech, and lifelong learning.
+              I thrive on solving tough problems, providing pixel-perfect designs, and creating scalable architecture.
             </p>
           </div>
         </div>

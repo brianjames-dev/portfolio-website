@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;700&display=swap');
 
+*{
+  font-family: 'Mulish', sans-serif;
+}
 
 html, body {
   font-family: 'Mulish', sans-serif;
@@ -58,7 +61,7 @@ section.about {
 
 section.projects {
   align-items: flex-start;
-  padding-bottom: 300px;
+  padding-bottom: 0px;
 }
 
 section.contact {
@@ -298,10 +301,9 @@ section.contact {
 /* ------------------------- */
 /* --------- ABOUT --------- */
 /* ------------------------- */
-
-/* section.about {
-
-} */
+.about .description {
+  line-height: 1.5;
+}
 
 
 /* ---------------------------- */
@@ -317,6 +319,7 @@ section.contact {
   padding: 20px;
   margin: 20px 0;
   border-radius: 10px;
+  scroll-margin-top: var(--header-height);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -324,31 +327,41 @@ section.contact {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 40px;
 }
 
-.project-header h3 {
+.project-header .title {
   margin: 0;
   font-size: 1.4rem;
+  line-height: 1;
 }
 
-.project-header a {
-  color: #333;
-  font-size: 0.9rem;
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
+.project-header .githubIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  transition: transform 0.3s ease-in-out;
 }
 
-.project-header a:hover {
-  border-bottom: 1px solid #333;
+.project-header .githubIcon:hover {
+  transform: scale(1.1);
 }
 
 .github-link-icon {
-  width: 30px;
-  height: 30px;
+  width: 100%;
+  height: auto;
+}
+
+.project-subheader p {
+  margin: 0 0 20px 0;
+  font-size: 1rem;
+  font-style: italic;
 }
 
 .project-stack {
-  margin: 10px 0;
+  margin: 10px 0 20px 0;
 }
 
 .tag {
@@ -356,37 +369,60 @@ section.contact {
   align-items: center;
   background: #B9B28A;
   color: #F8F3D9;
-  margin: 3px 3px 3px 0;
-  padding: 2px 8px;
+  margin: 3px 6px 3px 0;
+  padding: 4px 10px;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 700;
   min-height: 24px;
   position: relative;
-  padding-left: 24px;
+  padding-left: 28px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.tag:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.project-header .githubIcon,
+.tag {
+  cursor: pointer;
 }
 
 .tag-icon-container {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   position: absolute;
-  left: 4px;
+  left: 6px;
   top: 50%;
   transform: translateY(-50%);
 }
 
 .tag-icon {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 }
 
 .tag.no-icon {
-  padding-left: 8px;
+  padding-left: 12px;
+}
+
+.project-divider {
+  background-color: #504B38;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  height: 1px;
+
+  margin: 0;
 }
 
 .project-description {
   font-size: 0.95rem;
-  line-height: 1.4;
-  margin-top: 10px;
+  line-height: 1.5;
+  margin: 20px 0 10px 0;
 }
 
 .contact-links a {
@@ -398,6 +434,105 @@ section.contact {
 
 .contact-links a:hover {
   color: #504B38;
+}
+
+.gallery-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 20px auto 0 auto;
+  background-color: #B9B28A;
+  color: #F8F3D9;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.gallery-toggle-btn:hover {
+  transform: scale(1.05);
+  background-color: #504B38;
+}
+
+.arrow-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.project-gallery {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #B9B28A;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.gallery-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gallery-item img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.gallery-item p {
+  margin-top: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  color: #F8F3D9;
+}
+
+.clickable-gallery-image {
+  cursor: zoom-in;
+}
+
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+
+.fullscreen-image {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.fullscreen-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+.fullscreen-close-btn img {
+  width: 32px;
+  height: 32px;
 }
 
 /* ---------------------------- */
@@ -543,7 +678,31 @@ section.contact {
     margin-top: 15px;
   }
 
-  section.projects {
-    padding-bottom: 250px;
+  section.about {
+    align-items: center;
+    justify-content: center;
   }
+
+  .about .header {
+    text-align: center;
+  
+  }
+  
+  .about .description {
+    text-align: center;
+  }
+
+  section.projects {
+    padding-bottom: 0px;
+  }
+
+  .clickable-gallery-image {
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+  }
+  
+  .clickable-gallery-image:hover {
+    transform: scale(1.03);
+  }
+  
 }

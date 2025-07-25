@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { scrollToId } from '../utils/scrollToId';
 
 // Import all your icons explicitly
 import reactIcon from '../images/react.svg';
@@ -29,8 +30,50 @@ import scikitlearnIcon from '../images/scikitlearn.svg';
 import seabornIcon from '../images/seaborn.svg';
 import closeIcon from '../images/close.svg';
 import discordIcon from '../images/discord.svg';
+import downArrowIcon from '../images/down_arrows.svg';
+import upArrowIcon from '../images/up_arrows.svg';
+
+// Import all project images
+import bookiebot1 from '../images/bookiebot_imgs/bookiebot-icon.png';
+import bookiebot2 from '../images/bookiebot_imgs/intent-list-1.png';
+import bookiebot3 from '../images/bookiebot_imgs/intent-list-2.png';
+import bookiebot4 from '../images/bookiebot_imgs/intent-desc+example.png';
+import bookiebot5 from '../images/bookiebot_imgs/expense-breakdown.png';
+import bookiebot6 from '../images/bookiebot_imgs/spending-calendar.png';
+import bookiebot7 from '../images/bookiebot_imgs/specific-day-expenses.png';
+import bookiebot8 from '../images/bookiebot_imgs/logged-food-expense.png';
+import bookiebot9 from '../images/bookiebot_imgs/expense-sheet-proof.png';
+
+import skinpro1 from '../images/skinpro_imgs/splash_screen.jpg';
+import skinpro2 from '../images/skinpro_imgs/client_tab.jpg';
+import skinpro3 from '../images/skinpro_imgs/info_tab.jpg';
+import skinpro4 from '../images/skinpro_imgs/appt_tab.jpg';
+import skinpro5 from '../images/skinpro_imgs/photos_tab_blur.jpg';
+import skinpro6 from '../images/skinpro_imgs/QR_upload.jpg';
+import skinpro7 from '../images/skinpro_imgs/Upload_Photos.jpeg';
+import skinpro8 from '../images/skinpro_imgs/Upload_Complete.jpeg';
+import skinpro9 from '../images/skinpro_imgs/rx_tab.jpg';
+import skinpro10 from '../images/skinpro_imgs/rx_generator.jpg';
+import skinpro11 from '../images/skinpro_imgs/rx_preview.jpg';
+import skinpro12 from '../images/skinpro_imgs/alerts_tab.jpg';
+
 
 function Projects() {
+  const [expandedProjectIndex, setExpandedProjectIndex] = useState(null);
+  const [fullscreenImage, setFullscreenImage] = useState(null);
+
+  const toggleGallery = (index) => {
+    setExpandedProjectIndex(prev => (prev === index ? null : index));
+  };
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') setFullscreenImage(null);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
+  
   const iconMap = {
     'React': reactIcon,
     'AWS': awsIcon,
@@ -66,27 +109,57 @@ function Projects() {
 
   const projects = [
     {
-      title: 'Serverless Portfolio & Contact Form',
+      title: 'Serverless Portfolio',
+      team: 'Solo',
       description:
         'Personal portfolio website with a serverless architecture: React frontend deployed on CloudFront and S3, integrated with a cloud-native contact form powered by AWS Lambda, S3, and SES for email delivery.',
-      stack: ['React', 'JavaScript', 'HTML', 'CSS', 'AWS Lambda', 'S3', 'SES', 'CloudFront'],
+      stack: ['React', 'JavaScript', 'HTML', 'CSS', 'S3', 'CloudFront'],
+      github: 'https://github.com/brianjames-dev/portfolio-website',
     },
     {
       title: 'BookieBot',
+      team: 'Solo',
       description:
         'Autonomous AI finance chatbot that lets users log, query, and visualize expenses with natural language. Supports multi-user workflows, role-based access, and over 30 analytics intents.',
       stack: ['Python', 'Discord.py', 'OpenAI API', 'Google Sheets API', 'Railway'],
       github: 'https://github.com/brianjames-dev/bookiebot',
+      images: [
+        { src: bookiebot1, caption: 'BookieBot Discord Profile Pic' },
+        { src: bookiebot2, caption: 'Intent Recognition – Page 1' },
+        { src: bookiebot3, caption: 'Intent Recognition – Page 2' },
+        { src: bookiebot4, caption: 'Intent Description + Sample Query' },
+        { src: bookiebot5, caption: 'Expense Breakdown' },
+        { src: bookiebot6, caption: 'Spending Calendar View' },
+        { src: bookiebot7, caption: 'Expenses on a Specific Day' },
+        { src: bookiebot8, caption: 'Food Log Snapshot' },
+        { src: bookiebot9, caption: 'Autonomous Logging' },
+      ]
     },
     {
       title: 'SkinPro',
+      team: 'Contractual',
       description:
         'Full-stack desktop app for spa operations: manages 300+ client records and 2,000+ appointments, with QR-based mobile photo uploads, PDF prescription generator, and responsive Tkinter UI. Saved 1,000+ hours/year and $3,000+ in costs.',
-      stack: ['Python', 'SQLite', 'Flask', 'Tkinter', 'ReportLab', 'PIL'],
+      stack: ['Python', 'SQLite', 'Flask', 'HTML', 'CSS', 'Tkinter', 'ReportLab'],
       github: 'https://github.com/brianjames-dev/SkinPro',
+      images: [
+        { src: skinpro1, caption: '🚪 Splash Screen' },
+        { src: skinpro2, caption: '👩 Clients Tab' },
+        { src: skinpro3, caption: '📝 Info Tab (Client Demographics & History)' },
+        { src: skinpro4, caption: '📅 Appointments Tab' },
+        { src: skinpro5, caption: '📷 Photos Tab (Before & After Comparison)' },
+        { src: skinpro6, caption: '📲 QR Upload Window' },
+        { src: skinpro7, caption: '📲 Upload In Progress' },
+        { src: skinpro8, caption: '📲 Upload Complete' },
+        { src: skinpro9, caption: '💊 Prescriptions Tab' },
+        { src: skinpro10, caption: '🧾 Prescription Generator (Dynamic Form)' },
+        { src: skinpro11, caption: '🖨️ Finished Prescription Preview (Printable)' },
+        { src: skinpro12, caption: '🔔 Alerts Tab (Follow-up Reminders)' },
+      ]
     },
     {
       title: 'NES Emulator',
+      team: '5-person Team',
       description:
         'Cycle-accurate NES emulator (APU + CPU) with >95% test coverage and platform-specific bug fixes. Led development of Trello/Discord-driven team and delivered cross-platform support.',
       stack: ['C++', 'SDL2', 'Dear ImGUI'],
@@ -94,6 +167,7 @@ function Projects() {
     },
     {
       title: 'Task Checklist',
+      team: 'Solo',
       description:
         'Full-stack MERN web app with CRUD functionality and user-friendly React components, backed by a Node/Express/MongoDB stack.',
       stack: ['React', 'JavaScript', 'Node.js', 'Express.js', 'MongoDB', 'HTML', 'CSS'],
@@ -121,25 +195,107 @@ function Projects() {
       <div className="container">
         <h2>Projects</h2>
         {projects.map((proj, idx) => (
-          <div key={idx} className="project-card">
+          <div key={idx} className="project-card" id={`project-${proj.title.replace(/\s+/g, '-')}`}>
             <div className="project-header">
-              <h3>{proj.title}</h3>
-              <a href={proj.github} target="_blank" rel="noopener noreferrer">
+              <h3 className="title">{proj.title}</h3>
+              <a
+                className="githubIcon"
+                href={proj.github}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img src={githubIcon} alt="GitHub" className="github-link-icon" />
               </a>
             </div>
-            <div className="project-stack">
-              {proj.stack.flatMap((tech, i) => {
-                return renderTag(tech, i);
-              })}
-
+  
+            <div className="project-subheader">
+              <p>{proj.team}</p>
             </div>
+  
+            <div className="project-stack">
+              {proj.stack.flatMap((tech, i) => renderTag(tech, i))}
+            </div>
+  
+            <hr className="project-divider" />
+  
             <p className="project-description">{proj.description}</p>
+  
+            {proj.images && proj.images.length > 0 && (
+              <>
+                {/* TOP BUTTON */}
+                <button
+                  className="gallery-toggle-btn"
+                  onClick={() => toggleGallery(idx)}
+                >
+                  {expandedProjectIndex === idx ? 'Hide Gallery' : 'Show Gallery'}
+                  <img
+                    src={expandedProjectIndex === idx ? upArrowIcon : downArrowIcon}
+                    alt={expandedProjectIndex === idx ? 'Collapse' : 'Expand'}
+                    className="arrow-icon"
+                  />
+                </button>
+  
+                {expandedProjectIndex === idx && (
+                  <>
+                    <div className="project-gallery">
+                      {proj.images.map((img, i) => (
+                        <div className="gallery-item" key={i}>
+                          <img
+                            src={img.src}
+                            alt={img.caption || `Screenshot ${i + 1}`}
+                            className="clickable-gallery-image"
+                            onClick={() => setFullscreenImage(img.src)}
+                          />
+                          {img.caption && <p>{img.caption}</p>}
+                        </div>
+                      ))}
+                    </div>
+  
+                    {/* BOTTOM BUTTON */}
+                    <button
+                      className="gallery-toggle-btn"
+                      onClick={() => {
+                        toggleGallery(idx);
+                        setTimeout(() => scrollToId(`project-${proj.title.replace(/\s+/g, '-')}`), 0);
+                      }}
+                    >
+                      Hide Gallery
+                      <img
+                        src={upArrowIcon}
+                        alt="Collapse"
+                        className="arrow-icon"
+                      />
+                    </button>
+                  </>
+                )}
+              </>
+            )}
           </div>
         ))}
       </div>
+
+            {/* FULLSCREEN OVERLAY FEATURE */}
+            {fullscreenImage && (
+        <div
+          className={`fullscreen-overlay ${fullscreenImage ? 'visible' : ''}`}
+          onClick={() => setFullscreenImage(null)}
+        >
+          <img
+            src={fullscreenImage}
+            alt="Fullscreen"
+            className="fullscreen-image"
+          />
+          <button
+            className="fullscreen-close-btn"
+            onClick={() => setFullscreenImage(null)}
+            onMouseDown={(e) => e.stopPropagation()} // Prevents double trigger
+          >
+            <img src={closeIcon} alt="Close" />
+          </button>
+        </div>
+      )}
     </section>
-  );
+  );  
 }
 
 export default Projects;
