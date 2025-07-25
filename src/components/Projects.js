@@ -113,7 +113,7 @@ function Projects() {
       team: 'Solo',
       description:
         'Personal portfolio website with a serverless architecture: React frontend deployed on CloudFront and S3, integrated with a cloud-native contact form powered by AWS Lambda, S3, and SES for email delivery.',
-      stack: ['React', 'JavaScript', 'HTML', 'CSS', 'S3', 'CloudFront'],
+      stack: ['React', 'JavaScript', 'HTML', 'CSS', 'Git', 'AWS', 'S3', 'CloudFront'],
       github: 'https://github.com/brianjames-dev/portfolio-website',
     },
     {
@@ -121,7 +121,7 @@ function Projects() {
       team: 'Solo',
       description:
         'Autonomous AI finance chatbot that lets users log, query, and visualize expenses with natural language. Supports multi-user workflows, role-based access, and over 30 analytics intents.',
-      stack: ['Python', 'Discord.py', 'OpenAI API', 'Google Sheets API', 'Railway'],
+      stack: ['Python', 'Discord.py', 'Git', 'OpenAI API', 'Google Sheets API', 'Railway'],
       github: 'https://github.com/brianjames-dev/bookiebot',
       images: [
         { src: bookiebot1, caption: 'BookieBot Discord Profile Pic' },
@@ -140,7 +140,7 @@ function Projects() {
       team: 'Contractual',
       description:
         'Full-stack desktop app for spa operations: manages 300+ client records and 2,000+ appointments, with QR-based mobile photo uploads, PDF prescription generator, and responsive Tkinter UI. Saved 1,000+ hours/year and $3,000+ in costs.',
-      stack: ['Python', 'SQLite', 'Flask', 'HTML', 'CSS', 'Tkinter', 'ReportLab'],
+      stack: ['Python', 'SQLite', 'Flask', 'HTML', 'CSS', 'Git', 'Tkinter', 'ReportLab'],
       github: 'https://github.com/brianjames-dev/SkinPro',
       images: [
         { src: skinpro1, caption: '🚪 Splash Screen' },
@@ -162,7 +162,7 @@ function Projects() {
       team: '5-person Team',
       description:
         'Cycle-accurate NES emulator (APU + CPU) with >95% test coverage and platform-specific bug fixes. Led development of Trello/Discord-driven team and delivered cross-platform support.',
-      stack: ['C++', 'SDL2', 'Dear ImGUI'],
+      stack: ['C++', 'Git', 'SDL2', 'Dear ImGUI'],
       github: 'https://github.com/brianjames-dev/OSUcapstone',
     },
     {
