@@ -32,6 +32,8 @@ import closeIcon from '../images/close.svg';
 import discordIcon from '../images/discord.svg';
 import downArrowIcon from '../images/down_arrows.svg';
 import upArrowIcon from '../images/up_arrows.svg';
+import swipeIcon from '../images/swipe.svg';
+
 
 // Import all project images
 import bookiebot1 from '../images/bookiebot_imgs/bookiebot-icon.png';
@@ -90,11 +92,11 @@ const iconMap = {
 }
 
 
-function Projects() {
-  const [expandedProjectIndex, setExpandedProjectIndex] = useState(null);
+function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
   const [pendingGalleryIndex, setPendingGalleryIndex] = useState(null);
   const [fullscreenIndex, setFullscreenIndex] = useState(null);
   const [fullscreenImages, setFullscreenImages] = useState([]);
+  const [showSwipeHint, setShowSwipeHint] = useState(false);
 
   const toggleGallery = (index) => {
     if (expandedProjectIndex !== null && expandedProjectIndex !== index) {
@@ -103,6 +105,11 @@ function Projects() {
     } else {
       setExpandedProjectIndex(prev => (prev === index ? null : index));
     }
+  
+    // Force IntersectionObserver to recheck
+    setTimeout(() => {
+      window.dispatchEvent(new Event('scroll'));
+    }, 300);
   };
 
   useEffect(() => {
@@ -179,7 +186,7 @@ function Projects() {
       team: 'Solo',
       description:
         'Personal portfolio website with a serverless architecture: React frontend deployed on CloudFront and S3, integrated with a cloud-native contact form powered by AWS Lambda, S3, and SES for email delivery.',
-      stack: ['React', 'JavaScript', 'HTML', 'CSS', 'Git', 'AWS', 'S3', 'CloudFront'],
+      stack: ['React', 'JavaScript', 'HTML', 'CSS', 'Git', 'AWS', 'S3', 'CloudFront', 'SES', 'AWS Lambda'],
       github: 'https://github.com/brianjames-dev/portfolio-website',
     },
     {
@@ -260,8 +267,12 @@ function Projects() {
     <section id="projects" className="projects" data-snap-target>
       <div className="container">
         <h2>Projects</h2>
+  
+        {/* === PROJECT CARDS LOOP === */}
         {projects.map((proj, idx) => (
           <div key={idx} className="project-card" id={`project-${proj.title.replace(/\s+/g, '-')}`}>
+  
+            {/* -- Header: Title + GitHub Link -- */}
             <div className="project-header">
               <h3 className="title">{proj.title}</h3>
               <a
@@ -273,21 +284,25 @@ function Projects() {
                 <img src={githubIcon} alt="GitHub" className="github-link-icon" />
               </a>
             </div>
-
+  
+            {/* -- Subheader: Team info -- */}
             <div className="project-subheader">
               <p>{proj.team}</p>
             </div>
-
+  
+            {/* -- Stack / Tech Tags -- */}
             <div className="project-stack">
               {proj.stack.map((tech, i) => renderTag(tech, i))}
             </div>
-
+  
+            {/* -- Description Divider + Paragraph -- */}
             <hr className="project-divider" />
-
             <p className="project-description">{proj.description}</p>
-
-            {proj.images && proj.images.length > 0 && (
+  
+            {/* === OPTIONAL IMAGE GALLERY === */}
+            {proj.images?.length > 0 && (
               <>
+                {/* -- Toggle Button (Show/Hide Gallery) -- */}
                 <button
                   className="gallery-toggle-btn"
                   onClick={() => toggleGallery(idx)}
@@ -299,6 +314,8 @@ function Projects() {
                     className="arrow-icon"
                   />
                 </button>
+  
+                {/* -- Gallery Grid Display -- */}
                 {expandedProjectIndex === idx && (
                   <>
                     <div className="project-gallery">
@@ -312,13 +329,19 @@ function Projects() {
                             onClick={() => {
                               setFullscreenImages(proj.images);
                               setFullscreenIndex(i);
+                              setShowSwipeHint(true); // Show the swipe icon
+                            
+                              setTimeout(() => {
+                                setShowSwipeHint(false); // Hide after 2 seconds
+                              }, 2000);
                             }}
                           />
                           {img.caption && <p>{img.caption}</p>}
                         </div>
                       ))}
                     </div>
-
+  
+                    {/* -- Close Button for Gallery -- */}
                     <button
                       className="gallery-toggle-btn"
                       onClick={() => {
@@ -327,11 +350,7 @@ function Projects() {
                       }}
                     >
                       Hide Gallery
-                      <img
-                        src={upArrowIcon}
-                        alt="Collapse"
-                        className="arrow-icon"
-                      />
+                      <img src={upArrowIcon} alt="Collapse" className="arrow-icon" />
                     </button>
                   </>
                 )}
@@ -340,7 +359,8 @@ function Projects() {
           </div>
         ))}
       </div>
-
+  
+      {/* === FULLSCREEN OVERLAY MODE === */}
       {fullscreenIndex !== null && (
         <div
           className="fullscreen-overlay visible"
@@ -349,21 +369,32 @@ function Projects() {
             setFullscreenImages([]);
           }}
         >
+
+          {/* -- Swipe Hint Icon -- */}
+          {showSwipeHint && (
+            <img
+              src={swipeIcon}
+              alt="Swipe hint"
+              className="swipe-hint"
+            />
+          )}
+
+          {/* -- Fullscreen Image -- */}
           <img
             loading="lazy"
             src={fullscreenImages[fullscreenIndex]?.src}
             alt={fullscreenImages[fullscreenIndex]?.caption || "Fullscreen"}
             className="fullscreen-image"
           />
-
-          {/* Caption */}
+  
+          {/* -- Optional Caption -- */}
           {fullscreenImages[fullscreenIndex]?.caption && (
             <p className="fullscreen-caption">
               {fullscreenImages[fullscreenIndex].caption}
             </p>
           )}
-
-          {/* Close Button */}
+  
+          {/* -- Close Button (X) -- */}
           <button
             className="fullscreen-close-btn"
             onClick={(e) => {
@@ -375,8 +406,8 @@ function Projects() {
           >
             <img src={closeIcon} alt="Close" />
           </button>
-
-          {/* Arrows */}
+  
+          {/* -- Navigation Arrows (‹ ›) -- */}
           {fullscreenIndex > 0 && (
             <button
               className="carousel-arrow left"
@@ -402,7 +433,7 @@ function Projects() {
         </div>
       )}
     </section>
-  );
+  );  
 }
 
 export default Projects;

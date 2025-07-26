@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 import GithubIcon from '../images/github_themed.svg';
 import LinkedInIcon from '../images/linkedin_themed.svg';
 import InstagramIcon from '../images/instagram_themed.svg';
@@ -9,7 +10,7 @@ import InstagramIconHover from '../images/instagram_themed_hover.svg';
 function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState({});
-  const [captchaChecked, setCaptchaChecked] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   const validate = () => {
     const newErrors = {};
@@ -20,16 +21,38 @@ function Contact() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate() && captchaChecked) {
-      // Handle submission (e.g., API call)
-      alert('Message sent!');
-      setForm({ name: '', email: '', message: '' });
-      setErrors({});
-      setCaptchaChecked(false);
+    if (!validate() || !captchaToken) {
+      alert("Please complete all fields and verify you're not a robot.");
+      return;
     }
-  };
+  
+    try {
+      const response = await fetch('https://7ohwfvw4b9.execute-api.us-west-1.amazonaws.com/default/contactFormHandler', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...form, captchaToken }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        alert('Message sent!');
+        setForm({ name: '', email: '', message: '' });
+        setErrors({});
+        setCaptchaToken(null);
+      } else {
+        console.error(data);
+        alert('Something went wrong. Please try again later.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to send. Check your connection.');
+    }
+  };  
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -80,14 +103,14 @@ function Contact() {
             </label>
 
             <div className="contact-submit-row">
-              <div className="captcha-placeholder">
-                <input
-                  type="checkbox"
-                  checked={captchaChecked}
-                  onChange={() => setCaptchaChecked(!captchaChecked)}
+            <div class="recaptcha-wrapper">
+              <div className="recaptcha">
+                <ReCAPTCHA
+                  sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+                  onChange={(token) => setCaptchaToken(token)}
                 />
-                <label>I'm not a robot</label>
               </div>
+            </div>
               <button type="submit">Send Message</button>
             </div>
           </form>

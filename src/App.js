@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-
 import Header from './components/Header';
 import Home from './components/Home';
 import About from './components/About';
@@ -9,31 +8,59 @@ import './App.css';
 
 function App() {
   const [activeSection, setActiveSection] = useState('home');
+  const [expandedProjectIndex, setExpandedProjectIndex] = useState(null); // Updated to include setter
 
   useEffect(() => {
-    const sections = document.querySelectorAll('[data-snap-target]');
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.5 && entry.target.id) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+    const handleScroll = () => {
+      const scrollPos = window.scrollY; // Using top of viewport for simplicity
+      const sections = document.querySelectorAll('section');
+      let newActive = activeSection;
   
-    sections.forEach((section) => observer.observe(section));
-    return () => sections.forEach((section) => observer.unobserve(section));
-  }, []);
+      sections.forEach(section => {
+        const top = section.offsetTop;
+        const bottom = top + section.offsetHeight;
+        const id = section.getAttribute('id');
+        console.log(`Section: ${id}, Top: ${top}, Bottom: ${bottom}, ScrollPos: ${scrollPos}`); // Log each section's bounds
+        if (scrollPos >= top - 100 && scrollPos < bottom) { // Buffer for tolerance
+          newActive = id;
+        }
+      });
+  
+      console.log('ScrollPos:', scrollPos, 'NewActive:', newActive, 'CurrentActive:', activeSection); // Debug log
+  
+      if (newActive !== activeSection) {
+        setActiveSection(newActive);
+      }
+    };
+  
+    console.log('Adding scroll listener'); // Debug: Confirm listener is added
+    window.addEventListener('scroll', handleScroll, { passive: true }); // Use passive for performance
+    window.addEventListener('resize', handleScroll, { passive: true });
+    window.addEventListener('load', handleScroll);
+  
+    handleScroll(); // Trigger once on load
+  
+    return () => {
+      console.log('Removing scroll listener'); // Debug: Confirm listener is removed
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+      window.removeEventListener('load', handleScroll);
+    };
+  }, [activeSection]); // Dependency array
 
   return (
     <div className="App">
-      <Header activeSection={activeSection} />
+      <Header 
+        activeSection={activeSection} 
+        expandedProjectIndex={expandedProjectIndex} 
+      />
       <main>
         <Home />
         <About />
-        <Projects />
+        <Projects 
+          expandedProjectIndex={expandedProjectIndex} 
+          setExpandedProjectIndex={setExpandedProjectIndex} // Added setter prop
+        />
         <Contact />
       </main>
     </div>
