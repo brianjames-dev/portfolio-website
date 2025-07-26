@@ -25,6 +25,11 @@ html, body {
   scroll-behavior: smooth;
 }
 
+body.no-scroll {
+  overflow: hidden;
+  height: 100%;
+}
+
 button {
   font-weight: 500;
 }
@@ -54,6 +59,11 @@ section {
   scroll-snap-align: start;
 
   /* outline: 1px dashed red; */
+}
+
+section.home {
+  position: relative;
+  overflow: visible;
 }
 
 section.about,
@@ -183,10 +193,12 @@ section.projects {
 }
 
 .home-left .avatar {
+  position: relative;
   width: 250px;
   height: auto;
   filter: drop-shadow(-10px 0px 6px rgba(0, 0, 0, 0.3));
 }
+
 
 /* Right side (Text) */
 .home-right {
@@ -528,29 +540,49 @@ section.projects {
   cursor: zoom-in;
 }
 
+.swipe-hint {
+  display: none;
+}
+
 .fullscreen-overlay {
+  display: flex;
   position: fixed;
+  justify-content: center;
+  align-items: center;
   top: 0;
   left: 0;
   z-index: 9999;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.9);
+
+}
+
+.fullscreen-image-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.swipe-hint {
-  display: none;
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: auto;
 }
 
 .fullscreen-image {
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 90vw;
+  max-height: 90vh;
   border-radius: 8px;
-  cursor: zoom-out;
+  cursor: zoom-in;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease;
+  object-fit: contain;
+}
+
+
+.fullscreen-image.zoomed {
+  transform: scale(2);
+  cursor: zoom-out;
+  z-index: 1001;
+  will-change: transform;
 }
 
 .fullscreen-close-btn {
@@ -581,7 +613,7 @@ section.projects {
   font-size: 0.9rem;
   max-width: 85%;
   text-align: center;
-  z-index: 15;
+  z-index: 10000;
 }
 
 .carousel-arrow {
@@ -592,11 +624,21 @@ section.projects {
   border: none;
   padding: 10px 16px;
   cursor: pointer;
-  z-index: 12;
+  z-index: 10000;
   user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* Transition and base visible state */
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+}
+
+.carousel-arrow.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .carousel-arrow.left {
@@ -923,6 +965,36 @@ button:hover {
     transform-origin: top;
   }
 
+  .avatar-wrapper {
+    position: relative;
+    width: 250px;  /* Match the avatar width */
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .avatar-glow {
+    position: absolute;
+    top: 0%;
+    width: 250px;
+    height: 600px;
+    background: radial-gradient(circle, #4D645C, transparent 200%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    filter: blur(20px);
+    pointer-events: none;
+  }
+  
+  .avatar-clipper {
+    position: relative;
+    overflow: hidden;
+    height: 260px; /* Adjust this to cut the glow at the divider */
+    width: 100%;
+    z-index: 1;
+  }
+  
   .home-divider {
     transform: scale(80%);
     transform-origin: top center;

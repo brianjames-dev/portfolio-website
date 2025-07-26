@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import alphaHeadshot from '../images/alpha_headshot.png';
 import DownloadIcon from '../images/download.svg';
 import SendIcon from '../images/send.svg'

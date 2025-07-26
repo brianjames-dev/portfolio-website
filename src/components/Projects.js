@@ -97,6 +97,12 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
   const [fullscreenIndex, setFullscreenIndex] = useState(null);
   const [fullscreenImages, setFullscreenImages] = useState([]);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
+  const [isSuperZoomed, setIsSuperZoomed] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [mouseDownTime, setMouseDownTime] = useState(null);
+
 
   const toggleGallery = (index) => {
     if (expandedProjectIndex !== null && expandedProjectIndex !== index) {
@@ -132,6 +138,31 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
       }, 0);
     }
   }, [expandedProjectIndex, pendingGalleryIndex]);
+
+  // Scroll lock
+  useEffect(() => {
+    if (fullscreenIndex !== null) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+      setIsSuperZoomed(false);  // Reset zoom on exit
+    }
+  
+    return () => {
+      // Clean up just in case
+      document.body.classList.remove('no-scroll');
+    };
+  }, [fullscreenIndex]);
+  
+  // Reset drag state
+  useEffect(() => {
+    if (fullscreenIndex === null || !isSuperZoomed) {
+      setDragOffset({ x: 0, y: 0 });
+      setIsDragging(false);
+      setMouseDownTime(null);
+    }
+  }, [fullscreenIndex, isSuperZoomed]);
+
 
   // preload adjacent images
   useEffect(() => {
@@ -380,13 +411,67 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
           )}
 
           {/* -- Fullscreen Image -- */}
-          <img
-            loading="lazy"
-            src={fullscreenImages[fullscreenIndex]?.src}
-            alt={fullscreenImages[fullscreenIndex]?.caption || "Fullscreen"}
-            className="fullscreen-image"
-          />
-  
+          <div
+            className="fullscreen-image-wrapper"
+            onClick={(e) => {
+              // Prevent overlay from closing fullscreen on image click
+              e.stopPropagation();
+            }}
+          >
+            <img
+              loading="lazy"
+              src={fullscreenImages[fullscreenIndex]?.src}
+              alt={fullscreenImages[fullscreenIndex]?.caption || "Fullscreen"}
+              className={`fullscreen-image ${isSuperZoomed ? 'zoomed' : ''}`}
+              style={{
+                transform: isSuperZoomed
+                  ? `scale(2) translate(${dragOffset.x}px, ${dragOffset.y}px)`
+                  : 'scale(1)',
+                cursor: isSuperZoomed ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in',
+              }}
+              onClick={(e) => {
+                // Only toggle super-zoom OFF on quick click (not here — we now handle it in onMouseUp)
+              }}
+              onMouseDown={(e) => {
+                if (isSuperZoomed) {
+                  e.preventDefault();
+                  setMouseDownTime(Date.now());
+                  setIsDragging(true);
+                  setDragStart({ 
+                    x: e.clientX - dragOffset.x, 
+                    y: e.clientY - dragOffset.y 
+                  });
+                }
+              }}
+              onMouseMove={(e) => {
+                if (isSuperZoomed && isDragging) {
+                  e.preventDefault();
+                  setDragOffset({
+                    x: e.clientX - dragStart.x,
+                    y: e.clientY - dragStart.y,
+                  });
+                }
+              }}
+              onMouseUp={(e) => {
+                if (isSuperZoomed) {
+                  setIsDragging(false);
+                  const heldTime = Date.now() - mouseDownTime;
+                  if (heldTime < 150) {
+                    setIsSuperZoomed(false); // ✅ Exit zoom only
+                    setDragOffset({ x: 0, y: 0 });
+                  }
+                } else {
+                  setIsSuperZoomed(true); // ✅ If not in zoom mode, treat quick click as zoom in
+                }
+              }}
+              onMouseLeave={() => {
+                if (isSuperZoomed) {
+                  setIsDragging(false);
+                }
+              }}
+            />
+          </div>
+
           {/* -- Optional Caption -- */}
           {fullscreenImages[fullscreenIndex]?.caption && (
             <p className="fullscreen-caption">
@@ -410,7 +495,7 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
           {/* -- Navigation Arrows (‹ ›) -- */}
           {fullscreenIndex > 0 && (
             <button
-              className="carousel-arrow left"
+              className={`carousel-arrow left ${isSuperZoomed ? 'hidden' : ''}`}  // <-- Add this!
               onClick={(e) => {
                 e.stopPropagation();
                 setFullscreenIndex((prev) => prev - 1);
@@ -419,9 +504,10 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
               <span className="arrow-inner">‹</span>
             </button>
           )}
+
           {fullscreenIndex < fullscreenImages.length - 1 && (
             <button
-              className="carousel-arrow right"
+              className={`carousel-arrow right ${isSuperZoomed ? 'hidden' : ''}`}  // <-- Add this!
               onClick={(e) => {
                 e.stopPropagation();
                 setFullscreenIndex((prev) => prev + 1);
