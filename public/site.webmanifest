@@ -1,0 +1,21 @@
+{
+    "name": "Brian James Portfolio",
+    "short_name": "BaJ.dev",
+    "icons": [
+      {
+        "src": "/favicon-192x192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/favicon-512x512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": "/",
+    "background_color": "#F8F3D9",
+    "theme_color": "#504B38",
+    "display": "standalone"
+  }
+  

@@ -105,14 +105,19 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
   const [mouseDownPos, setMouseDownPos] = useState({ x: 0, y: 0 });  
   const mouseWasDraggedRef = useRef(false);
 
-  
 
   const toggleGallery = (index) => {
+    const id = `project-${projects[index].title.replace(/\s+/g, '-')}`;
+    const isDesktop = window.innerWidth > 600;
+  
     if (expandedProjectIndex !== null && expandedProjectIndex !== index) {
       setExpandedProjectIndex(null);
       setPendingGalleryIndex(index);
     } else {
       setExpandedProjectIndex(prev => (prev === index ? null : index));
+      if (expandedProjectIndex !== index && isDesktop) {
+        setTimeout(() => scrollToId(id), 0);
+      }
     }
   
     // Force IntersectionObserver to recheck
@@ -120,6 +125,8 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
       window.dispatchEvent(new Event('scroll'));
     }, 0);
   };
+  
+  
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -164,6 +171,18 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
     }
   }, [fullscreenIndex]);
 
+  useEffect(() => {
+    const preventScroll = (e) => e.preventDefault();
+  
+    if (fullscreenIndex !== null) {
+      document.body.addEventListener('touchmove', preventScroll, { passive: false });
+    }
+  
+    return () => {
+      document.body.removeEventListener('touchmove', preventScroll);
+    };
+  }, [fullscreenIndex]);
+  
   // preload adjacent images
   useEffect(() => {
     if (fullscreenIndex !== null) {
