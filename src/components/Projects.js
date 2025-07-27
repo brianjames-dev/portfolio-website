@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { scrollToId } from '../utils/scrollToId';
 
 // Import all your icons explicitly
@@ -102,6 +102,8 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [mouseDownTime, setMouseDownTime] = useState(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const scrollLockRef = useRef(false);
 
 
   const toggleGallery = (index) => {
@@ -139,21 +141,36 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
     }
   }, [expandedProjectIndex, pendingGalleryIndex]);
 
-  // Scroll lock
+  // Place scroll lock behavior below  
   useEffect(() => {
-    if (fullscreenIndex !== null) {
+    const enteringOverlay = fullscreenIndex !== null && !scrollLockRef.current;
+    const exitingOverlay = fullscreenIndex === null && scrollLockRef.current;
+  
+    if (enteringOverlay) {
+      const y = window.scrollY;
+      setScrollPosition(y);
+      scrollLockRef.current = true;
+  
+      console.log('🔒 Locking scroll at:', y);
       document.body.classList.add('no-scroll');
-    } else {
-      document.body.classList.remove('no-scroll');
-      setIsSuperZoomed(false);  // Reset zoom on exit
+      document.body.style.top = `-${y}px`;
+  
+      setTimeout(() => {
+        console.log('🔁 ScrollY after overlay open:', window.scrollY);
+      }, 0);
     }
   
-    return () => {
-      // Clean up just in case
+    if (exitingOverlay) {
+      console.log('🔓 Restoring scroll to:', scrollPosition);
       document.body.classList.remove('no-scroll');
-    };
-  }, [fullscreenIndex]);
+      document.body.style.top = '';
+      window.scrollTo(0, scrollPosition);
+      scrollLockRef.current = false;
+    }
   
+    console.log('📸 fullscreenIndex:', fullscreenIndex, ' | isSuperZoomed:', isSuperZoomed);
+  }, [fullscreenIndex]);
+
   // Reset drag state
   useEffect(() => {
     if (fullscreenIndex === null || !isSuperZoomed) {
@@ -182,34 +199,82 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
   useEffect(() => {
     const overlay = document.querySelector('.fullscreen-overlay');
     if (!overlay) return;
-
-    let startX = null;
-
+  
+    let lastTouchX = null;
+    let lastTouchY = null;
+    let touchStartTime = null;
+    let moved = false;
+  
     const handleTouchStart = (e) => {
-      startX = e.touches[0].clientX;
+      if (!e.touches || e.touches.length !== 1) return;
+  
+      const touch = e.touches[0];
+      lastTouchX = touch.clientX;
+      lastTouchY = touch.clientY;
+      touchStartTime = Date.now();
+      moved = false;
     };
-
+  
     const handleTouchMove = (e) => {
-      if (!startX) return;
-      const deltaX = e.touches[0].clientX - startX;
-      if (deltaX > 80 && fullscreenIndex > 0) {
-        setFullscreenIndex((prev) => prev - 1);
-        startX = null;
-      } else if (deltaX < -80 && fullscreenIndex < fullscreenImages.length - 1) {
-        setFullscreenIndex((prev) => prev + 1);
-        startX = null;
+      if (!lastTouchX || !lastTouchY) return;
+  
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - lastTouchX;
+      const deltaY = touch.clientY - lastTouchY;
+  
+      const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+      if (distance > 4) moved = true;
+  
+      if (isSuperZoomed) {
+        e.preventDefault(); // Stop swipe/scroll
+      
+        const dragScale = 0.5; // Adjust this to make drag feel smoother
+      
+        setDragOffset(prev => ({
+          x: prev.x + deltaX * dragScale,
+          y: prev.y + deltaY * dragScale
+        }));
+      
+        // Reset anchor for continuous drag
+        lastTouchX = touch.clientX;
+        lastTouchY = touch.clientY;
+      } else {
+        // Only trigger swipe when not zoomed
+        if (deltaX > 80 && fullscreenIndex > 0) {
+          setFullscreenIndex((prev) => prev - 1);
+          lastTouchX = null;
+        } else if (deltaX < -80 && fullscreenIndex < fullscreenImages.length - 1) {
+          setFullscreenIndex((prev) => prev + 1);
+          lastTouchX = null;
+        }
       }
     };
-
-    overlay.addEventListener('touchstart', handleTouchStart, { passive: true });
-    overlay.addEventListener('touchmove', handleTouchMove, { passive: true });
-
+  
+    const handleTouchEnd = () => {
+      const heldTime = Date.now() - touchStartTime;
+  
+      if (isSuperZoomed && heldTime < 150 && !moved) {
+        setIsSuperZoomed(false);
+        setDragOffset({ x: 0, y: 0 });
+      }
+  
+      lastTouchX = null;
+      lastTouchY = null;
+      touchStartTime = null;
+      moved = false;
+    };
+  
+    overlay.addEventListener('touchstart', handleTouchStart, { passive: false });
+    overlay.addEventListener('touchmove', handleTouchMove, { passive: false });
+    overlay.addEventListener('touchend', handleTouchEnd);
+  
     return () => {
       overlay.removeEventListener('touchstart', handleTouchStart);
       overlay.removeEventListener('touchmove', handleTouchMove);
+      overlay.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [fullscreenIndex, fullscreenImages]);
-
+  }, [fullscreenIndex, fullscreenImages, isSuperZoomed]);
+  
 
   const projects = [
     {

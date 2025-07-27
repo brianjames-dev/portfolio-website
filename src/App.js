@@ -20,20 +20,20 @@ function App() {
         const top = section.offsetTop;
         const bottom = top + section.offsetHeight;
         const id = section.getAttribute('id');
-        console.log(`Section: ${id}, Top: ${top}, Bottom: ${bottom}, ScrollPos: ${scrollPos}`); // Log each section's bounds
+        // console.log(`Section: ${id}, Top: ${top}, Bottom: ${bottom}, ScrollPos: ${scrollPos}`); // Log each section's bounds
         if (scrollPos >= top - 100 && scrollPos < bottom) { // Buffer for tolerance
           newActive = id;
         }
       });
   
-      console.log('ScrollPos:', scrollPos, 'NewActive:', newActive, 'CurrentActive:', activeSection); // Debug log
+      // console.log('ScrollPos:', scrollPos, 'NewActive:', newActive, 'CurrentActive:', activeSection); // Debug log
   
       if (newActive !== activeSection) {
         setActiveSection(newActive);
       }
     };
   
-    console.log('Adding scroll listener'); // Debug: Confirm listener is added
+    // console.log('Adding scroll listener'); // Debug: Confirm listener is added
     window.addEventListener('scroll', handleScroll, { passive: true }); // Use passive for performance
     window.addEventListener('resize', handleScroll, { passive: true });
     window.addEventListener('load', handleScroll);
@@ -41,7 +41,7 @@ function App() {
     handleScroll(); // Trigger once on load
   
     return () => {
-      console.log('Removing scroll listener'); // Debug: Confirm listener is removed
+      // console.log('Removing scroll listener'); // Debug: Confirm listener is removed
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
       window.removeEventListener('load', handleScroll);
