@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { scrollToId } from '../utils/scrollToId';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 // Import all your icons explicitly
 import reactIcon from '../images/react.svg';
@@ -98,13 +99,13 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
   const [fullscreenImages, setFullscreenImages] = useState([]);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [isSuperZoomed, setIsSuperZoomed] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [mouseDownTime, setMouseDownTime] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollLockRef = useRef(false);
+  const [mouseDownTime, setMouseDownTime] = useState(null);
+  const [mouseDownPos, setMouseDownPos] = useState({ x: 0, y: 0 });  
+  const mouseWasDraggedRef = useRef(false);
 
+  
 
   const toggleGallery = (index) => {
     if (expandedProjectIndex !== null && expandedProjectIndex !== index) {
@@ -117,7 +118,7 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
     // Force IntersectionObserver to recheck
     setTimeout(() => {
       window.dispatchEvent(new Event('scroll'));
-    }, 300);
+    }, 0);
   };
 
   useEffect(() => {
@@ -151,35 +152,17 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
       setScrollPosition(y);
       scrollLockRef.current = true;
   
-      console.log('🔒 Locking scroll at:', y);
       document.body.classList.add('no-scroll');
       document.body.style.top = `-${y}px`;
-  
-      setTimeout(() => {
-        console.log('🔁 ScrollY after overlay open:', window.scrollY);
-      }, 0);
     }
   
     if (exitingOverlay) {
-      console.log('🔓 Restoring scroll to:', scrollPosition);
       document.body.classList.remove('no-scroll');
       document.body.style.top = '';
       window.scrollTo(0, scrollPosition);
       scrollLockRef.current = false;
     }
-  
-    console.log('📸 fullscreenIndex:', fullscreenIndex, ' | isSuperZoomed:', isSuperZoomed);
   }, [fullscreenIndex]);
-
-  // Reset drag state
-  useEffect(() => {
-    if (fullscreenIndex === null || !isSuperZoomed) {
-      setDragOffset({ x: 0, y: 0 });
-      setIsDragging(false);
-      setMouseDownTime(null);
-    }
-  }, [fullscreenIndex, isSuperZoomed]);
-
 
   // preload adjacent images
   useEffect(() => {
@@ -201,67 +184,29 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
     if (!overlay) return;
   
     let lastTouchX = null;
-    let lastTouchY = null;
-    let touchStartTime = null;
-    let moved = false;
   
     const handleTouchStart = (e) => {
       if (!e.touches || e.touches.length !== 1) return;
-  
-      const touch = e.touches[0];
-      lastTouchX = touch.clientX;
-      lastTouchY = touch.clientY;
-      touchStartTime = Date.now();
-      moved = false;
+      lastTouchX = e.touches[0].clientX;
     };
   
     const handleTouchMove = (e) => {
-      if (!lastTouchX || !lastTouchY) return;
+      if (lastTouchX === null) return;
   
-      const touch = e.touches[0];
-      const deltaX = touch.clientX - lastTouchX;
-      const deltaY = touch.clientY - lastTouchY;
+      const currentX = e.touches[0].clientX;
+      const deltaX = currentX - lastTouchX;
   
-      const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
-      if (distance > 4) moved = true;
-  
-      if (isSuperZoomed) {
-        e.preventDefault(); // Stop swipe/scroll
-      
-        const dragScale = 0.5; // Adjust this to make drag feel smoother
-      
-        setDragOffset(prev => ({
-          x: prev.x + deltaX * dragScale,
-          y: prev.y + deltaY * dragScale
-        }));
-      
-        // Reset anchor for continuous drag
-        lastTouchX = touch.clientX;
-        lastTouchY = touch.clientY;
-      } else {
-        // Only trigger swipe when not zoomed
-        if (deltaX > 80 && fullscreenIndex > 0) {
-          setFullscreenIndex((prev) => prev - 1);
-          lastTouchX = null;
-        } else if (deltaX < -80 && fullscreenIndex < fullscreenImages.length - 1) {
-          setFullscreenIndex((prev) => prev + 1);
-          lastTouchX = null;
-        }
+      if (deltaX > 80 && fullscreenIndex > 0) {
+        setFullscreenIndex((prev) => prev - 1);
+        lastTouchX = null;
+      } else if (deltaX < -80 && fullscreenIndex < fullscreenImages.length - 1) {
+        setFullscreenIndex((prev) => prev + 1);
+        lastTouchX = null;
       }
     };
   
     const handleTouchEnd = () => {
-      const heldTime = Date.now() - touchStartTime;
-  
-      if (isSuperZoomed && heldTime < 150 && !moved) {
-        setIsSuperZoomed(false);
-        setDragOffset({ x: 0, y: 0 });
-      }
-  
       lastTouchX = null;
-      lastTouchY = null;
-      touchStartTime = null;
-      moved = false;
     };
   
     overlay.addEventListener('touchstart', handleTouchStart, { passive: false });
@@ -273,7 +218,8 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
       overlay.removeEventListener('touchmove', handleTouchMove);
       overlay.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [fullscreenIndex, fullscreenImages, isSuperZoomed]);
+  }, [fullscreenIndex, fullscreenImages]);
+  
   
 
   const projects = [
@@ -461,11 +407,14 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
         <div
           className="fullscreen-overlay visible"
           onClick={() => {
-            setFullscreenIndex(null);
-            setFullscreenImages([]);
+            if (isSuperZoomed) {
+              setIsSuperZoomed(false); // Just exit superzoom
+            } else {
+              setFullscreenIndex(null); // Fully close overlay
+              setFullscreenImages([]);
+            }
           }}
         >
-
           {/* -- Swipe Hint Icon -- */}
           {showSwipeHint && (
             <img
@@ -479,61 +428,72 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
           <div
             className="fullscreen-image-wrapper"
             onClick={(e) => {
-              e.stopPropagation();
-            }}
+              const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+              if (isTouch || mouseWasDraggedRef.current) {
+                e.stopPropagation();
+              }
+            }}     
           >
-            <img
-              loading="lazy"
-              src={fullscreenImages[fullscreenIndex]?.src}
-              alt={fullscreenImages[fullscreenIndex]?.caption || "Fullscreen"}
-              className={`fullscreen-image ${isSuperZoomed ? 'zoomed' : ''}`}
-              style={{
-                transform: isSuperZoomed
-                  ? `scale(2) translate(${dragOffset.x}px, ${dragOffset.y}px)`
-                  : 'scale(1)',
-                cursor: isSuperZoomed ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in',
-              }}
-              onClick={(e) => {
-                // Only toggle super-zoom OFF on quick click (not here — we now handle it in onMouseUp)
-              }}
-              onMouseDown={(e) => {
-                if (isSuperZoomed) {
-                  e.preventDefault();
-                  setMouseDownTime(Date.now());
-                  setIsDragging(true);
-                  setDragStart({ 
-                    x: e.clientX - dragOffset.x, 
-                    y: e.clientY - dragOffset.y 
-                  });
-                }
-              }}
-              onMouseMove={(e) => {
-                if (isSuperZoomed && isDragging) {
-                  e.preventDefault();
-                  setDragOffset({
-                    x: e.clientX - dragStart.x,
-                    y: e.clientY - dragStart.y,
-                  });
-                }
-              }}
-              onMouseUp={(e) => {
-                if (isSuperZoomed) {
-                  setIsDragging(false);
-                  const heldTime = Date.now() - mouseDownTime;
-                  if (heldTime < 150) {
-                    setIsSuperZoomed(false);
-                    setDragOffset({ x: 0, y: 0 });
-                  }
-                } else {
-                  setIsSuperZoomed(true);
-                }
-              }}
-              onMouseLeave={() => {
-                if (isSuperZoomed) {
-                  setIsDragging(false);
-                }
-              }}
-            />
+            {isSuperZoomed ? (
+              <TransformWrapper
+                doubleClick={{ disabled: true }}
+                pinch={{ disabled: false }}
+                panning={{ velocityDisabled: false }}
+                wheel={{ disabled: true }}
+                initialScale={2.3}
+                minScale={2.3}
+                maxScale={2.3}
+                centerOnInit
+              >
+                <TransformComponent>
+                <div
+                  className="superzoomed"
+                  onMouseDown={(e) => {
+                    setMouseDownTime(Date.now());
+                    setMouseDownPos({ x: e.clientX, y: e.clientY });
+                    mouseWasDraggedRef.current = false;
+                  }}
+                  
+                  onMouseUp={(e) => {
+                    const duration = Date.now() - mouseDownTime;
+                    const distX = Math.abs(e.clientX - mouseDownPos.x);
+                    const distY = Math.abs(e.clientY - mouseDownPos.y);
+                    const movement = Math.sqrt(distX ** 2 + distY ** 2);
+                  
+                    const isShortClick = duration < 200 && movement < 5;
+                  
+                    if (isShortClick) {
+                      e.stopPropagation(); // only block overlay close on short click
+                      setIsSuperZoomed(false); // Exit zoom
+                    } else {
+                      mouseWasDraggedRef.current = true; // mark as dragged
+                    }
+                  }}
+                >                    
+                    <img
+                      src={fullscreenImages[fullscreenIndex]?.src}
+                      alt={fullscreenImages[fullscreenIndex]?.caption || "Fullscreen"}
+                      className="fullscreen-image superzoomed"
+                      style={{ touchAction: 'none' }}
+                    />
+                  </div>
+                </TransformComponent>
+              </TransformWrapper>
+            ) : (
+              <img
+                src={fullscreenImages[fullscreenIndex]?.src}
+                alt={fullscreenImages[fullscreenIndex]?.caption || "Fullscreen"}
+                className="fullscreen-image"
+                style={{
+                  transform: 'scale(1)',
+                  cursor: 'zoom-in',
+                }}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent closing overlay
+                  setIsSuperZoomed(true); // Enter zoom
+                }}
+              />
+            )}
           </div>
 
           {/* -- Optional Caption -- */}
@@ -542,7 +502,7 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
               {fullscreenImages[fullscreenIndex].caption}
             </p>
           )}
-  
+
           {/* -- Close Button (X) -- */}
           <button
             className="fullscreen-close-btn"
@@ -550,12 +510,13 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
               e.stopPropagation();
               setFullscreenIndex(null);
               setFullscreenImages([]);
+              setIsSuperZoomed(false);
             }}
             onMouseDown={(e) => e.stopPropagation()}
           >
             <img src={closeIcon} alt="Close" />
           </button>
-  
+
           {/* -- Navigation Arrows (‹ ›) -- */}
           {fullscreenIndex > 0 && (
             <button

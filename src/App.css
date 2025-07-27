@@ -546,45 +546,53 @@ section.projects {
 }
 
 .fullscreen-overlay {
-  display: flex;
   position: fixed;
-  justify-content: center;
-  align-items: center;
   top: 0;
   left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 15, 15, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 9999;
-  width: 100dvw;
-  height: 100dvh;
-  background-color: rgba(0, 0, 0, 0.9);
-  touch-action: none;
-  overscroll-behavior: none;
 }
 
 .fullscreen-image-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Prevents image overflow */
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 100%;
-  max-height: 100%;
-  pointer-events: auto;
 }
+
 
 .fullscreen-image {
   max-width: 90vw;
   max-height: 90vh;
   border-radius: 8px;
   cursor: zoom-in;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
   transition: transform 0.3s ease;
   object-fit: contain;
 }
 
+.fullscreen-image:not(.superzoomed) {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); /* Only when NOT zoomed */
+}
 
-.fullscreen-image.zoomed {
-  transform: scale(2);
+.superzoomed {
+  max-width: none !important;
+  max-height: none !important;
+  width: 100dvw;
+  height: 100dvh;
   cursor: zoom-out;
-  z-index: 1001;
-  will-change: transform;
+  border-radius: 0;
+  transform: scale(.7); /* changed */
+}
+
+.superzoomed:active {
+  cursor: grabbing;
 }
 
 .fullscreen-close-btn {
@@ -1085,6 +1093,53 @@ button:hover {
     animation: swipeWave 2s ease-in-out infinite;
   }
   
+  .fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 15, 15, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .fullscreen-image-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevents image overflow */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  
+  .fullscreen-image {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+    object-fit: contain;
+  }
+  
+  .fullscreen-image:not(.superzoomed) {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); /* Only when NOT zoomed */
+  }
+  
+  .superzoomed {
+    max-width: none !important;
+    max-height: none !important;
+    width: 100dvw;
+    height: 100dvh;
+    cursor: grab;
+    border-radius: 0;
+
+    transform: scale(.9); /* changed */
+  }
+
   .fullscreen-close-btn {
     top: 20px;
     right: 20px;
