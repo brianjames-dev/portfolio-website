@@ -479,7 +479,6 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
           <div
             className="fullscreen-image-wrapper"
             onClick={(e) => {
-              // Prevent overlay from closing fullscreen on image click
               e.stopPropagation();
             }}
           >
@@ -522,11 +521,11 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
                   setIsDragging(false);
                   const heldTime = Date.now() - mouseDownTime;
                   if (heldTime < 150) {
-                    setIsSuperZoomed(false); // ✅ Exit zoom only
+                    setIsSuperZoomed(false);
                     setDragOffset({ x: 0, y: 0 });
                   }
                 } else {
-                  setIsSuperZoomed(true); // ✅ If not in zoom mode, treat quick click as zoom in
+                  setIsSuperZoomed(true);
                 }
               }}
               onMouseLeave={() => {
@@ -560,7 +559,7 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
           {/* -- Navigation Arrows (‹ ›) -- */}
           {fullscreenIndex > 0 && (
             <button
-              className={`carousel-arrow left ${isSuperZoomed ? 'hidden' : ''}`}  // <-- Add this!
+              className={`carousel-arrow left ${isSuperZoomed ? 'hidden' : ''}`}
               onClick={(e) => {
                 e.stopPropagation();
                 setFullscreenIndex((prev) => prev - 1);
@@ -572,7 +571,7 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
 
           {fullscreenIndex < fullscreenImages.length - 1 && (
             <button
-              className={`carousel-arrow right ${isSuperZoomed ? 'hidden' : ''}`}  // <-- Add this!
+              className={`carousel-arrow right ${isSuperZoomed ? 'hidden' : ''}`}
               onClick={(e) => {
                 e.stopPropagation();
                 setFullscreenIndex((prev) => prev + 1);
