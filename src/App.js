@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ParticlesBackground from './ParticlesBackground';
 import Header from './components/Header';
 import Home from './components/Home';
 import About from './components/About';
@@ -54,6 +55,7 @@ function App() {
         activeSection={activeSection} 
         expandedProjectIndex={expandedProjectIndex} 
       />
+      <ParticlesBackground />
       <main>
         <Home />
         <About />

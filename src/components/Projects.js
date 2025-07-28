@@ -125,8 +125,6 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
       window.dispatchEvent(new Event('scroll'));
     }, 0);
   };
-  
-  
 
   useEffect(() => {
     const handleEsc = (e) => {
