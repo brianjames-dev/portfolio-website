@@ -14,7 +14,7 @@ const ParticlesBackground = () => {
       init={particlesInit}
       options={{
         fullScreen: {
-          enable: true,
+          enable: false,
           zIndex: -1,
         },
         background: {
@@ -65,7 +65,7 @@ const ParticlesBackground = () => {
               enable: true,
               mode: "push",
             },
-            resize: true,
+            resize: false,
           },
           modes: {
             repulse: {
