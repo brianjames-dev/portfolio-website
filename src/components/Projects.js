@@ -31,8 +31,7 @@ import scikitlearnIcon from '../images/scikitlearn.svg';
 import seabornIcon from '../images/seaborn.svg';
 import closeIcon from '../images/close.svg';
 import discordIcon from '../images/discord.svg';
-import downArrowIcon from '../images/down_arrows.svg';
-import upArrowIcon from '../images/up_arrows.svg';
+import fullscreenIcon from '../images/fullscreen.svg';
 import swipeIcon from '../images/swipe.svg';
 
 
@@ -93,8 +92,7 @@ const iconMap = {
 }
 
 
-function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
-  const [pendingGalleryIndex, setPendingGalleryIndex] = useState(null);
+function Projects() {
   const [fullscreenIndex, setFullscreenIndex] = useState(null);
   const [fullscreenImages, setFullscreenImages] = useState([]);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
@@ -105,27 +103,7 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
   const [mouseDownPos, setMouseDownPos] = useState({ x: 0, y: 0 });  
   const mouseWasDraggedRef = useRef(false);
 
-
-  const toggleGallery = (index) => {
-    const id = `project-${projects[index].title.replace(/\s+/g, '-')}`;
-    const isDesktop = window.innerWidth > 600;
-  
-    if (expandedProjectIndex !== null && expandedProjectIndex !== index) {
-      setExpandedProjectIndex(null);
-      setPendingGalleryIndex(index);
-    } else {
-      setExpandedProjectIndex(prev => (prev === index ? null : index));
-      if (expandedProjectIndex !== index && isDesktop) {
-        setTimeout(() => scrollToId(id), 0);
-      }
-    }
-  
-    // Force IntersectionObserver to recheck
-    setTimeout(() => {
-      window.dispatchEvent(new Event('scroll'));
-    }, 0);
-  };
-
+  // Escape hotkey --> closes fullscreen on desktop
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === 'Escape') {
@@ -136,16 +114,6 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
-
-  useEffect(() => {
-    if (expandedProjectIndex === null && pendingGalleryIndex !== null) {
-      setTimeout(() => {
-        scrollToId(`project-${projects[pendingGalleryIndex].title.replace(/\s+/g, '-')}`);
-        setExpandedProjectIndex(pendingGalleryIndex);
-        setPendingGalleryIndex(null);
-      }, 0);
-    }
-  }, [expandedProjectIndex, pendingGalleryIndex]);
 
   // Place scroll lock behavior below  
   useEffect(() => {
@@ -169,6 +137,7 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
     }
   }, [fullscreenIndex]);
 
+  // More scroll lock behavior
   useEffect(() => {
     const preventScroll = (e) => e.preventDefault();
   
@@ -360,60 +329,18 @@ function Projects({ expandedProjectIndex, setExpandedProjectIndex }) {
   
             {/* === OPTIONAL IMAGE GALLERY === */}
             {proj.images?.length > 0 && (
-              <>
-                {/* -- Toggle Button (Show/Hide Gallery) -- */}
-                <button
-                  className="gallery-toggle-btn"
-                  onClick={() => toggleGallery(idx)}
-                >
-                  {expandedProjectIndex === idx ? 'Hide Gallery' : 'Show Gallery'}
-                  <img
-                    src={expandedProjectIndex === idx ? upArrowIcon : downArrowIcon}
-                    alt={expandedProjectIndex === idx ? 'Collapse' : 'Expand'}
-                    className="arrow-icon"
-                  />
-                </button>
-  
-                {/* -- Gallery Grid Display -- */}
-                {expandedProjectIndex === idx && (
-                  <>
-                    <div className="project-gallery">
-                      {proj.images.map((img, i) => (
-                        <div className="gallery-item" key={i}>
-                          <img
-                            loading="lazy"
-                            src={img.src}
-                            alt={img.caption || `Screenshot ${i + 1}`}
-                            className="clickable-gallery-image"
-                            onClick={() => {
-                              setFullscreenImages(proj.images);
-                              setFullscreenIndex(i);
-                              setShowSwipeHint(true); // Show the swipe icon
-                            
-                              setTimeout(() => {
-                                setShowSwipeHint(false); // Hide after 2 seconds
-                              }, 2000);
-                            }}
-                          />
-                          {img.caption && <p>{img.caption}</p>}
-                        </div>
-                      ))}
-                    </div>
-  
-                    {/* -- Close Button for Gallery -- */}
-                    <button
-                      className="gallery-toggle-btn"
-                      onClick={() => {
-                        toggleGallery(idx);
-                        setTimeout(() => scrollToId(`project-${proj.title.replace(/\s+/g, '-')}`), 0);
-                      }}
-                    >
-                      Hide Gallery
-                      <img src={upArrowIcon} alt="Collapse" className="arrow-icon" />
-                    </button>
-                  </>
-                )}
-              </>
+              <button
+                className="gallery-toggle-btn"
+                onClick={() => {
+                  setFullscreenImages(proj.images);
+                  setFullscreenIndex(0); // start with first image
+                  setShowSwipeHint(true);
+                  setTimeout(() => setShowSwipeHint(false), 2000);
+                }}
+              >
+                Show Gallery
+                <img src={fullscreenIcon} alt="Expand" className="arrow-icon" />
+              </button>
             )}
           </div>
         ))}
