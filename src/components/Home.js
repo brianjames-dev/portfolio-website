@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import alphaHeadshot from '../images/alpha_headshot.png';
 import DownloadIcon from '../images/download.svg';
 import SendIcon from '../images/send.svg'
@@ -30,8 +29,9 @@ function Home() {
             <h2 className="name">Brian James</h2>
             <p className="subtitle">Full Stack Developer</p>
             <p className="description">
-              Former touring musician and upcoming CS graduate from OSU (Winter 2025).
-              I thrive on solving tough problems, providing pixel-perfect designs, and creating scalable architecture.
+              From touring musician to upcoming CS graduate, 
+              I thrive on solving tough problems, providing clean designs, 
+              and creating scalable architecture in all of my coding endeavors.
             </p>
           </div>
         </div>

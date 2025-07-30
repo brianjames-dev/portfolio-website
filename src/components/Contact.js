@@ -11,7 +11,9 @@ function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState({});
   const [captchaToken, setCaptchaToken] = useState(null);
-
+  const [status, setStatus] = useState(null);
+  const [message, setMessage] = useState("");
+  
   const validate = () => {
     const newErrors = {};
     if (!form.name.trim()) newErrors.name = 'Name is required.';
@@ -24,36 +26,41 @@ function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate() || !captchaToken) {
-      alert("Please complete all fields and verify you're not a robot.");
+      setStatus("error");
+      setMessage("Please complete all fields and verify you're not a robot.");
       return;
     }
   
     try {
-      const response = await fetch('https://7ohwfvw4b9.execute-api.us-west-1.amazonaws.com/default/contactFormHandler', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ...form, captchaToken }),
-      });
+      const response = await fetch(
+        "https://7ohwfvw4b9.execute-api.us-west-1.amazonaws.com/default/contactFormHandler",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...form, captchaToken }),
+        }
+      );
   
       const data = await response.json();
   
       if (response.ok) {
-        alert('Message sent!');
-        setForm({ name: '', email: '', message: '' });
+        setStatus("success");
+        setMessage("Message sent! I'll get back to you soon.");
+        setForm({ name: "", email: "", message: "" });
         setErrors({});
         setCaptchaToken(null);
       } else {
-        console.error(data);
-        alert('Something went wrong. Please try again later.');
+        setStatus("error");
+        setMessage(data.error || "Something went wrong. Please try again later.");
       }
     } catch (err) {
       console.error(err);
-      alert('Failed to send. Check your connection.');
+      setStatus("error");
+      setMessage("Failed to send. Check your internet connection.");
     }
-  };  
+  };
 
+  
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -114,6 +121,12 @@ function Contact() {
               <button type="submit">Send Message</button>
             </div>
           </form>
+
+          {status && (
+            <div className={`form-feedback ${status}`}>
+              {message}
+            </div>
+          )}
         </div>
 
         <div className="contact-right">
