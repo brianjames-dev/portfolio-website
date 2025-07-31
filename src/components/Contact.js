@@ -13,7 +13,8 @@ function Contact() {
   const [captchaToken, setCaptchaToken] = useState(null);
   const [status, setStatus] = useState(null);
   const [message, setMessage] = useState("");
-  
+  const [loading, setLoading] = useState(false);
+
   const validate = () => {
     const newErrors = {};
     if (!form.name.trim()) newErrors.name = 'Name is required.';
@@ -25,11 +26,16 @@ function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    if (loading) return; // Prevent double-clicks
+  
     if (!validate() || !captchaToken) {
       setStatus("error");
       setMessage("Please complete all fields and verify you're not a robot.");
       return;
     }
+  
+    setLoading(true); // Start spinner
   
     try {
       const response = await fetch(
@@ -57,8 +63,11 @@ function Contact() {
       console.error(err);
       setStatus("error");
       setMessage("Failed to send. Check your internet connection.");
+    } finally {
+      setLoading(false); // Stop spinner
     }
   };
+  
 
   
   const handleChange = (e) => {
@@ -70,7 +79,7 @@ function Contact() {
       <div className="contact-card">
         <div className="contact-left">
           <h2>Get In Touch</h2>
-          <p>Feel free to fill the form below, or contact me directly by email.</p>
+          <p>Feel free to fill out the form below, <br></br> or contact me directly by email.</p>
 
           <form onSubmit={handleSubmit} noValidate>
             <label>
@@ -118,7 +127,29 @@ function Contact() {
                 />
               </div>
             </div>
-              <button type="submit">Send Message</button>
+              <button type="submit" disabled={loading}>
+                {loading ? (
+                  <svg
+                    className="loading-spinner"
+                    viewBox="0 0 50 50"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="25"
+                      cy="25"
+                      r="20"
+                      fill="none"
+                      stroke="#F8F3D9"
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                      strokeDasharray="90 150"
+                      strokeDashoffset="0"
+                    />
+                  </svg>
+                ) : (
+                  "Send Message"
+                )}
+              </button>
             </div>
           </form>
 

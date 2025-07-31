@@ -102,6 +102,38 @@ function Projects() {
   const [mouseDownTime, setMouseDownTime] = useState(null);
   const [mouseDownPos, setMouseDownPos] = useState({ x: 0, y: 0 });  
   const mouseWasDraggedRef = useRef(false);
+  const thumbnailRefs = useRef([]);
+
+
+  // Thumbnail row centering when loading new images
+  useEffect(() => {
+    thumbnailRefs.current = [];
+  }, [fullscreenImages]);
+
+  // Auto-scroll for thumbnail row when index changes
+  useEffect(() => {
+    if (
+      fullscreenIndex !== null &&
+      thumbnailRefs.current[fullscreenIndex]
+    ) {
+      setTimeout(() => {
+        const el = thumbnailRefs.current[fullscreenIndex];
+        const container = el?.parentElement;
+        if (!el || !container) return;
+  
+        const containerRect = container.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        const offset =
+          elRect.left - containerRect.left - container.clientWidth / 2 + el.clientWidth / 2;
+  
+        container.scrollTo({
+          left: container.scrollLeft + offset,
+          behavior: 'smooth',
+        });
+      }, 50);
+    }
+  }, [fullscreenIndex]);
+  
 
   // Escape hotkey --> closes fullscreen on desktop
   useEffect(() => {
@@ -139,7 +171,12 @@ function Projects() {
 
   // More scroll lock behavior
   useEffect(() => {
-    const preventScroll = (e) => e.preventDefault();
+    const preventScroll = (e) => {
+      const isInsideThumbnailStrip = e.target.closest('.thumbnail-strip');
+      if (!isInsideThumbnailStrip) {
+        e.preventDefault(); // Only block scrolling if not in thumbnail row
+      }
+    };
   
     if (fullscreenIndex !== null) {
       document.body.addEventListener('touchmove', preventScroll, { passive: false });
@@ -149,6 +186,7 @@ function Projects() {
       document.body.removeEventListener('touchmove', preventScroll);
     };
   }, [fullscreenIndex]);
+  
   
   // preload adjacent images
   useEffect(() => {
@@ -173,8 +211,17 @@ function Projects() {
   
     const handleTouchStart = (e) => {
       if (!e.touches || e.touches.length !== 1) return;
+    
+      // Ignore swipes that start inside thumbnail strip
+      const target = e.target;
+      if (target.closest('.thumbnail-strip')) {
+        lastTouchX = null;
+        return;
+      }
+    
       lastTouchX = e.touches[0].clientX;
     };
+    
   
     const handleTouchMove = (e) => {
       if (lastTouchX === null) return;
@@ -206,6 +253,89 @@ function Projects() {
     };
   }, [fullscreenIndex, fullscreenImages]);
   
+  // thumbnail strip mobile logic
+  useEffect(() => {
+    const strip = document.querySelector('.thumbnail-strip');
+    if (!strip) return;
+  
+    let isDragging = false;
+    let startX;
+    let scrollLeft;
+  
+    const startDrag = (e) => {
+      isDragging = true;
+      startX = e.pageX || e.touches[0].pageX;
+      scrollLeft = strip.scrollLeft;
+    };
+  
+    const drag = (e) => {
+      if (!isDragging) return;
+      const x = e.pageX || e.touches[0].pageX;
+      const walk = x - startX;
+      strip.scrollLeft = scrollLeft - walk;
+    };
+  
+    const stopDrag = () => {
+      isDragging = false;
+    };
+  
+    strip.addEventListener('mousedown', startDrag);
+    strip.addEventListener('touchstart', startDrag);
+  
+    strip.addEventListener('mousemove', drag);
+    strip.addEventListener('touchmove', drag);
+  
+    strip.addEventListener('mouseup', stopDrag);
+    strip.addEventListener('mouseleave', stopDrag);
+    strip.addEventListener('touchend', stopDrag);
+  
+    return () => {
+      strip.removeEventListener('mousedown', startDrag);
+      strip.removeEventListener('touchstart', startDrag);
+      strip.removeEventListener('mousemove', drag);
+      strip.removeEventListener('touchmove', drag);
+      strip.removeEventListener('mouseup', stopDrag);
+      strip.removeEventListener('mouseleave', stopDrag);
+      strip.removeEventListener('touchend', stopDrag);
+    };
+  }, []);  
+  
+  // detect scroll end and re-center
+  useEffect(() => {
+    const strip = document.querySelector('.thumbnail-strip');
+    if (!strip || fullscreenIndex === null) return;
+  
+    let scrollTimeout;
+  
+    const handleScroll = () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      // Wait for 300ms of no scroll activity
+      scrollTimeout = setTimeout(() => {
+        scrollToThumbnail(fullscreenIndex, true); // Smooth recenter
+      }, 1000);
+    };
+  
+    strip.addEventListener('scroll', handleScroll);
+  
+    return () => {
+      strip.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, [fullscreenIndex]);
+  
+  // better centering logic
+  const scrollToThumbnail = (index, smooth = true) => {
+    const el = thumbnailRefs.current[index];
+    const strip = document.querySelector('.thumbnail-strip');
+    if (!el || !strip) return;
+  
+    const elLeft = el.offsetLeft;
+    const elWidth = el.offsetWidth;
+    const stripWidth = strip.offsetWidth;
+  
+    const scrollX = elLeft - (stripWidth / 2) + (elWidth / 2);
+    strip.scrollTo({ left: scrollX, behavior: smooth ? 'smooth' : 'auto' });
+  };
   
 
   const projects = [
@@ -294,7 +424,11 @@ function Projects() {
   return (
     <section id="projects" className="projects" data-snap-target>
       <div className="container">
-        <h2>Projects</h2>
+        <div className="project-header-wrapper">
+          <div className="project-header-card">
+            <h2>Projects</h2>
+          </div>
+        </div>
   
         {/* === PROJECT CARDS LOOP === */}
         {projects.map((proj, idx) => (
@@ -352,9 +486,9 @@ function Projects() {
           className="fullscreen-overlay visible"
           onClick={() => {
             if (isSuperZoomed) {
-              setIsSuperZoomed(false); // Just exit superzoom
+              setIsSuperZoomed(false);
             } else {
-              setFullscreenIndex(null); // Fully close overlay
+              setFullscreenIndex(null);
               setFullscreenImages([]);
             }
           }}
@@ -368,84 +502,107 @@ function Projects() {
             />
           )}
 
-          {/* -- Fullscreen Image -- */}
-          <div
-            className="fullscreen-image-wrapper"
-            onClick={(e) => {
-              const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-              if (isTouch || mouseWasDraggedRef.current) {
-                e.stopPropagation();
-              }
-            }}     
-          >
-            {isSuperZoomed ? (
-              <TransformWrapper
-                doubleClick={{ disabled: true }}
-                pinch={{ disabled: false }}
-                panning={{ velocityDisabled: false }}
-                wheel={{ disabled: true }}
-                initialScale={2.3}
-                minScale={2.3}
-                maxScale={2.3}
-                centerOnInit
-              >
-                <TransformComponent>
-                <div
-                  className="superzoomed"
-                  onMouseDown={(e) => {
-                    setMouseDownTime(Date.now());
-                    setMouseDownPos({ x: e.clientX, y: e.clientY });
-                    mouseWasDraggedRef.current = false;
-                  }}
-                  
-                  onMouseUp={(e) => {
-                    const duration = Date.now() - mouseDownTime;
-                    const distX = Math.abs(e.clientX - mouseDownPos.x);
-                    const distY = Math.abs(e.clientY - mouseDownPos.y);
-                    const movement = Math.sqrt(distX ** 2 + distY ** 2);
-                  
-                    const isShortClick = duration < 200 && movement < 5;
-                  
-                    if (isShortClick) {
-                      e.stopPropagation(); // only block overlay close on short click
-                      setIsSuperZoomed(false); // Exit zoom
-                    } else {
-                      mouseWasDraggedRef.current = true; // mark as dragged
-                    }
-                  }}
-                >                    
-                    <img
-                      src={fullscreenImages[fullscreenIndex]?.src}
-                      alt={fullscreenImages[fullscreenIndex]?.caption || "Fullscreen"}
-                      className="fullscreen-image superzoomed"
-                      style={{ touchAction: 'none' }}
-                    />
-                  </div>
-                </TransformComponent>
-              </TransformWrapper>
-            ) : (
-              <img
-                src={fullscreenImages[fullscreenIndex]?.src}
-                alt={fullscreenImages[fullscreenIndex]?.caption || "Fullscreen"}
-                className="fullscreen-image"
-                style={{
-                  transform: 'scale(1)',
-                  cursor: 'zoom-in',
-                }}
+          {/* -- Centered Image + Caption Container -- */}
+          <div className="fullscreen-center-area">
+              <div
+                className={`fullscreen-image-wrapper ${isSuperZoomed ? 'superzoom-mode' : ''}`}
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent closing overlay
-                  setIsSuperZoomed(true); // Enter zoom
+                  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+                  if (isTouch || mouseWasDraggedRef.current) {
+                    e.stopPropagation();
+                  }
                 }}
-              />
-            )}
+              >
+                {isSuperZoomed ? (
+                  <TransformWrapper
+                    doubleClick={{ disabled: true }}
+                    pinch={{ disabled: false }}
+                    panning={{ velocityDisabled: false }}
+                    wheel={{ disabled: true }}
+                    initialScale={2.3}
+                    minScale={2.3}
+                    maxScale={2.3}
+                    centerOnInit
+                  >
+                    <TransformComponent>
+                      <div
+                        className="superzoomed"
+                        onMouseDown={(e) => {
+                          setMouseDownTime(Date.now());
+                          setMouseDownPos({ x: e.clientX, y: e.clientY });
+                          mouseWasDraggedRef.current = false;
+                        }}
+                        onMouseUp={(e) => {
+                          const duration = Date.now() - mouseDownTime;
+                          const distX = Math.abs(e.clientX - mouseDownPos.x);
+                          const distY = Math.abs(e.clientY - mouseDownPos.y);
+                          const movement = Math.sqrt(distX ** 2 + distY ** 2);
+
+                          const isShortClick = duration < 200 && movement < 5;
+
+                          if (isShortClick) {
+                            e.stopPropagation();
+                            setIsSuperZoomed(false);
+                          } else {
+                            mouseWasDraggedRef.current = true;
+                          }
+                        }}
+                      >
+                        <img
+                          src={fullscreenImages[fullscreenIndex]?.src}
+                          alt={fullscreenImages[fullscreenIndex]?.caption || "Fullscreen"}
+                          className="fullscreen-image superzoomed"
+                          style={{ touchAction: 'none' }}
+                        />
+                      </div>
+                    </TransformComponent>
+                  </TransformWrapper>
+                ) : (
+                  <img
+                    src={fullscreenImages[fullscreenIndex]?.src}
+                    alt={fullscreenImages[fullscreenIndex]?.caption || "Fullscreen"}
+                    className="fullscreen-image"
+                    style={{
+                      transform: 'scale(1)',
+                      cursor: 'zoom-in',
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsSuperZoomed(true);
+                    }}
+                  />
+                )}
+              </div>
+
+              {/* -- Optional Caption -- */}
+              {fullscreenImages[fullscreenIndex]?.caption && (
+                <p className={`fullscreen-caption ${isSuperZoomed ? 'hidden' : ''}`}>
+                  {fullscreenImages[fullscreenIndex].caption}
+                </p>
+              )}
           </div>
 
-          {/* -- Optional Caption -- */}
-          {fullscreenImages[fullscreenIndex]?.caption && (
-            <p className="fullscreen-caption">
-              {fullscreenImages[fullscreenIndex].caption}
-            </p>
-          )}
+          {/* -- Thumbnail Strip (Fixed at bottom) -- */}
+          <div className={`thumbnail-strip ${isSuperZoomed ? 'hidden' : ''}`}>
+            {fullscreenImages.map((img, i) => (
+              <div
+                key={i}
+                className={`thumbnail-container ${i === fullscreenIndex ? 'active' : ''}`}
+                ref={(el) => (thumbnailRefs.current[i] = el)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFullscreenIndex(i);
+                  setIsSuperZoomed(false);
+                }}
+              >
+                <img
+                  src={img.src}
+                  alt={img.caption || `Thumbnail ${i + 1}`}
+                  className="thumbnail-image"
+                />
+              </div>
+            ))}
+          </div>
 
           {/* -- Close Button (X) -- */}
           <button
