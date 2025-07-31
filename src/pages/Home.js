@@ -8,6 +8,7 @@ import InstagramIcon from '../images/instagram_themed.svg';
 import GithubIconHover from '../images/github_themed_hover.svg';
 import LinkedInIconHover from '../images/linkedin_themed_hover.svg';
 import InstagramIconHover from '../images/instagram_themed_hover.svg';
+import '../styles/Home.css'
 
 function Home() {
   return (

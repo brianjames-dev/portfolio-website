@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import menuIcon from '../images/menu.svg';
 import closeIcon from '../images/close.svg';
+import '../styles/Header.css'
 
 let hasAnimatedIn = false;
 

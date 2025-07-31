@@ -1,0 +1,76 @@
+/* ========== Desktop Styles ========== */
+.project-detail-panel {
+    position: relative;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 30px auto;
+    max-width: 960px;
+  
+    opacity: 0;
+    animation: expandFade 0.4s ease-out forwards;
+    transition: max-height 0.4s ease, opacity 0.4s ease;
+
+    background: rgba(235, 229, 194, 0.90);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .project-card.expanded .project-detail-panel {
+    max-height: 1000px;
+    opacity: 1;
+    pointer-events: auto;
+  }  
+
+  @keyframes expandFade {
+    0% {
+      opacity: 0;
+      transform: scale(0.98) translateY(40px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  .project-title {
+    margin: 0 0 20px 0;
+    font-size: 1.4rem;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 28px;
+    background: none;
+    border: none;
+    color: #504B38;
+    cursor: pointer;
+  }
+
+  .show-gallery-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 20px auto 0 auto;
+    background-color: #B9B28A;
+    color: #F8F3D9;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .show-gallery-btn:hover {
+    transform: scale(1.05);
+    background-color: #504B38;
+  }
+
+/* ========== Mobile Styles ========== */
+@media (max-width: 600px) {
+
+}

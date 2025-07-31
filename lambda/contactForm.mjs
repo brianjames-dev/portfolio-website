@@ -67,7 +67,7 @@ export const handler = async (event) => {
         },
         Body: {
           Text: {
-            Data: `Hey ${name},\n\nThanks for checking out out my portfolio, I really appreciate the time. If you're expecting an email back, I'll be replying as soon as I can.\n\nHere’s a copy of what you sent:\n\n"${message}"\n\n— Brian James`,
+            Data: `Hey ${name},\n\nThanks for checking out my portfolio, I really appreciate the time. If you're expecting an email back, I'll be replying as soon as I can.\n\nHere’s a copy of what you sent:\n\n"${message}"\n\n— Brian James`,
           },
         },
       },

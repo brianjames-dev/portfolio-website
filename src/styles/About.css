@@ -1,0 +1,24 @@
+/* ========== Desktop Styles ========== */
+.about-card {
+    border-radius: 10px;
+    max-width: 800px;
+    margin: 0;
+  
+    background: rgba(235, 229, 194, 0.90); /* translucent version of #EBE5C2 */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Optional: adds depth */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Optional: frosty border */
+  }
+  
+  .about .header {
+    margin: 0 0 20px 0;
+    text-align: center;
+  }
+  
+  .about .description {
+    line-height: 1.5;
+  }
+
+/* ========== Mobile Styles ========== */
+@media (max-width: 600px) {
+
+}

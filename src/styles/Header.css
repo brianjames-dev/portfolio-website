@@ -1,0 +1,157 @@
+/* ========== Desktop Styles ========== */
+.site-header {
+    height: var(--header-height, 60px);
+    background: #504B38;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 8px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Logo */
+  .site-header .logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    position: absolute;
+    left: 20px;
+    top: 25%;
+    transform: translateY(-50%);
+  }
+  
+  .site-header .logo a {
+    color: #F8F3D9;
+    text-decoration: none;
+  }
+  
+  /* Nav */
+  .site-header nav {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .site-header nav.hidden-on-load {
+    display: none;
+  }
+  
+  .site-header nav a {
+    margin: 0 var(--nav-margin, 30px);
+    text-decoration: none;
+    color: #F8F3D9;
+    font-weight: 600;
+    font-size: var(--nav-font-size, 1rem);
+    position: relative; /* for bubble overlap */
+    z-index: 1;         /* Ensures text sits above the indicator */
+  
+    transition: color 0.3s ease;
+  }
+  
+  .site-header nav a:hover {
+    color: #B9B28A;
+  }
+  
+  .site-header nav a.active {
+    color: #504B38;
+  }
+  
+  /* Bubble indicator */
+  .bubble-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 32px;
+    border-radius: 10px;
+    background-color: #EBE5C2;
+    width: 0;
+    left: 0;
+    transition: left 0.3s ease, width 0.3s ease, opacity 0.3s ease;
+    z-index: 0;
+    pointer-events: none; /* Prevent bubble from intercepting clicks */
+  }
+  
+  /* Mobile menu icon */
+  .menu-button {
+    display: none;
+    position: absolute;
+    bottom: 5px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 1100;
+  }
+
+/* ========== Mobile Styles ========== */
+@media (max-width: 600px) {
+  .site-header .logo {
+    left: 50%;
+    top: 30%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+  }
+
+  .menu-button {
+    display: block;
+    top: 20%
+  }
+
+  .menu-button img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .site-header nav {
+    display: flex;
+    flex-direction: column;
+    background: #504B38;
+    position: fixed;
+    top: var(--header-height);
+    width: 31%;
+    transform: translateX(170%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 8px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .site-header nav.active {
+    transform: translateX(66%);
+  }
+
+  .site-header nav a {
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    border-top: 1px solid #B9B28A;
+    color: #F8F3D9;
+    text-decoration: none;
+  }
+
+  .site-header nav a.active {
+    color: #504B38;
+  }
+
+  .bubble-indicator {
+    display: block; /* Allow bubble to show when menu is open */
+    border-radius: 0px; /* Match desktop rounded shape */
+    background-color: #EBE5C2; /* Match desktop color */
+    opacity: 0; /* Start hidden, controlled by JS */
+    transition: width 0.3s ease, height 0.3s ease, left 0.3s ease, opacity 0.3s ease; /* Smooth transitions */
+    pointer-events: none; /* Prevent interference with clicks */
+  }
+
+  .site-header nav.active .bubble-indicator {
+    display: block;
+    opacity: 1; /* Show when menu is open */
+    position: absolute; /* Ensure positioning works */
+    bottom: 0; /* Align to bottom of nav items */
+    transform: translateY(50%); /* Center vertically below the link */
+    z-index: 0;
+  }
+
+  .site-header nav:not(.active) .bubble-indicator {
+    display: none; /* Hide bubble when menu is closed */
+  }
+}
