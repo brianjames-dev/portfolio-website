@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { renderTag } from '../utils/renderTag.js';
+import { scrollToProjectCard, scrollToYPosition, scrollPositionMap } from '../utils/scrollToProjectCard.js';
 import githubIcon from '../images/github.svg';
 import '../styles/ProjectCard.css';
 
@@ -14,15 +15,17 @@ function ProjectCard({
   isVisible = true,
 }) {
   const ref = useRef();
+  const previousY = useRef(null);
 
-  // Report position for scroll restoration after collapse
   useEffect(() => {
     if (!isExpanded && ref.current && reportPosition) {
       const rect = ref.current.getBoundingClientRect();
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
-
+      const top = rect.top + scrollTop;
+  
+      previousY.current = top; // Store previous position
       reportPosition(project.id, {
-        top: rect.top + scrollTop,
+        top,
         height: rect.height,
       });
     }
@@ -37,9 +40,7 @@ function ProjectCard({
       layout
       className={`project-card${isExpanded ? ' expanded' : ''}`}
       id={`project-${project.id}`}
-      style={{
-        willChange: 'transform',
-      }}
+      style={{ willChange: 'transform' }}
       transition={{
         layout: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
         duration: 0.5,
@@ -71,29 +72,50 @@ function ProjectCard({
 
       <motion.hr layout="position" className="project-divider" layoutId={`divider-${project.id}`} />
 
-      {/* === Shared Body === */}
+      {/* === Description Section === */}
       {isExpanded ? (
-        <motion.div
-          layout="position"
-          className="project-description fade-transition"
-          layoutId={`desc-${project.id}`}
-        >
-          <p>
-            <strong>Problem:</strong>{' '}
-            {project.problem || 'This project was built to solve a real-world issue.'}
-          </p>
-          <p>
-            <strong>Design Goals:</strong> Deliver a user-first, responsive solution leveraging
-            modern tools.
-          </p>
-          <p>
-            <strong>My Process:</strong> Worked full-stack from schema to frontend. Overcame
-            performance and API integration challenges.
-          </p>
-          <p>
-            <strong>Results:</strong> Improved user engagement and streamlined interaction.
-          </p>
-        </motion.div>
+        <>
+          <motion.div
+            layout="position"
+            className="project-description fade-transition"
+            layoutId={`desc-${project.id}`}
+          >
+            <p><strong>Subtitle:</strong> {project.expanded?.subtitle || 'Expanded project view.'}</p>
+          </motion.div>
+
+          {/* === Expanded Sections (No Gallery Images Here) === */}
+          <motion.div layout className="project-section">
+            <h4>Problem & Motivation</h4>
+            <p>{project.expanded?.problem}</p>
+          </motion.div>
+
+          <motion.div layout className="project-section">
+            <h4>Tools & Stack</h4>
+            <ul className="tools-list">
+              {project.expanded?.tools?.map((tool, i) => <li key={i}>{tool}</li>)}
+            </ul>
+          </motion.div>
+
+          <motion.div layout className="project-section">
+            <h4>Key Features</h4>
+            {project.expanded?.features?.map((feat, i) => (
+              <div key={i} className="feature-item">
+                <strong>{feat.title}</strong>
+                <p>{feat.content}</p>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.div layout className="project-section">
+            <h4>Final Polish</h4>
+            <p>{project.expanded?.polish}</p>
+          </motion.div>
+
+          <motion.div layout className="project-section">
+            <h4>Reflection & Learnings</h4>
+            <p>{project.expanded?.reflection}</p>
+          </motion.div>
+        </>
       ) : (
         <motion.p
           layout="position"
@@ -113,13 +135,28 @@ function ProjectCard({
                 Show Gallery
               </button>
             )}
-            <button className="learn-more-btn" onClick={onCollapse}>
+            <button
+              className="learn-more-btn"
+              onClick={() => {
+                onCollapse();
+                const y = scrollPositionMap.get(project.id);
+                if (y !== undefined) {
+                  setTimeout(() => scrollToYPosition(y), 300); // delay until collapse finishes
+                }
+              }}
+            >
               Close
             </button>
           </>
         ) : (
           project.images?.length > 0 && (
-            <button onClick={onExpand} className="learn-more-btn">
+            <button
+              onClick={() => {
+                scrollToProjectCard(project.id);
+                onExpand();
+              }}
+              className="learn-more-btn"
+            >
               Learn More
             </button>
           )

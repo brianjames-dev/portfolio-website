@@ -35,6 +35,7 @@ const projects = [
       github: 'https://github.com/brianjames-dev/portfolio-website',
       images: [],
     },
+
     {
       id: 'bookiebot',
       title: 'BookieBot',
@@ -54,7 +55,62 @@ const projects = [
         { src: bookiebot8, caption: 'Food Log Snapshot' },
         { src: bookiebot9, caption: 'Autonomous Logging' },
       ],
+      expanded: {
+        subtitle: 'LLM-powered Discord agent for seamless budget tracking',
+        heroMedia: [
+          bookiebot2,
+          bookiebot5,
+          bookiebot6,
+        ],
+        problem: `
+          BookieBot was born out of a personal need: my girlfriend and I wanted a fast, natural way to track spending without disrupting our day.
+          Traditional spreadsheets worked well for organizing data *after the fact*, but logging purchases in the moment required too many clicks, tabs, and copy-pastes.
+          The core goal? Remove friction between making a purchase and recording it correctly — turning budgeting into a habit, not a hassle.
+        `,
+        tools: [
+          'Python',
+          'Discord.py',
+          'OpenAI API',
+          'Google Sheets API',
+          'Railway (Hosting)',
+          'Fully async architecture with asyncio'
+        ],
+        features: [
+          {
+            title: '🗣️ Natural Language Expense Logging',
+            content: `BookieBot accepts everyday messages like “Starbucks 6.45 breakfast” and parses them into structured data entries. 
+            It intelligently identifies the category, amount, and merchant using GPT-powered parsing.`
+          },
+          {
+            title: '🧠 LLM-as-a-Translator',
+            content: `Instead of traditional input forms, BookieBot uses OpenAI’s language model to translate messy input into clean JSON. 
+            This unlocked flexibility: new commands didn’t require code rewrites — just better prompt design.`
+          },
+          {
+            title: '📊 Google Sheets Integration',
+            content: `Each entry is logged directly to our personalized Google Sheets budget. 
+            For future versions, this system can be expanded to generate templated sheets per user.`
+          },
+          {
+            title: '⚡ Full Async Performance',
+            content: `The bot runs fully asynchronously, allowing it to quickly process incoming messages, call the OpenAI API, 
+            and follow up with confirmation — without blocking or delays.`
+          }
+        ],
+        polish: `
+          - Designed for clean, contextual responses inside Discord — no command syntax to memorize  
+          - Error-tolerant: if parsing fails, the bot politely asks for clarification  
+          - Highly maintainable: prompt-based architecture makes it easy to tune behavior without changing code  
+          - Optimized for daily use: fast responses, smart defaults, and minimal effort required
+        `,
+        reflection: `
+          BookieBot was a huge step forward in learning real-world LLM integration — not just for fun, but for solving a practical, recurring pain point.
+          It changed how I think about building tools: sometimes the best UI is the one you don’t have to learn.
+          If I had more time, I’d package it into a mobile app with user-authenticated Google Sheet syncing and visual dashboards.
+        `
+      }
     },
+    
     {
       id: 'skinpro',
       title: 'SkinPro',
@@ -78,6 +134,7 @@ const projects = [
         { src: skinpro12, caption: '🔔 Alerts Tab (Follow-up Reminders)' },
       ],
     },
+
     {
       id: 'nes-emulator',
       title: 'NES Emulator',
@@ -88,6 +145,7 @@ const projects = [
       github: 'https://github.com/brianjames-dev/OSUcapstone',
       images: [],
     },
+    
     {
       id: 'task-checklist',
       title: 'Task Checklist',
