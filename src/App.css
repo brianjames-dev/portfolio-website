@@ -55,6 +55,10 @@ h1, h2, h3 {
   padding: 20px;
 }
 
+.container-shifted {
+  transform: translateX(-220px); /* Matches the expanded card's rightward growth */
+}
+
 /* Default section style */
 section {
   color: #504B38;
@@ -80,7 +84,6 @@ section.about,
 section.projects {
   min-height: 0;
   padding-top: 0;
-  margin: 40px 0;
   scroll-margin-top: var(--header-height); /* Offset scroll without needing padding */
 }
 

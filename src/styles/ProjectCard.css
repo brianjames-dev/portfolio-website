@@ -1,14 +1,73 @@
+/* /styles/ProjectCard.css */
+
 /* ========== Desktop Styles ========== */
 .project-card {
   padding: 20px;
-  margin: 20px 0;
   border-radius: 10px;
   scroll-margin-top: var(--header-height);
+
+  max-width: 800px;
+  width: 100%;
+  margin: 20px auto;
+  overflow: visible;
+
+  will-change: transform, opacity;
+  contain: layout paint; /* helps layout isolation */
+  transition: none; /* prevent CSS transitions from interfering */
+
   background: rgba(235, 229, 194, 0.90); /* translucent version of #EBE5C2 */
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* slightly deeper shadow for depth */
   border: 1px solid rgba(255, 255, 255, 0.2); /* optional frosty border */
 }
-  
+
+.project-content {
+  transition: opacity 0.3s ease;
+}
+
+.project-card.expanded {
+  margin: 0 auto;
+  max-width: 1500px; /* 800 + 200px */
+}
+
+.project-bg-fade {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(235, 229, 194, 0.90);;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.project-card .project-content,
+.project-card .project-header,
+.project-card .project-subheader,
+.project-card .project-stack,
+.project-card .project-divider,
+.project-card .project-description,
+.project-card .project-actions {
+  position: relative;
+  z-index: 1;
+  will-change: transform, opacity;
+}
+
+.project-fade-wrapper {
+  position: relative;
+  z-index: 0;
+}
+
+.project-fade-bg {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(235, 229, 194, 0.90);
+  border-radius: inherit;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.project-fade-bg.visible {
+  opacity: 1;
+}
+
 .project-header-wrapper {
   display: flex;
   justify-content: center;
@@ -149,6 +208,13 @@
   height: 20px;
   transition: transform 0.3s ease;
 }
+
+.project-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
 /* ========== Mobile Styles ========== */
 @media (max-width: 600px) {
 

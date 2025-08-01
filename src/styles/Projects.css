@@ -1,3 +1,5 @@
+/* /styles/Projects.css */
+
 /* ========== Desktop Styles ========== */
 .projects h2 {
     margin: 0px;
@@ -233,9 +235,31 @@
   display: block;
 }
 
+.project-expanded-outside {
+  position: absolute;
+  width: 100%;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.project-expanded-outside .expanded-card-wrapper {
+  pointer-events: auto;
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.project-placeholder {
+  visibility: hidden;
+}
+
 
 /* ========== Mobile Styles ========== */
 @media (max-width: 600px) {
+  .project-expanded-outside .expanded-card-wrapper {
+    width: 100%;
+    padding: 0 20px;
+  }
+
   .clickable-gallery-image {
     cursor: zoom-in;
     transition: transform 0.2s ease;
