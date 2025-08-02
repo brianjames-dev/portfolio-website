@@ -12,6 +12,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
   const mouseWasDraggedRef = useRef(false);
   const thumbnailRefs = useRef([]);
   const hasShownSwipeHintRef = useRef(false);
+  const hintTimeoutRef = useRef(null);
 
 
   const scrollToThumbnail = (i, smooth = true) => {
@@ -156,19 +157,24 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
 
   // Show swipe hint once
   useEffect(() => {
-    if (index !== null && images.length > 0 && !hasShownSwipeHintRef.current) {
+    // Show the hint only once per full page load (session)
+    if (
+      index !== null &&
+      images.length > 0 &&
+      !hasShownSwipeHintRef.current
+    ) {
       hasShownSwipeHintRef.current = true;
       setShowSwipeHint(true);
-      const timeout = setTimeout(() => setShowSwipeHint(false), 2000);
-      return () => clearTimeout(timeout);
+  
+      hintTimeoutRef.current = setTimeout(() => {
+        setShowSwipeHint(false);
+      }, 2000);
     }
+  
+    return () => {
+      clearTimeout(hintTimeoutRef.current);
+    };
   }, [index, images]);
-
-  useEffect(() => {
-    if (index === null) {
-      hasShownSwipeHintRef.current = false;
-    }
-  }, [index]);
 
   // Keyboard escape
   useEffect(() => {

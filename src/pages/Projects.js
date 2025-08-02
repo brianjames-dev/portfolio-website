@@ -11,6 +11,7 @@ function Projects() {
   const [projectPositions, setProjectPositions] = useState({});
   const [expandedCardHeight, setExpandedCardHeight] = useState(0);
   const expandedRef = useRef();
+  
 
   useEffect(() => {
     if (selectedProject) {

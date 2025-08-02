@@ -296,7 +296,8 @@
     z-index: 10;
     pointer-events: none;
 
-    animation: swipeWave 2s ease-in-out infinite;
+    animation: swipeWave 2s ease-in-out 1;
+    animation-fill-mode: forwards;
   }
   
   .superzoomed {
