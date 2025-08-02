@@ -10,6 +10,37 @@ function Header({ activeSection }) {
   const navRef = useRef(null);
   const bubbleRef = useRef(null);
 
+  // Handle header hide/show on scroll
+  useEffect(() => {
+    const header = document.querySelector('.site-header');
+    if (!header) return;
+  
+    let lastScrollY = window.scrollY;
+    const threshold = 10;
+  
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastScrollY;
+  
+      if (Math.abs(scrollDelta) < threshold) return;
+  
+      if (scrollDelta > 0) {
+        // Scrolling down
+        header.classList.add('hidden');
+        setMenuOpen(false);
+      } else {
+        // Scrolling up
+        header.classList.remove('hidden');
+      }
+  
+      lastScrollY = currentScrollY;
+    };
+  
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+
   // Handle mobile menu animation
   useEffect(() => {
     const nav = navRef.current;
