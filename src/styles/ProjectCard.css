@@ -20,13 +20,50 @@
   border: 1px solid rgba(255, 255, 255, 0.2); /* optional frosty border */
 }
 
+.fade-transition {
+  will-change: opacity, transform;
+}
+
+.custom-bullet-list {
+  padding-left: 1.2rem;
+  margin-top: 0rem;
+  list-style-type: disc;
+}
+
+.custom-bullet-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.feature-list {
+  padding-left: 1.2rem;
+  margin-top: 0.5rem;
+  list-style: none;
+}
+
+.feature-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.project-section h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.project-section p {
+  line-height: 1.5;
+  margin: 0 0 0.7rem 0;
+}
+
 .project-content {
   transition: opacity 0.3s ease;
 }
 
 .project-card.expanded {
   margin: 0 auto;
-  max-width: 1500px; /* 800 + 200px */
+  max-width: 1000px; /* 800 + 200px */
 }
 
 .project-bg-fade {
@@ -123,7 +160,7 @@
 .project-description {
   font-size: 0.95rem;
   line-height: 1.5;
-  margin: 20px 0 0px 0;
+  margin: 20px 0 0 0;
 }
 
 .project-stack {
@@ -186,7 +223,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  margin: 20px auto 0 auto;
+  margin: 0 auto 0 auto;
   background-color: #B9B28A;
   color: #F8F3D9;
   padding: 10px 14px;
@@ -195,18 +232,12 @@
   font-weight: 500;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
   
 .learn-more-btn:hover {
   transform: scale(1.05);
   background-color: #504B38;
-}
-  
-.arrow-icon {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.3s ease;
 }
 
 .project-actions {

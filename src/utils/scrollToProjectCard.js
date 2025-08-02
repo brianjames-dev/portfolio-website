@@ -5,7 +5,7 @@ export function scrollToProjectCard(cardId, yOffset = -60) {
   const element = document.getElementById(`project-${cardId}`);
   if (element) {
     const y = element.getBoundingClientRect().top + window.scrollY;
-    scrollPositionMap.set(cardId, y); // 💾 Save original position BEFORE expanding
+    scrollPositionMap.set(cardId, y);
 
     window.scrollTo({
       top: y + yOffset,

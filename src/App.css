@@ -36,7 +36,6 @@ html, body {
 
 body.no-scroll {
   overflow: hidden;
-  /* position: fixed;  added */
   height: 100%;
   width: 100%;
 }
@@ -56,7 +55,7 @@ h1, h2, h3 {
 }
 
 .container-shifted {
-  transform: translateX(-220px); /* Matches the expanded card's rightward growth */
+  transform: translateX(-120px); /* Matches the expanded card's rightward growth */
 }
 
 /* Default section style */

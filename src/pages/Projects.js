@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import ProjectCard from '../components/ProjectCard';
 import ProjectGallery from '../components/ProjectGallery';
 import projects from '../data/projects';
@@ -10,7 +10,6 @@ function Projects() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [projectPositions, setProjectPositions] = useState({});
   const [expandedCardHeight, setExpandedCardHeight] = useState(0);
-
   const expandedRef = useRef();
 
   useEffect(() => {
@@ -24,9 +23,9 @@ function Projects() {
     setFullscreenIndex(0);
   };
 
-  const reportPosition = (id, { top, height }) => {
+  const reportPosition = useCallback((id, { top, height }) => {
     setProjectPositions((prev) => ({ ...prev, [id]: { top, height } }));
-  };
+  }, []);  
 
   useLayoutEffect(() => {
     if (expandedRef.current && selectedProject) {

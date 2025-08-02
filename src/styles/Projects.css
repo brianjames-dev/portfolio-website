@@ -244,12 +244,14 @@
 
 .project-expanded-outside .expanded-card-wrapper {
   pointer-events: auto;
-  width: 1200px;
+  width: 1000px;
   margin: 0 auto;
 }
 
 .project-placeholder {
   visibility: hidden;
+  /* transition: height 0.4s ease; */
+  will-change: height;
 }
 
 

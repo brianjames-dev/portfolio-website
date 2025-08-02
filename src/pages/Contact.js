@@ -120,7 +120,7 @@ function Contact() {
             </label>
 
             <div className="contact-submit-row">
-            <div class="recaptcha-wrapper">
+            <div className="recaptcha-wrapper">
               <div className="recaptcha">
                 <ReCAPTCHA
                   sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
