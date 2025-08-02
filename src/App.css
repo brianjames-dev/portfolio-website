@@ -93,7 +93,7 @@ section.projects {
   }
 
   section.home {
-    min-height: 100svh;
+    min-height: 100lvh;
     align-items: flex-start;
   }
 

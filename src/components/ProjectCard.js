@@ -1,6 +1,8 @@
+// ProjectCard.js
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { renderTag } from '../utils/renderTag.js';
+import { renderTechStackItem } from '../utils/renderTechStackItem';
 import {
   scrollToProjectCard,
   scrollToYPosition,
@@ -45,10 +47,8 @@ function ProjectCard({
   }, [isExpanded]);
 
   useEffect(() => {
-    if (isExpanded) return; // Don't report when expanded
-  
+    if (isExpanded) return;
     let timeout;
-  
     const report = () => {
       if (ref.current && reportPosition) {
         const rect = ref.current.getBoundingClientRect();
@@ -59,21 +59,17 @@ function ProjectCard({
         });
       }
     };
-  
     const handleResize = () => {
       clearTimeout(timeout);
-      timeout = setTimeout(report, 200); // Debounce to avoid spamming
+      timeout = setTimeout(report, 200);
     };
-  
-    report(); // Initial position
+    report();
     window.addEventListener('resize', handleResize);
-  
     return () => {
       clearTimeout(timeout);
       window.removeEventListener('resize', handleResize);
     };
   }, [isExpanded, reportPosition, project.id]);
-  
 
   const lockScroll = () => {
     document.body.classList.add('no-scroll');
@@ -89,13 +85,10 @@ function ProjectCard({
     lockScroll();
     const y = scrollPositionMap.get(project.id);
     if (y !== undefined) scrollToYPosition(y);
-
     setShowExpandedContent(false);
     setTimeout(() => {
       onCollapse();
-      setTimeout(() => {
-        unlockScroll();
-      }, CARD_ANIMATION_DURATION * 1000);
+      setTimeout(() => unlockScroll(), CARD_ANIMATION_DURATION * 1000);
     }, CONTENT_FADE_DURATION * 1000);
   };
 
@@ -115,27 +108,31 @@ function ProjectCard({
         ease: [0.4, 0, 0.2, 1],
       }}
     >
-      {/* === Header === */}
-      <motion.div layout="position" className="project-header" layoutId={`header-${project.id}`}>
-        <motion.h3 layout="position" className="title" layoutId={`title-${project.id}`}>
-          {project.title}
-        </motion.h3>
-        <a className="githubIcon" href={project.github} target="_blank" rel="noopener noreferrer">
-          <img src={githubIcon} alt="GitHub" className="github-link-icon" />
-        </a>
-      </motion.div>
+      {/* Collapsed Header */}
+      {!isExpanded && (
+        <>
+          <motion.div layout="position" className="project-header" layoutId={`header-${project.id}`}>
+            <motion.h3 layout="position" className="title" layoutId={`title-${project.id}`}>
+              {project.title}
+            </motion.h3>
+            <a className="githubIcon" href={project.github} target="_blank" rel="noopener noreferrer">
+              <img src={githubIcon} alt="GitHub" className="github-link-icon" />
+            </a>
+          </motion.div>
 
-      <motion.div layout="position" className="project-subheader" layoutId={`subheader-${project.id}`}>
-        <p>{project.team}</p>
-      </motion.div>
+          <motion.div layout="position" className="project-subheader" layoutId={`subheader-${project.id}`}>
+            <p>{project.team}</p>
+          </motion.div>
 
-      <motion.div layout="position" className="project-stack" layoutId={`stack-${project.id}`}>
-        {project.stack.map((tech, i) => renderTag(tech, i))}
-      </motion.div>
+          <motion.div layout="position" className="project-stack" layoutId={`stack-${project.id}`}>
+            {project.stack.map((tech, i) => renderTag(tech, i))}
+          </motion.div>
 
-      <motion.hr layout="position" className="project-divider" layoutId={`divider-${project.id}`} />
+          <motion.hr layout="position" className="project-divider" layoutId={`divider-${project.id}`} />
+        </>
+      )}
 
-      {/* === Collapsed Content === */}
+      {/* Collapsed Content */}
       <AnimatePresence mode="wait">
         {!isExpanded && collapsedShouldRender && (
           <motion.div
@@ -144,19 +141,11 @@ function ProjectCard({
             initial={{ opacity: 0 }}
             animate={{ opacity: showCollapsedContent ? 1 : 0 }}
             exit={{ opacity: 0 }}
-            transition={{ 
-              duration: CONTENT_FADE_DURATION,
-              delay: CARD_ANIMATION_DURATION,
-            }}
+            transition={{ duration: CONTENT_FADE_DURATION, delay: CARD_ANIMATION_DURATION }}
           >
-            <motion.p
-              layout="position"
-              className="project-description fade-transition"
-              layoutId={`desc-${project.id}`}
-            >
+            <motion.p layout="position" className="project-description fade-transition" layoutId={`desc-${project.id}`}>
               {project.description}
             </motion.p>
-
             {project.images?.length > 0 && (
               <div className="project-actions">
                 <button
@@ -176,7 +165,7 @@ function ProjectCard({
         )}
       </AnimatePresence>
 
-      {/* === Expanded Content === */}
+      {/* Expanded Content */}
       {isExpanded && (
         <motion.div
           key="expanded-block"
@@ -185,6 +174,19 @@ function ProjectCard({
           animate={{ opacity: showExpandedContent ? 1 : 0 }}
           transition={{ duration: CONTENT_FADE_DURATION }}
         >
+          {/* Expanded Title / Subtitle / GitHub */}
+          <div className="expanded-header">
+            <div className="expanded-title-row">
+              <h3>{project.expanded?.title}</h3>
+              {project.expanded?.github && (
+                <a className="githubIcon" href={project.expanded.github} target="_blank" rel="noopener noreferrer">
+                  <img src={githubIcon} alt="GitHub" className="github-link-icon" />
+                </a>
+              )}
+            </div>
+            <p className="expanded-subtitle">{project.expanded?.subtitle}</p>
+          </div>
+
           {[
             ['Short Description', project.expanded?.description],
             ['Background', project.expanded?.background],
@@ -207,11 +209,8 @@ function ProjectCard({
                 className="project-section"
                 initial={{ opacity: 0, y: 80 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 50}}
-                transition={{ 
-                  duration: CONTENT_FADE_DURATION,
-                  delay: idx * 0.2, //cascading effect
-                }}
+                exit={{ opacity: 0, y: 50 }}
+                transition={{ duration: CONTENT_FADE_DURATION, delay: idx * 0.2 }}
               >
                 <h4>{label}</h4>
                 {label === 'Key Features' ? (
@@ -222,30 +221,45 @@ function ProjectCard({
                       </li>
                     ))}
                   </ul>
-                ) : (() => {
-                  const lines = content.split('\n').map(line => line.trim()).filter(Boolean);
-                  const bulletLines = lines.filter(line => line.startsWith('-'));
-                  const normalLines = lines.filter(line => !line.startsWith('-'));
-                  return (
-                    <>
-                      {normalLines.map((line, i) => (
-                        <p key={`p-${i}`}>{line}</p>
-                      ))}
-                      {bulletLines.length > 0 && (
-                        <ul className="custom-bullet-list">
-                          {bulletLines.map((line, i) => (
-                            <li key={`b-${i}`}>{line.replace(/^-/, '').trim()}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </>
-                  );
-                })()}
+                ) : label === 'Architecture & Design' ? (
+                  <>
+                    {content
+                      .split('\n')
+                      .map((line, i) => line.trim())
+                      .filter(Boolean)
+                      .map((line, i) => <p key={`arch-p-${i}`}>{line}</p>)}
+                
+                    <div className="tech-stack-item">
+                      {project.stack.map((tech, i) => renderTechStackItem(tech, i))}
+                    </div>
+                  </>
+                ) : (
+                
+                  (() => {
+                    const lines = content.split('\n').map(line => line.trim()).filter(Boolean);
+                    const bulletLines = lines.filter(line => line.startsWith('-'));
+                    const normalLines = lines.filter(line => !line.startsWith('-'));
+                    return (
+                      <>
+                        {normalLines.map((line, i) => (
+                          <p key={`p-${i}`}>{line}</p>
+                        ))}
+                        {bulletLines.length > 0 && (
+                          <ul className="custom-bullet-list">
+                            {bulletLines.map((line, i) => (
+                              <li key={`b-${i}`}>{line.replace(/^-/, '').trim()}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </>
+                    );
+                  })()
+                )}
               </motion.div>
             );
           })}
 
-          {/* === Expanded Buttons === */}
+          {/* Expanded Actions */}
           <div className="project-actions">
             {project.images?.length > 0 && (
               <button className="learn-more-btn" onClick={() => onGalleryClick(project.images)}>

@@ -56,6 +56,18 @@ const projects = [
         { src: bookiebot9, caption: 'Autonomous Logging' },
       ],
       expanded: {
+        title: `
+          BookieBot - AI Agent
+        `,
+
+        subtitle: `
+          Solo Project
+        `,
+
+        github: `
+          https://github.com/brianjames-dev/bookiebot
+        `,
+
         description: `
           BookieBot is an autonomous AI finance chatbot that allows users to log, query, and visualize their expenses with natural language and supports multi-user workflows, role-based access, and over thirty analytics intents.
         `,

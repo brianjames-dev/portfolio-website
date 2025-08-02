@@ -188,12 +188,16 @@
 /* ========== Mobile Styles ========== */
 @media (max-width: 600px) {
   .home-card {
+    justify-content: center;
+    align-items: center;
+    min-height: 100lvh;
     margin-top: 0;
-    scroll-margin-top: 60px;
+    scroll-margin-top: 0px;
     background: rgba(248, 243, 217, 0.75);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0); /* Optional: adds depth */
     border: 1px solid rgba(255, 255, 255, .2); /* Optional: frosty border */
 
+    /* border: dotted 1px red; */
   }
 
   .home-content {
