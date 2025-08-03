@@ -31,7 +31,9 @@ import closeIcon from '../images/close.svg';
 import discordIcon from '../images/discord.svg';
 import fullscreenIcon from '../images/fullscreen.svg';
 import swipeIcon from '../images/swipe.svg';
-
+import galleryIcon from '../images/gallery.svg';
+import githubLight from '../images/github_light.svg';
+import closeDark from '../images/close_dark.svg';
 
 const iconMap = {
   'React': reactIcon,
@@ -63,6 +65,11 @@ const iconMap = {
   'Download': downloadIcon,
   'Express.js': expressIcon,
   'Discord.py': discordIcon,
+  'Fullscreen' : fullscreenIcon,
+  'Swipe' : swipeIcon,
+  'Gallery' : galleryIcon,
+  'GitLight' : githubLight,
+  'CloseDark' : closeDark
 };
 
 export default iconMap;

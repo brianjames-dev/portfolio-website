@@ -11,15 +11,17 @@ const purposeMap = {
 };
 
 export function renderTechStackItem(tech, i) {
-  const icon = iconMap[tech];
-  const purpose = purposeMap[tech] || 'Used in project';
-
-  return (
-    <div key={i} className="tech-stack-item">
-      {icon && <img src={icon} alt={tech} className="tech-icon" />}
-      <div className="tech-description">
-        <strong>{tech}</strong>: {purpose}
+    const icon = iconMap[tech];
+    const purpose = purposeMap[tech] || 'Used in project';
+  
+    return (
+      <div key={i} className="tech-stack-item">
+        <div className="tech-tag" title={tech}>
+          {icon && <img src={icon} alt={tech} className="tech-icon" />}
+          <span className="tech-name">{tech}</span>
+        </div>
+        <p className="tech-purpose">{purpose}</p>
       </div>
-    </div>
-  );
-}
+    );
+  }
+  

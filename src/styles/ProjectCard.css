@@ -1,171 +1,39 @@
 /* /styles/ProjectCard.css */
 
-/* ========== Desktop Styles ========== */
+/* ========== Card Container ========== */
 .project-card {
   padding: 20px;
   border-radius: 10px;
   scroll-margin-top: var(--header-height);
-
   max-width: 800px;
   width: 100%;
   margin: 20px auto;
   overflow: visible;
-
   will-change: transform, opacity;
-  contain: layout paint; /* helps layout isolation */
-  transition: none; /* prevent CSS transitions from interfering */
-
-  background: rgba(235, 229, 194, 0.90); /* translucent version of #EBE5C2 */
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* slightly deeper shadow for depth */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* optional frosty border */
-}
-
-.expanded-header {
-  margin-bottom: 1.5rem;
-}
-
-.expanded-title-row {
-  position: relative;
-  display: flex;
-  min-height: 20px;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 1;
-  will-change: transform, opacity;
-}
-
-.expanded-title-row h3 {
-  margin: 0;
-  font-size: 1.4rem;
-}
-
-.expanded-subtitle {
-  margin: 0 0 20px 0;
-  font-size: 1rem;
-  font-style: italic;
-}
-
-.tech-timeline {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.tech-stack-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.tech-icon {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  margin-top: 2px;
-}
-
-.tech-description {
-  line-height: 1.5;
-}
-
-.fade-transition {
-  will-change: opacity, transform;
-}
-
-.custom-bullet-list {
-  padding-left: 1.2rem;
-  margin-top: 0rem;
-  list-style-type: disc;
-}
-
-.custom-bullet-list li {
-  margin-bottom: 0.5rem;
-  line-height: 1.5;
-}
-
-.feature-list {
-  padding-left: 1.2rem;
-  margin-top: 0.5rem;
-  list-style: none;
-}
-
-.feature-list li {
-  margin-bottom: 0.5rem;
-  line-height: 1.5;
-}
-
-.project-section h4 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.project-section p {
-  line-height: 1.5;
-  margin: 0 0 0.7rem 0;
-}
-
-.project-content {
-  transition: opacity 0.3s ease;
+  contain: layout paint;
+  transition: none;
+  background: rgba(235, 229, 194, 0.90);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .project-card.expanded {
+  max-width: 1000px;
   margin: 0 auto;
-  max-width: 1000px; /* 800 + 200px */
 }
 
-.project-bg-fade {
-  position: absolute;
-  inset: 0;
-  background-color: rgba(235, 229, 194, 0.90);;
-  border-radius: inherit;
-  z-index: 0;
-}
-
-.project-card .project-content,
-.project-card .project-header,
-.project-card .project-subheader,
-.project-card .project-stack,
-.project-card .project-divider,
-.project-card .project-description,
-.project-card .project-actions {
-  position: relative;
-  z-index: 1;
-  will-change: transform, opacity;
-}
-
-.project-fade-wrapper {
-  position: relative;
-  z-index: 0;
-}
-
-.project-fade-bg {
-  position: absolute;
-  inset: 0;
-  background-color: rgba(235, 229, 194, 0.90);
-  border-radius: inherit;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.project-fade-bg.visible {
-  opacity: 1;
-}
-
+/* ========== Header (Collapsed + Expanded) ========== */
 .project-header-wrapper {
   display: flex;
   justify-content: center;
 }
 
 .project-header-card {
-  display: inline-block; /* Shrinks to fit content */
+  display: inline-block;
   border-radius: 10px;
   padding: 10px 16px;
-
   background: rgba(248, 243, 217, 0.75);
-  border: 1px solid rgba(255, 255, 255, .2); /* Optional: frosty border */
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .project-header {
@@ -181,6 +49,13 @@
   line-height: 1;
 }
 
+.project-subheader p {
+  margin: 0 0 20px 0;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+/* ========== GitHub Icon ========== */
 .githubIcon {
   display: flex;
   align-items: center;
@@ -200,22 +75,130 @@
   height: auto;
 }
 
-.project-subheader p {
+/* ========== Expanded View Header ========== */
+.expanded-header {
+  margin-bottom: 1.5rem;
+}
+
+.expanded-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  min-height: 20px;
+  z-index: 1;
+  will-change: transform, opacity;
+}
+
+.expanded-title-row h3 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.expanded-subtitle {
   margin: 0 0 20px 0;
   font-size: 1rem;
   font-style: italic;
 }
 
-.project-description {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin: 20px 0 0 0;
+/* ========== Expanded View Buttons ========== */
+.expanded-buttons-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+  margin: 0;
 }
 
+.expanded-top-button,
+.learn-more-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: #B9B28A;
+  color: #F8F3D9;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.expanded-top-button:hover,
+.learn-more-btn:hover {
+  transform: scale(1.05);
+  background-color: #504B38;
+}
+
+.button-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.close-button-icon {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.close-button-icon:hover {
+  transform: scale(1.1);
+}
+
+/* ========== Stack / Timeline ========== */
 .project-stack {
   margin: 10px 0 20px 0;
 }
-  
+
+.tech-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.tech-stack-item {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.tech-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(185, 178, 138, 0.25);
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.tech-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.tech-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #504B38;
+}
+
+.tech-purpose {
+  font-size: 0.95rem;
+  color: #504B38;
+  line-height: 1.5;
+  margin: 0 !important;
+}
+
+/* ========== Tag List ========== */
 .tag {
   display: inline-flex;
   align-items: center;
@@ -227,12 +210,12 @@
   font-size: 0.9rem;
   font-weight: 700;
   min-height: 24px;
-  position: relative;
   padding-left: 28px;
+  position: relative;
   cursor: pointer;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
-  
+
 .tag:hover {
   transform: scale(1.05);
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
@@ -246,14 +229,63 @@
   top: 50%;
   transform: translateY(-50%);
 }
-  
+
 .tag-icon {
   width: 18px;
   height: 18px;
 }
-  
+
 .tag.no-icon {
   padding-left: 12px;
+}
+
+/* ========== Project Description + Sections ========== */
+.project-description {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 20px 0 0 0;
+}
+
+.project-section h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.project-section p {
+  line-height: 1.5;
+  margin: 0 0 0.7rem 0;
+}
+
+.feature-list {
+  padding-left: 1.2rem;
+  margin-top: 0.5rem;
+  list-style: none;
+}
+
+.feature-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.custom-bullet-list {
+  padding-left: 1.2rem;
+  margin-top: 0;
+  list-style-type: disc;
+}
+
+.custom-bullet-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+/* ========== Section Fade Effects ========== */
+.fade-transition {
+  will-change: opacity, transform;
+}
+
+.project-content {
+  transition: opacity 0.3s ease;
 }
 
 .project-divider {
@@ -263,39 +295,47 @@
   align-items: center;
   border: none;
   height: 1px;
-  
   margin: 0;
 }
 
-.learn-more-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin: 0 auto 0 auto;
-  background-color: #B9B28A;
-  color: #F8F3D9;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
-}
-  
-.learn-more-btn:hover {
-  transform: scale(1.05);
-  background-color: #504B38;
+/* ========== Expanded Background Layers ========== */
+.project-fade-wrapper {
+  position: relative;
+  z-index: 0;
 }
 
+.project-fade-bg {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(235, 229, 194, 0.90);
+  border-radius: inherit;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.project-fade-bg.visible {
+  opacity: 1;
+}
+
+.project-bg-fade {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(235, 229, 194, 0.90);
+  border-radius: inherit;
+  z-index: 0;
+}
+
+/* ========== Actions ========== */
 .project-actions {
   display: flex;
+  justify-content: center;
+
   gap: 10px;
   margin-top: 20px;
 }
 
 /* ========== Mobile Styles ========== */
 @media (max-width: 600px) {
-
+  /* Add mobile overrides here */
 }

@@ -8,8 +8,10 @@ import {
   scrollToYPosition,
   scrollPositionMap,
 } from '../utils/scrollToProjectCard.js';
-import githubIcon from '../images/github.svg';
 import '../styles/ProjectCard.css';
+import ProjectExpandedView from './ProjectExpandedView';
+import iconMap from '../data/iconMap.js';
+
 
 const CARD_ANIMATION_DURATION = 0.5;
 const CONTENT_FADE_DURATION = 0.5;
@@ -116,7 +118,7 @@ function ProjectCard({
               {project.title}
             </motion.h3>
             <a className="githubIcon" href={project.github} target="_blank" rel="noopener noreferrer">
-              <img src={githubIcon} alt="GitHub" className="github-link-icon" />
+              <img src={iconMap['GitHub']} alt="GitHub" className="github-link-icon" />
             </a>
           </motion.div>
 
@@ -167,110 +169,12 @@ function ProjectCard({
 
       {/* Expanded Content */}
       {isExpanded && (
-        <motion.div
-          key="expanded-block"
-          className="expanded-block"
-          initial={false}
-          animate={{ opacity: showExpandedContent ? 1 : 0 }}
-          transition={{ duration: CONTENT_FADE_DURATION }}
-        >
-          {/* Expanded Title / Subtitle / GitHub */}
-          <div className="expanded-header">
-            <div className="expanded-title-row">
-              <h3>{project.expanded?.title}</h3>
-              {project.expanded?.github && (
-                <a className="githubIcon" href={project.expanded.github} target="_blank" rel="noopener noreferrer">
-                  <img src={githubIcon} alt="GitHub" className="github-link-icon" />
-                </a>
-              )}
-            </div>
-            <p className="expanded-subtitle">{project.expanded?.subtitle}</p>
-          </div>
-
-          {[
-            ['Short Description', project.expanded?.description],
-            ['Background', project.expanded?.background],
-            ['The Problem', project.expanded?.challenge],
-            ['Goal', project.expanded?.goal],
-            ['Research & Approach', project.expanded?.research],
-            ['Architecture & Design', project.expanded?.architecture],
-            ['Key Features', project.expanded?.features],
-            ['Impact', project.expanded?.impact],
-            ['Reflection & Learnings', project.expanded?.reflection],
-            ['What’s Next', project.expanded?.future],
-          ].map(([label, content], idx) => {
-            if (!content) return null;
-            const key = `section-${label}`;
-
-            return (
-              <motion.div
-                key={key}
-                layout
-                className="project-section"
-                initial={{ opacity: 0, y: 80 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 50 }}
-                transition={{ duration: CONTENT_FADE_DURATION, delay: idx * 0.2 }}
-              >
-                <h4>{label}</h4>
-                {label === 'Key Features' ? (
-                  <ul className="feature-list">
-                    {content.map((feat, i) => (
-                      <li key={i}>
-                        <strong>{feat.title}</strong>: {feat.content}
-                      </li>
-                    ))}
-                  </ul>
-                ) : label === 'Architecture & Design' ? (
-                  <>
-                    {content
-                      .split('\n')
-                      .map((line, i) => line.trim())
-                      .filter(Boolean)
-                      .map((line, i) => <p key={`arch-p-${i}`}>{line}</p>)}
-                
-                    <div className="tech-stack-item">
-                      {project.stack.map((tech, i) => renderTechStackItem(tech, i))}
-                    </div>
-                  </>
-                ) : (
-                
-                  (() => {
-                    const lines = content.split('\n').map(line => line.trim()).filter(Boolean);
-                    const bulletLines = lines.filter(line => line.startsWith('-'));
-                    const normalLines = lines.filter(line => !line.startsWith('-'));
-                    return (
-                      <>
-                        {normalLines.map((line, i) => (
-                          <p key={`p-${i}`}>{line}</p>
-                        ))}
-                        {bulletLines.length > 0 && (
-                          <ul className="custom-bullet-list">
-                            {bulletLines.map((line, i) => (
-                              <li key={`b-${i}`}>{line.replace(/^-/, '').trim()}</li>
-                            ))}
-                          </ul>
-                        )}
-                      </>
-                    );
-                  })()
-                )}
-              </motion.div>
-            );
-          })}
-
-          {/* Expanded Actions */}
-          <div className="project-actions">
-            {project.images?.length > 0 && (
-              <button className="learn-more-btn" onClick={() => onGalleryClick(project.images)}>
-                Show Gallery
-              </button>
-            )}
-            <button className="learn-more-btn" onClick={handleClose}>
-              Close
-            </button>
-          </div>
-        </motion.div>
+        <ProjectExpandedView
+          project={project}
+          onGalleryClick={onGalleryClick}
+          handleClose={handleClose}
+          showExpandedContent={showExpandedContent}
+        />
       )}
     </motion.div>
   );

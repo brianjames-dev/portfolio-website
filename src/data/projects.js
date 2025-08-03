@@ -69,7 +69,7 @@ const projects = [
         `,
 
         description: `
-          BookieBot is an autonomous AI finance chatbot that allows users to log, query, and visualize their expenses with natural language and supports multi-user workflows, role-based access, and over thirty analytics intents.
+          BookieBot is an <strong>autonomous AI finance chatbot</strong> that allows users to log, query, and visualize their expenses with <strong>natural language</strong> and supports <strong>multi-user workflows, role-based access, and over thirty analytics intents</strong>.
         `,
         
         background: `
@@ -77,28 +77,22 @@ const projects = [
         `,
       
         challenge: `
-        We didn’t have a logging problem — we had a convenience problem.
+        We didn’t have a logging problem — we had <strong>a convenience problem</strong>.
         Even though we were motivated to budget together, the workflow wasn’t compatible with daily life. In moments when we were busy or distracted — grabbing coffee, getting groceries — we’d forget to log things, lose receipts, and the data would slowly drift further away from cohesive and correct. To keep things simple in the beginning, my partner would drop a message into our shared Discord with the amount and item of their purchase, which I would gradually enter into the shared spreadsheet. At a certain point, I realized I was working harder, and not smarter. What if budgeting was as simple as chatting?
         `,
       
         goal: `
-          Build a personal finance tool that could remain simple, accessible, and truly frictionless. I wanted the bot to do the following:
+          Build a personal finance tool that could remain <strong>simple, accessible, and truly frictionless</strong>. I wanted the bot to do the following:
           - Understand natural language commands
           - Log expenses automatically into Google Sheets with accurate information
           - Live inside a space we already used: Discord
         `,
       
         research: `
-        Most existing solutions (YNAB, Mint, Notion templates) were either too rigid or required dedicated UI interaction. I didn’t want an additional learning curve for either of us. I realized that a GPT-powered Discord bot could act as the "interface" — something we could message naturally and forget about. I wanted the bot to accept normal dialogue for quick use (e.g., $12 sushi) and for each user to get immediate confirmation. Mostly, I wanted to not have to touch the spreadsheet at all other than to review at the end of the month, and to easily tune behaviors by updating the prompt rather than rewriting code. 
+        Most existing solutions (YNAB, Mint, Notion templates) were either too rigid or required dedicated UI interaction. I didn’t want an additional learning curve for either of us. I realized that a <strong>GPT-powered Discord bot</strong> could act as the "interface" — something we could message naturally and forget about. I wanted the bot to <strong>accept normal dialogue</strong> for quick use (e.g., $12 sushi) and for each user to get immediate confirmation. Mostly, I wanted to not have to touch the spreadsheet at all other than to review at the end of the month, and to <strong>easily tune behaviors by updating the prompt</strong> rather than rewriting code. 
         `,
       
         architecture: `
-          BookieBot is built using:
-          - Python + Discord.py for a reactive bot experience
-          - OpenAI API for natural language parsing (into structured JSON)
-          - Google Sheets API to log directly to our budget template
-          - Fully async architecture for speed and without blocking
-          - Railway for simple, scalable hosting
         `,
       
         features: [
@@ -127,7 +121,7 @@ const projects = [
         `,
       
         reflection: `
-          BookieBot taught me what practical LLM integration looks like, and showed me that the best tools often feel invisible and leave users with an easy, immediate solution to a practical problem. Creating BookieBot taught me:
+          BookieBot taught me what practical LLM integration looks like, and showed me that the <strong>best tools often feel invisible</strong> and leave users with an easy, immediate solution to a practical problem. Creating BookieBot taught me:
           - How to structure prompts for reliability
           - Where LLMs outperform traditional parsers
           - How async design creates responsiveness
@@ -135,7 +129,7 @@ const projects = [
         `,
       
         future: `
-        BookieBot is still evolving. It’s not just a bot; it’s the foundation of a personal finance agent. Future directions include:
+        BookieBot is still evolving. It’s not just a bot; it’s the foundation of a <strong>personal finance agent</strong>. Future directions include:
         - Mobile dashboard with custom Google Sheet templates
         - Authenticated multi-user mode
         - Visual insights powered by GPT summaries
@@ -166,6 +160,23 @@ const projects = [
         { src: skinpro11, caption: '🖨️ Finished Prescription Preview (Printable)' },
         { src: skinpro12, caption: '🔔 Alerts Tab (Follow-up Reminders)' },
       ],
+      expanded: {
+        title: `
+          SkinPro - Fullstack Desktop Application/Database
+        `,
+
+        subtitle: `
+          Contractual Project - Apotheca Day Spa
+        `,
+
+        github: `
+          https://github.com/brianjames-dev/SkinPro
+        `,
+
+        description: `
+          Full-stack desktop app for spa operations: manages 300+ client records and 2,000+ appointments, with QR-based mobile photo uploads, PDF prescription generator, and responsive Tkinter UI. Saved 1,000+ hours/year and $3,000+ in costs.
+        `,
+      }
     },
 
     {
