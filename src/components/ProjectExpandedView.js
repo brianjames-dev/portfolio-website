@@ -3,6 +3,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import iconMap from '../data/iconMap.js';
 import { renderTechStackItem } from '../utils/renderTechStackItem';
+import { renderContentBlock } from '../utils/renderContentBlock';
+import '../styles/BookieBot.css';
 
 const CONTENT_FADE_DURATION = 0.5;
 
@@ -34,7 +36,7 @@ function ProjectExpandedView({ project, onGalleryClick, handleClose, showExpande
           {project.images?.length > 0 && (
             <button className="expanded-top-button" onClick={() => onGalleryClick(project.images)}>
               <img src={iconMap['Gallery']} alt="Gallery" className="button-icon" />
-              Show Gallery
+              Gallery
             </button>
           )}
           {project.expanded?.github && (
@@ -49,75 +51,65 @@ function ProjectExpandedView({ project, onGalleryClick, handleClose, showExpande
         </div>
       </div>
 
-      {[ 
+      {[
         ['Short Description', project.expanded?.description],
         ['Background', project.expanded?.background],
         ['The Problem', project.expanded?.challenge],
         ['Goal', project.expanded?.goal],
         ['Research & Approach', project.expanded?.research],
-        ['Architecture & Design', project.expanded?.architecture],
-        ['Key Features', project.expanded?.features],
+        ['Tech Stack', project.expanded?.techStack],
+        ['Features', project.expanded?.features],
         ['Impact', project.expanded?.impact],
         ['Reflection & Learnings', project.expanded?.reflection],
-        ['What’s Next', project.expanded?.future],
+        ['What’s Next?', project.expanded?.future],
       ].map(([label, content], idx) => {
         if (!content) return null;
         const key = `section-${label}`;
 
         return (
-          <motion.div
-            key={key}
-            layout
-            className="project-section"
-            initial={{ opacity: 0, y: 80 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            transition={{ duration: CONTENT_FADE_DURATION, delay: idx * 0.2 }}
-          >
-            <h4>{label}</h4>
-            {label === 'Key Features' ? (
-              <ul className="feature-list">
-                {content.map((feat, i) => (
-                  <li key={i}>
-                    <strong>{feat.title}</strong>: {feat.content}
-                  </li>
-                ))}
-              </ul>
-            ) : label === 'Architecture & Design' ? (
-              <>
-                {content
-                  .split('\n')
-                  .map((line, i) => line.trim())
-                  .filter(Boolean)
-                  .map((line, i) => (
-                    <p key={`arch-p-${i}`} dangerouslySetInnerHTML={{ __html: line }} />
-                  ))}
-                <div className="tech-timeline">
-                  {project.stack.map((tech, i) => renderTechStackItem(tech, i))}
-                </div>
-              </>
-            ) : (
-              (() => {
-                const lines = content.split('\n').map(line => line.trim()).filter(Boolean);
-                const bulletLines = lines.filter(line => line.startsWith('-'));
-                const normalLines = lines.filter(line => !line.startsWith('-'));
-                return (
-                  <>
-                    {normalLines.map((line, i) => (
-                      <p key={`p-${i}`} dangerouslySetInnerHTML={{ __html: line }} />
-                    ))}
-                    {bulletLines.length > 0 && (
-                      <ul className="custom-bullet-list">
-                        {bulletLines.map((line, i) => (
-                          <li key={`b-${i}`} dangerouslySetInnerHTML={{ __html: line.replace(/^-/, '').trim() }} />
-                        ))}
-                      </ul>
-                    )}
-                  </>
-                );
-              })()
-            )}
-          </motion.div>
+          <React.Fragment key={key}>
+            {label !== 'Short Description' && <div className="section-divider" />}
+            <motion.div
+              layout
+              className="project-section"
+              initial={{ opacity: 0, y: 80 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              transition={{ duration: CONTENT_FADE_DURATION, delay: idx * 0.2 }}
+            >
+              <h4>{label}</h4>
+              {label === 'Tech Stack' ? (
+                <>
+                  <div className="tech-timeline">
+                    {project.stack.map((tech, i) => renderTechStackItem(tech, i))}
+                  </div>
+                  {project.expanded?.techStack?.map?.((block, i) => renderContentBlock(block, i))}
+                </>
+              ) : Array.isArray(content) ? (
+                content.map((block, i) => renderContentBlock(block, i))
+              ) : (
+                (() => {
+                  const lines = content.split('\n').map(line => line.trim()).filter(Boolean);
+                  const bulletLines = lines.filter(line => line.startsWith('-'));
+                  const normalLines = lines.filter(line => !line.startsWith('-'));
+                  return (
+                    <>
+                      {normalLines.map((line, i) => (
+                        <p key={`p-${i}`} dangerouslySetInnerHTML={{ __html: line }} />
+                      ))}
+                      {bulletLines.length > 0 && (
+                        <ul className="custom-bullet-list">
+                          {bulletLines.map((line, i) => (
+                            <li key={`b-${i}`} dangerouslySetInnerHTML={{ __html: line.replace(/^-/, '').trim() }} />
+                          ))}
+                        </ul>
+                      )}
+                    </>
+                  );
+                })()
+              )}
+            </motion.div>
+          </React.Fragment>
         );
       })}
 
@@ -125,10 +117,11 @@ function ProjectExpandedView({ project, onGalleryClick, handleClose, showExpande
         {project.images?.length > 0 && (
           <button className="learn-more-btn" onClick={() => onGalleryClick(project.images)}>
             <img src={iconMap['Gallery']} alt="Gallery" className="button-icon" />
-            Show Gallery
+            Gallery
           </button>
         )}
         <button className="learn-more-btn" onClick={handleClose}>
+          <img src={iconMap['Collapse']} alt="Collapse" className="button-icon" />
           Close
         </button>
       </div>

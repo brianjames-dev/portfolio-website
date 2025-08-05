@@ -34,6 +34,8 @@ import swipeIcon from '../images/swipe.svg';
 import galleryIcon from '../images/gallery.svg';
 import githubLight from '../images/github_light.svg';
 import closeDark from '../images/close_dark.svg';
+import infoIcon from '../images/info.svg';
+import collapseIcon from '../images/collapse.svg';
 
 const iconMap = {
   'React': reactIcon,
@@ -69,7 +71,9 @@ const iconMap = {
   'Swipe' : swipeIcon,
   'Gallery' : galleryIcon,
   'GitLight' : githubLight,
-  'CloseDark' : closeDark
+  'CloseDark' : closeDark,
+  'Info' : infoIcon,
+  'Collapse' : collapseIcon
 };
 
 export default iconMap;

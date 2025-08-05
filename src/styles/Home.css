@@ -100,6 +100,7 @@
   .home-action-buttons button {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     background-color: #B9B28A;
     color: #F8F3D9;

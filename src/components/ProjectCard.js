@@ -152,6 +152,14 @@ function ProjectCard({
               <div className="project-actions">
                 <button
                   className="learn-more-btn"
+                  onClick={() => onGalleryClick(project.images)}
+                >
+                  <img src={iconMap['Gallery']} alt="Gallery" className="button-icon" />
+                  Gallery
+                </button>
+
+                <button
+                  className="learn-more-btn"
                   onClick={() => {
                     lockScroll();
                     scrollToProjectCard(project.id);
@@ -159,6 +167,7 @@ function ProjectCard({
                     setTimeout(unlockScroll, CARD_ANIMATION_DURATION * 1000);
                   }}
                 >
+                  <img src={iconMap['Info']} alt="Info" className="button-icon" />
                   Learn More
                 </button>
               </div>
