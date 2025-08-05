@@ -49,7 +49,7 @@ const bookiebot = {
     { src: bookiebot4, caption: 'Intent Description + Sample Query' },
     { src: bookiebot5, caption: 'Expense Breakdown (Matplotlib)' },
     { src: bookiebot6, caption: 'Spending Calendar View (Matplotlib)' },
-    { src: bookiebot7, caption: 'Expenses on a Specific Day Matplotlib)' },
+    { src: bookiebot7, caption: 'Expenses on a Specific Day (Matplotlib)' },
     { src: bookiebot8, caption: 'Food Log Snapshot' },
     { src: bookiebot9, caption: 'Autonomous Logging' },
     { src: bookiebot1, caption: 'BookieBot Discord Profile Pic' },

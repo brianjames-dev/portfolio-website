@@ -48,6 +48,38 @@ function ProjectCard({
     return () => clearTimeout(timeout);
   }, [isExpanded]);
 
+  // 🔁 Repeatedly report position during initial expansion (images might load late)
+  useEffect(() => {
+    if (!isExpanded || !ref.current || !reportPosition) return;
+
+    let intervalId = null;
+    let startTime = Date.now();
+
+    const report = () => {
+      const rect = ref.current.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      reportPosition(project.id, {
+        top: rect.top + scrollTop,
+        height: rect.height,
+      });
+    };
+
+    report(); // First immediate call
+
+    intervalId = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      if (elapsed >= 10000) {
+        clearInterval(intervalId);
+        return;
+      }
+      report();
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isExpanded, reportPosition, project.id]);
+
   useEffect(() => {
     if (isExpanded) return;
     let timeout;

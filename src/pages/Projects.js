@@ -11,7 +11,6 @@ function Projects() {
   const [projectPositions, setProjectPositions] = useState({});
   const [expandedCardHeight, setExpandedCardHeight] = useState(0);
   const expandedRef = useRef();
-  
 
   useEffect(() => {
     if (selectedProject) {
@@ -24,9 +23,36 @@ function Projects() {
     setFullscreenIndex(0);
   };
 
-  const reportPosition = useCallback((id, { top, height }) => {
-    setProjectPositions((prev) => ({ ...prev, [id]: { top, height } }));
-  }, []);  
+  const reportPosition = useCallback(
+    (id, { top, height }) => {
+      setProjectPositions((prev) => ({ ...prev, [id]: { top, height } }));
+
+      // If this is the selected/expanded project, force re-measure
+      if (selectedProject?.id === id && expandedRef.current) {
+        const newHeight = expandedRef.current.offsetHeight;
+        if (newHeight !== expandedCardHeight) {
+          setExpandedCardHeight(newHeight);
+        }
+      }
+    },
+    [selectedProject, expandedCardHeight]
+  );
+
+  // Re-check height of floating expanded card while it's open
+  useEffect(() => {
+    if (!selectedProject) return;
+
+    const intervalId = setInterval(() => {
+      if (expandedRef.current) {
+        const newHeight = expandedRef.current.offsetHeight;
+        if (newHeight !== expandedCardHeight) {
+          setExpandedCardHeight(newHeight);
+        }
+      }
+    }, 500); // Adjust interval if needed
+
+    return () => clearInterval(intervalId);
+  }, [selectedProject, expandedCardHeight]);
 
   useLayoutEffect(() => {
     if (expandedRef.current && selectedProject) {
@@ -34,16 +60,45 @@ function Projects() {
     }
   }, [selectedProject]);
 
+  useEffect(() => {
+    if (selectedProject) {
+      console.log('Updated expanded card height:', expandedCardHeight);
+    }
+  }, [expandedCardHeight]);
+
+  useEffect(() => {
+    if (!selectedProject) return;
+  
+    const handleResize = () => {
+      const elem = document.getElementById(`project-${selectedProject.id}`);
+      if (!elem) return;
+  
+      const rect = elem.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  
+      setProjectPositions((prev) => ({
+        ...prev,
+        [selectedProject.id]: {
+          top: rect.top + scrollTop,
+          height: rect.height,
+        },
+      }));
+    };
+  
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [selectedProject]);
+
   return (
     <section id="projects" className="projects" data-snap-target>
-      <div   className={`container ${selectedProject ? 'container-shifted' : ''}`}>
+      <div className={`container ${selectedProject ? 'container-shifted' : ''}`}>
         <div className="project-header-wrapper">
           <div className="project-header-card">
             <h2>Projects</h2>
           </div>
         </div>
 
-        {/* === Project Cards === */}
+        {/* === Project Cards with Placeholder === */}
         {projects.map((proj) => {
           const isThisSelected = selectedProject?.id === proj.id;
           const placeholderHeight = isThisSelected ? expandedCardHeight : undefined;
@@ -70,13 +125,13 @@ function Projects() {
         })}
       </div>
 
-      {/* === Expanded Card Floating at Y-offset === */}
+      {/* === Floating Expanded Card === */}
       {selectedProject && projectPositions[selectedProject.id] && (
         <div
           ref={expandedRef}
           className="project-expanded-outside"
           style={{
-            top: projectPositions[selectedProject.id].top
+            top: projectPositions[selectedProject.id].top,
           }}
         >
           <div className="expanded-card-wrapper">
