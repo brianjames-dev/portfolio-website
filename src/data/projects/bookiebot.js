@@ -28,8 +28,7 @@ import memoryErrorHandling from '../../images/bookiebot_imgs/storyboard_imgs/mem
 import multiUser from '../../images/bookiebot_imgs/storyboard_imgs/multi_user.png';
 import nrmlDialogueConf from '../../images/bookiebot_imgs/storyboard_imgs/normal_dialogue_confirmation.png';
 import easyBudgeting from '../../images/bookiebot_imgs/storyboard_imgs/easy_budgeting.png';
-import naturalLanguageLogging1 from '../../images/bookiebot_imgs/storyboard_imgs/natural_language_logging1.png';
-import naturalLanguageLogging2 from '../../images/bookiebot_imgs/storyboard_imgs/natural_language_logging2.png';
+import naturalLanguageLogging from '../../images/bookiebot_imgs/storyboard_imgs/natural_language_logging.png';
 import structurePromptsReliable from '../../images/bookiebot_imgs/storyboard_imgs/structure_prompts_reliable.png';
 import techStack from '../../images/bookiebot_imgs/storyboard_imgs/techstack.png';
 import understandingCmds from '../../images/bookiebot_imgs/storyboard_imgs/understanding_cmds.png';
@@ -67,16 +66,16 @@ const bookiebot = {
     `,
     description: [
       {
+        type: 'text',
+        className: 'desc-text',
+        content: `
+          BookieBot is an <strong>autonomous AI finance chatbot</strong> that allows users to log, query, and visualize their expenses with <strong>natural language</strong> and supports <strong>multi-user workflows, role-based access, and over thirty analytics intents.</strong>
+        `
+      },
+      {
         type: 'group',
         className: 'desc-block',
         blocks: [
-          {
-            type: 'text',
-            className: 'desc-text',
-            content: `
-              BookieBot is an <strong>autonomous AI finance chatbot</strong> that allows users to log, query, and visualize their expenses with <strong>natural language</strong> and supports <strong>multi-user workflows, role-based access, and over thirty analytics intents.</strong>
-            `
-          },
           {
             type: 'image',
             className: 'desc-bookiebot-hero-img',
@@ -137,76 +136,58 @@ const bookiebot = {
     ],
       
     research: [
-        {
-          type: 'group',
-          className: 'research-row row-1',
-          blocks: [
-            {
-              type: 'text',
-              className: 'research-text research-text-row1',
-              content: `Most existing solutions (YNAB, Mint, Notion templates) were either too rigid or required dedicated UI interaction. I didn’t want an additional learning curve for either of us. I realized that a <strong>GPT-powered Discord bot</strong> could act as the "interface" — something we could message naturally and forget about.`
-            },
-            {
-              type: 'group',
-              className: 'img-wrapper img-right',
-              blocks: [
-                {
-                  type: 'image',
-                  className: 'research-img gpt-powered-img',
-                  src: GPTpowered,
-                  alt: 'GPT-powered interface'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          type: 'group',
-          className: 'research-row row-2',
-          blocks: [
-            {
-              type: 'group',
-              className: 'img-wrapper img-left',
-              blocks: [
-                {
-                  type: 'image',
-                  className: 'research-img natural-lang-img',
-                  src: nrmlDialogueConf,
-                  alt: 'Natural language logging'
-                }
-              ]
-            },
-            {
-              type: 'text',
-              className: 'research-text research-text-row2',
-              content: `I wanted the bot to accept normal dialogue for quick use (e.g., $12 sushi) and for each user to get immediate confirmation.`
-            }
-          ]
-        },
-        {
-          type: 'group',
-          className: 'research-row row-3',
-          blocks: [
-            {
-              type: 'text',
-              className: 'research-text research-text-row3',
-              content: `Mostly, I wanted to not have to touch the spreadsheet at all other than to review at the end of the month, and to easily tune behaviors by updating the prompt rather than rewriting code.`
-            },
-            {
-              type: 'group',
-              className: 'img-wrapper img-right',
-              blocks: [
-                {
-                  type: 'image',
-                  className: 'research-img prompt-structure-img',
-                  src: easyBudgeting,
-                  alt: 'Structure prompts for reliability'
-                }
-              ]
-            }
-          ]
-        }
-      ],        
+      {
+        type: 'text',
+        className: 'research-text',
+        content: `Most existing solutions (YNAB, Mint, Notion templates) were either too rigid or required dedicated UI interaction. I didn’t want an additional learning curve for either of us. I realized that a <strong>GPT-powered Discord bot</strong> could act as the "interface" — something we could message naturally and forget about.`
+      },
+      {
+        type: 'group',
+        className: 'research-img-block',
+        blocks: [
+          {
+            type: 'image',
+            className: 'research-img-center gpt-powered-img',
+            src: GPTpowered,
+            alt: 'GPT-powered interface'
+          }
+        ]
+      },
+      {
+        type: 'text',
+        className: 'research-text',
+        content: `I wanted the bot to accept normal dialogue for quick use (e.g., $12 sushi) and for each user to get immediate confirmation.`
+      },
+      {
+        type: 'group',
+        className: 'research-img-block',
+        blocks: [
+          {
+            type: 'image',
+            className: 'research-img-center natural-lang-img',
+            src: nrmlDialogueConf,
+            alt: 'Natural language logging'
+          }
+        ]
+      },
+      {
+        type: 'text',
+        className: 'research-text',
+        content: `Mostly, I wanted to not have to touch the spreadsheet at all other than to review at the end of the month, and to easily tune behaviors by updating the prompt rather than rewriting code.`
+      },
+      {
+        type: 'group',
+        className: 'research-img-block',
+        blocks: [
+          {
+            type: 'image',
+            className: 'research-img-center prompt-structure-img',
+            src: easyBudgeting,
+            alt: 'Structure prompts for reliability'
+          }
+        ]
+      }
+    ],      
       
     techStack: [
       {
@@ -245,7 +226,7 @@ const bookiebot = {
             {
               type: 'image',
               className: 'feature-img sheets-sync-img',
-              src: naturalLanguageLogging2,
+              src: naturalLanguageLogging,
               alt: 'Google Sheets Sync',
               caption: 'Google Sheets Sync: Each expense is logged into a clean, timestamped row in our shared Google Sheet — no human editing required.'
             },

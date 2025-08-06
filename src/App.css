@@ -3,6 +3,18 @@
 /* ========== Desktop Styles ========== */
 :root {
   --header-height: 60px;
+
+  --color-bg: #F8F3D9;
+  --color-text: #504B38;
+  --color-accent: #B9B28A;
+  --color-secondary: #EBE5C2;
+}
+
+[data-theme='dark'] {
+  --color-bg: #2B2B2B;        
+  --color-text: #F8F3D9;
+  --color-accent: #8A845F;
+  --color-secondary: #3E3A2A;
 }
 
 #tsparticles {
@@ -41,7 +53,12 @@ body.no-scroll {
 }
 
 button {
-  font-weight: 500;
+  font-weight: 700;
+  background-color: #B9B28A;
+}
+
+button:hover {
+  background-color: #504B38;
 }
 
 h1, h2, h3 {
