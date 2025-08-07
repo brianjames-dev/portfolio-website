@@ -214,28 +214,28 @@ const bookiebot = {
               className: 'feature-img natural-lang2-img',
               src: GPTcloudToJson,
               alt: 'Natural Language Logging',
-              caption: 'Natural Language Logging: Messages like "Target 18.43 groceries" are interpreted by GPT, categorized, and converted to JSON.'
+              caption: '<strong>Natural Language Logging:</strong><br> Messages like "Target 18.43 groceries" are interpreted by GPT, categorized, and converted to JSON.'
             },
             {
               type: 'image',
               className: 'feature-img llm-translator-img',
               src: brainCircuit,
               alt: 'LLM-as-a-Translator',
-              caption: 'LLM-as-a-Translator: Instead of hard-coded commands, GPT handles linguistic flexibility.'
+              caption: '<strong>LLM-as-a-Translator:</strong><br> Instead of hard-coded commands, GPT handles linguistic flexibility.'
             },
             {
               type: 'image',
               className: 'feature-img sheets-sync-img',
               src: naturalLanguageLogging,
               alt: 'Google Sheets Sync',
-              caption: 'Google Sheets Sync: Each expense is logged into a clean, timestamped row in our shared Google Sheet — no human editing required.'
+              caption: '<strong>Google Sheets Sync:</strong><br> Each expense is logged into a clean, timestamped row in our shared Google Sheet — no human editing required.'
             },
             {
               type: 'image',
               className: 'feature-img fast-async-img',
               src: lightningBookiebot,
               alt: 'Fast & Async',
-              caption: 'Fast & Async: Thanks to asyncio, responses are snappy and never block on API calls or logging.'
+              caption: '<strong>Fast & Async:</strong><br> Thanks to asyncio, responses are snappy and never block on API calls or logging.'
             }
           ]
         }

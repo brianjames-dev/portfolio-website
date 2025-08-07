@@ -2,9 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { renderTag } from '../utils/renderTag.js';
-import { renderTechStackItem } from '../utils/renderTechStackItem';
 import {
-  scrollToProjectCard,
   scrollToYPosition,
   scrollPositionMap,
 } from '../utils/scrollToProjectCard.js';
@@ -194,7 +192,6 @@ function ProjectCard({
                   className="learn-more-btn"
                   onClick={() => {
                     lockScroll();
-                    scrollToProjectCard(project.id);
                     onExpand();
                     setTimeout(unlockScroll, CARD_ANIMATION_DURATION * 1000);
                   }}

@@ -3,6 +3,7 @@ import ProjectCard from '../components/ProjectCard';
 import ProjectGallery from '../components/ProjectGallery';
 import projects from '../data/projects';
 import '../styles/Projects.css';
+import { scrollToProjectCard } from '../utils/scrollToProjectCard.js';
 
 function Projects() {
   const [fullscreenIndex, setFullscreenIndex] = useState(null);
@@ -12,6 +13,25 @@ function Projects() {
   const [expandedCardHeight, setExpandedCardHeight] = useState(0);
   const expandedRef = useRef();
 
+  const handleExpand = (proj) => {
+    // If no card is open, scroll and expand immediately
+    if (!selectedProject) {
+      scrollToProjectCard(proj.id);
+      setSelectedProject(proj);
+      return;
+    }
+  
+    // If clicking the same card, do nothing
+    if (selectedProject.id === proj.id) return;
+  
+    // Otherwise: close current, wait for collapse, scroll, then expand
+    setSelectedProject(null);
+    setTimeout(() => {
+      scrollToProjectCard(proj.id); // scroll after layout resets
+      setSelectedProject(proj);
+    }, 600); // Match animation delay
+  };
+  
   useEffect(() => {
     if (selectedProject) {
       console.log('Expanded top:', projectPositions[selectedProject.id]);
@@ -114,7 +134,7 @@ function Projects() {
                 key={proj.id}
                 project={proj}
                 isExpanded={false}
-                onExpand={() => setSelectedProject(proj)}
+                onExpand={() => handleExpand(proj)}
                 onCollapse={() => setSelectedProject(null)}
                 onGalleryClick={() => onGalleryClick(proj.images)}
                 isVisible={!selectedProject || selectedProject.id !== proj.id}

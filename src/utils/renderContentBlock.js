@@ -34,7 +34,9 @@ export function renderContentBlock(block, i) {
           src={block.src}
           alt={block.alt || ''}
         />
-        {block.caption && <figcaption>{block.caption}</figcaption>}
+        {block.caption && (
+          <figcaption dangerouslySetInnerHTML={{ __html: block.caption }} />
+        )}
       </figure>
     );
   }

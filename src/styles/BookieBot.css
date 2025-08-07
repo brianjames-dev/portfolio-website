@@ -536,18 +536,22 @@
 
     .natural-lang2-img {
       width: 95% !important;
+      margin: 0 auto 30px auto;
     }
 
     .llm-translator-img {
       width: 75% !important;
+      margin: 0 auto 30px auto;
     }
 
     .sheets-sync-img {
       width: 80% !important;
+      margin: 0 auto 30px auto;
     }
 
     .fast-async-img {
       width: 80% !important;
+      margin: 0 auto 30px auto;
     }
 
   /* ========== Impact ========== */
