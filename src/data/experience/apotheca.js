@@ -1,4 +1,4 @@
-// /data/experience/skinpro.js
+// /data/experience/apotheca.js
 
 // Import all project images
 import skinpro1 from '../../images/skinpro_imgs/splash_screen.jpg';
@@ -14,10 +14,10 @@ import skinpro10 from '../../images/skinpro_imgs/rx_generator.jpg';
 import skinpro11 from '../../images/skinpro_imgs/rx_preview.jpg';
 import skinpro12 from '../../images/skinpro_imgs/alerts_tab.jpg';
 
-const skinpro = {
-    id: 'skinpro',
-    title: 'Apotheca | Full-stack Developer',
-    team: 'Remote | Part-time',
+const apotheca = {
+    id: 'apotheca',
+    title: 'Full-stack Developer',
+    team: 'Apotheca | Remote | Part-time',
     description:
         'Design, maintain, and evolve the SkinPro desktop application in collaboration with the business owner, managing 300+ client records and 2,000+ appointments, saving 1,000+ hours/year of manual work and $3,000+ in software costs.',
     stack: ['Python', 'SQLite', 'Flask', 'HTML', 'CSS', 'Git', 'Tkinter', 'ReportLab'],
@@ -39,11 +39,11 @@ const skinpro = {
     
     expanded: {
         title: `
-        Apotheca | Full-stack Developer
+            Full-stack Developer
         `,
 
         subtitle: `
-        Remote | Part-time
+            Apotheca | Remote | Part-time
         `,
 
         github: `
@@ -58,4 +58,4 @@ const skinpro = {
     }
 };
 
-export default skinpro;
+export default apotheca;
