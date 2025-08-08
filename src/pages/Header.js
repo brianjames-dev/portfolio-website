@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import menuIcon from '../images/menu.svg';
-import closeIcon from '../images/close.svg';
+import iconMap from '../data/iconMap.js'
 import '../styles/Header.css'
 
 let hasAnimatedIn = false;
@@ -132,13 +131,13 @@ function Header({ activeSection }) {
 
         <div className="menu-button" onClick={() => setMenuOpen(!menuOpen)}>
           <img
-            src={menuOpen ? closeIcon : menuIcon}
+            src={menuOpen ? iconMap['Close'] : iconMap['Menu']}
             alt={menuOpen ? 'Close menu' : 'Open menu'}
           />
         </div>
 
         <nav ref={navRef} className={menuOpen ? 'active' : ''}>
-          {['home', 'about', 'projects', 'contact'].map((section) => (
+          {['home', 'about', 'experience', 'projects', 'contact'].map((section) => (
             <a
               key={section}
               className={activeSection === section ? 'active' : ''}

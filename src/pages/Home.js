@@ -1,13 +1,6 @@
 import React from 'react';
 import alphaHeadshot from '../images/alpha_headshot.png';
-import DownloadIcon from '../images/download.svg';
-import SendIcon from '../images/send.svg'
-import GithubIcon from '../images/github_themed.svg';
-import LinkedInIcon from '../images/linkedin_themed.svg';
-import InstagramIcon from '../images/instagram_themed.svg';
-import GithubIconHover from '../images/github_themed_hover.svg';
-import LinkedInIconHover from '../images/linkedin_themed_hover.svg';
-import InstagramIconHover from '../images/instagram_themed_hover.svg';
+import iconMap from '../data/iconMap.js'
 import '../styles/Home.css'
 
 function Home() {
@@ -47,14 +40,14 @@ function Home() {
         <div className="home-action-buttons">
           <a href="/resume.pdf" download>
             <button>
-              <img src={DownloadIcon} alt="Download icon" />
+              <img src={iconMap['Download']} alt="Download icon" />
               Résumé
             </button>
           </a>
 
           <a href="mailto:brianjames.dev@gmail.com">
             <button>
-              <img src={SendIcon} alt="Email icon" />
+              <img src={iconMap['Send']} alt="Email Send icon" />
               Email Me
             </button>
           </a>
@@ -68,8 +61,8 @@ function Home() {
             rel="noopener noreferrer"
           >
             <span className="icon-wrapper">
-              <img src={GithubIcon} alt="GitHub" className="default" />
-              <img src={GithubIconHover} alt="GitHub" className="hover" />
+              <img src={iconMap['GitHubThemed']} alt="GitHub" className="default" />
+              <img src={iconMap['GitHubHover']} alt="GitHub" className="hover" />
             </span>
           </a>
           <a
@@ -78,8 +71,8 @@ function Home() {
             rel="noopener noreferrer"
           >
             <span className="icon-wrapper">
-              <img src={LinkedInIcon} alt="LinkedIn" className="default" />
-              <img src={LinkedInIconHover} alt="LinkedIn" className="hover" />
+              <img src={iconMap['LinkedInThemed']} alt="LinkedIn" className="default" />
+              <img src={iconMap['LinkedInThemed']} alt="LinkedIn" className="hover" />
             </span>
           </a>
           <a
@@ -88,8 +81,8 @@ function Home() {
             rel="noopener noreferrer"
           >
             <span className="icon-wrapper">
-              <img src={InstagramIcon} alt="Instagram" className="default" />
-              <img src={InstagramIconHover} alt="Instagram" className="hover" />
+              <img src={iconMap['InstagramThemed']} alt="Instagram" className="default" />
+              <img src={iconMap['InstagramThemed']} alt="Instagram" className="hover" />
             </span>
           </a>
         </div>

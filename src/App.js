@@ -3,6 +3,7 @@ import ParticlesBackground from './ParticlesBackground';
 import Header from './pages/Header';
 import Home from './pages/Home';
 import About from './pages/About';
+import Experience from './pages/Experience';
 import Projects from './pages/Projects';
 import Contact from './pages/Contact';
 import './App.css';
@@ -59,6 +60,7 @@ function App() {
       <main>
         <Home />
         <About />
+        <Experience />
         <Projects 
           expandedProjectIndex={expandedProjectIndex} 
           setExpandedProjectIndex={setExpandedProjectIndex} // Added setter prop

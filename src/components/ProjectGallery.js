@@ -1,8 +1,8 @@
 // /components/ProjectGallery.js
 import React, { useEffect, useRef, useState } from 'react';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import closeIcon from '../images/close.svg';
-import swipeIcon from '../images/swipe.svg';
+import iconMap from '../data/iconMap.js';
+
 
 function ProjectGallery({ images, index, setIndex, onClose }) {
   const [isSuperZoomed, setIsSuperZoomed] = useState(false);
@@ -237,7 +237,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     >
       {/* Swipe Hint */}
       {showSwipeHint && (
-        <img src={swipeIcon} alt="Swipe hint" className="swipe-hint" />
+        <img src={iconMap['Swipe']} alt="Swipe hint" className="swipe-hint" />
       )}
 
       {/* Centered Image */}
@@ -341,7 +341,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
         }}
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <img src={closeIcon} alt="Close" />
+        <img src={iconMap['Close']} alt="Close" />
       </button>
 
       {/* Arrows */}

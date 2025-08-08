@@ -36,6 +36,13 @@ import githubLight from '../images/github_light.svg';
 import closeDark from '../images/close_dark.svg';
 import infoIcon from '../images/info.svg';
 import collapseIcon from '../images/collapse.svg';
+import githubThemed from '../images/github_themed.svg';
+import githubHover from '../images/github_themed_hover.svg';
+import linkedinThemed from '../images/linkedin_themed.svg';
+import linkedinHover from '../images/linkedin_themed_hover.svg';
+import instagramThemed from '../images/instagram_themed.svg';
+import instagramHover from '../images/instagram_themed_hover.svg';
+import sendIcon from '../images/send.svg';
 
 const iconMap = {
   'React': reactIcon,
@@ -73,7 +80,14 @@ const iconMap = {
   'GitLight' : githubLight,
   'CloseDark' : closeDark,
   'Info' : infoIcon,
-  'Collapse' : collapseIcon
+  'Collapse' : collapseIcon,
+  'GitHubThemed' : githubThemed,
+  'GitHubHover' : githubHover,
+  'LinkedInThemed' : linkedinThemed,
+  'LinkedInHover' : linkedinHover,
+  'InstagramThemed' : instagramThemed,
+  'InstagramHover' : instagramHover,
+  'Send' : sendIcon
 };
 
 export default iconMap;
