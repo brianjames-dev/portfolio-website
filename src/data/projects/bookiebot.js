@@ -36,8 +36,8 @@ import visualGPTsummaries from '../../images/bookiebot_imgs/storyboard_imgs/visu
 
 const bookiebot = {
   id: 'bookiebot',
-  title: 'BookieBot',
-  team: 'Solo',
+  title: 'BookieBot | AI Agent',
+  team: 'Solo Project',
   description:
     'BookieBot is an autonomous AI finance chatbot that allows users to log, query, and visualize their expenses using natural language and supports multi-user workflows, role-based access, and over 30 analytics intents.',
   stack: ['Python', 'Discord.py', 'Git', 'OpenAI API', 'Google Sheets API', 'Railway'],
@@ -56,7 +56,7 @@ const bookiebot = {
 
   expanded: {
     title: `
-      BookieBot - AI Agent
+      BookieBot | AI Agent
     `,
     subtitle: `
       Solo Project

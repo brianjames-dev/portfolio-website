@@ -71,6 +71,24 @@ h1, h2, h3 {
   padding: 20px;
 }
 
+.projects .container { 
+  max-width: none;            /* remove clamp */
+  width: 100%;
+}
+
+#experience.projects .container { 
+  max-width: none;
+  width: 100%;
+}
+
+/* Optional: center the stack explicitly */
+.projects .container,
+#experience.projects .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .container-shifted {
   transform: translateX(-120px); /* Matches the expanded card's rightward growth */
 }

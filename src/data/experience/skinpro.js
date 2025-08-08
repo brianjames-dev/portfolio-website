@@ -1,4 +1,4 @@
-// /data/projects/skinpro.js
+// /data/experience/skinpro.js
 
 // Import all project images
 import skinpro1 from '../../images/skinpro_imgs/splash_screen.jpg';
@@ -16,12 +16,12 @@ import skinpro12 from '../../images/skinpro_imgs/alerts_tab.jpg';
 
 const skinpro = {
     id: 'skinpro',
-    title: 'SkinPro',
-    team: 'Contractual',
+    title: 'Apotheca | Full-stack Developer',
+    team: 'Remote | Part-time',
     description:
-        'Full-stack desktop app for spa operations: manages 300+ client records and 2,000+ appointments, with QR-based mobile photo uploads, PDF prescription generator, and responsive Tkinter UI. Saved 1,000+ hours/year and $3,000+ in costs.',
+        'Design, maintain, and evolve the SkinPro desktop application in collaboration with the business owner, managing 300+ client records and 2,000+ appointments, saving 1,000+ hours/year of manual work and $3,000+ in software costs.',
     stack: ['Python', 'SQLite', 'Flask', 'HTML', 'CSS', 'Git', 'Tkinter', 'ReportLab'],
-    github: 'https://github.com/brianjames-dev/SkinPro',
+    github: '',
     images: [
         { src: skinpro1, caption: '🚪 Splash Screen' },
         { src: skinpro2, caption: '👩 Clients Tab' },
@@ -39,19 +39,21 @@ const skinpro = {
     
     expanded: {
         title: `
-        SkinPro - Fullstack Desktop Application/Database
+        Apotheca | Full-stack Developer
         `,
 
         subtitle: `
-        Contractual Project - Apotheca Day Spa
+        Remote | Part-time
         `,
 
         github: `
-        https://github.com/brianjames-dev/SkinPro
+        
         `,
 
         description: `
-        Full-stack desktop app for spa operations: manages 300+ client records and 2,000+ appointments, with QR-based mobile photo uploads, PDF prescription generator, and responsive Tkinter UI. Saved 1,000+ hours/year and $3,000+ in costs.
+            •  Design, maintain, and evolve the SkinPro desktop application [Github] in collaboration with the business owner, managing 300+ client records and 2,000+ appointments, saving 1,000+ hours/year of manual work and $3,000+ in software costs.
+            •  Integrated a QR-based mobile-to-desktop photo upload system and a dynamic PDF prescription generator—reducing photo management time by 90% and supporting customizable care routines.
+            •  Built modern, responsive UIs with CTkinter and a local SQLite database with weekly backups, saving $500+ per year on cloud costs.
         `,
     }
 };

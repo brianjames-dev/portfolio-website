@@ -102,8 +102,8 @@
 
 .fullscreen-close-btn {
   position: absolute;
-  top: 40px;
-  right: 300px;
+  right: 15dvw; /* 5% from right edge of viewport */
+  top: 10dvh;
   background: rgba(0, 0, 0, 0.4);
   border: none;
   padding: 10px 10px 7px 10px;
@@ -118,7 +118,7 @@
 
 .carousel-arrow {
   position: absolute;
-  top: 48%; /* adjust upward by ~half of 124px */
+  top: 47%; /* adjust upward by ~half of 124px */
   transform: translateY(-50%);
   background: rgba(0, 0, 0, 0.4);
   border: none;
@@ -154,11 +154,11 @@
 }
 
 .carousel-arrow.left {
-  left: 300px;
+  left: 15dvw; /* 5% from left edge of viewport */
 }
 
 .carousel-arrow.right {
-  right: 300px;
+  right: 15dvw; /* 5% from right edge of viewport */
 }
 
 .arrow-inner {
@@ -246,12 +246,6 @@
   pointer-events: auto;
   width: 1000px;
   margin: 0 auto;
-}
-
-.project-placeholder {
-  visibility: hidden;
-  /* transition: height 0.4s ease; */
-  will-change: height;
 }
 
 

@@ -1,46 +1,62 @@
-/* /styles/ProjectCard.css */
-
-/* ========== Card Container ========== */
+/* /styles/CollapsedCard.css */
 .project-card {
   padding: 20px;
   border-radius: 10px;
   scroll-margin-top: var(--header-height);
-  max-width: 800px;
   width: 100%;
+  max-width: 800px; /* Collapsed width */
   margin: 20px auto;
-  overflow: visible;
-  will-change: transform, opacity;
-  contain: layout paint;
-  transition: none;
-  background: rgba(235, 229, 194, 0.90);
+  background: rgba(235, 229, 194, 0.9);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: box-shadow 0.3s ease, border-radius 0.3s ease; /* Smooth non-layout transitions */
+  min-height: 0; /* Prevent min-height constraints */
 }
 
-.project-card.expanded {
-  max-width: 1000px;
-  margin: 0 auto;
+/* Expanded card styles */
+.project-card.expanded-card {
+  max-width: 1000px; /* Expanded width */
+  border-radius: 12px; /* Slightly larger for visual distinction */
+}
+
+/* Expanded block */
+.expanded-block {
+  width: 100%;
+  max-width: 100%; /* Allow full width of parent */
+  margin-bottom: 0; /* Ensure no extra margin */
+}
+
+/* Ensure project-actions and project-section don’t add unexpected margins */
+.project-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 0; /* Prevent extra bottom margin */
+}
+
+.project-section {
+  margin-bottom: 0; /* Prevent extra bottom margin */
+}
+
+/* Mobile Styles */
+@media (max-width: 600px) {
+  .project-card {
+    max-width: 100%;
+    padding: 15px;
+  }
+  .project-card.expanded-card {
+    max-width: 100%;
+  }
 }
 
 /* ========== Header (Collapsed + Expanded) ========== */
-.project-header-wrapper {
-  display: flex;
-  justify-content: center;
-}
-
-.project-header-card {
-  display: inline-block;
-  border-radius: 10px;
-  padding: 10px 16px;
-  background: rgba(248, 243, 217, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
 .project-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 20px;
+  min-height: 30px;
 }
 
 .project-header .title {
@@ -87,7 +103,6 @@
   position: relative;
   min-height: 20px;
   z-index: 1;
-  will-change: transform, opacity;
 }
 
 .expanded-title-row h3 {
@@ -188,7 +203,6 @@
   padding: 6px 12px;
   border-radius: 8px;
   white-space: nowrap;
-  /* no min-width — it shrinks to fit text naturally */
   cursor: pointer;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
@@ -277,7 +291,7 @@
 }
 
 .project-description {
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.5;
   margin: 20px 0 0 0;
 }
@@ -293,17 +307,6 @@
   margin: 0 0 0.7rem 0;
 }
 
-.feature-list {
-  padding-left: 1.2rem;
-  margin-top: 0.5rem;
-  list-style: none;
-}
-
-.feature-list li {
-  margin-bottom: 0.5rem;
-  line-height: 1.5;
-}
-
 .custom-bullet-list {
   padding-left: 1.2rem;
   margin-top: 0;
@@ -315,15 +318,7 @@
   line-height: 1.5;
 }
 
-/* ========== Section Fade Effects ========== */
-.fade-transition {
-  will-change: opacity, transform;
-}
-
-.project-content {
-  transition: opacity 0.3s ease;
-}
-
+/* ========== Project Divider ========== */
 .project-divider {
   background-color: #504B38;
   display: flex;
@@ -332,78 +327,4 @@
   border: none;
   height: 1px;
   margin: 0;
-}
-
-/* ========== Expanded Background Layers ========== */
-.project-fade-wrapper {
-  position: relative;
-  z-index: 0;
-}
-
-.project-fade-bg {
-  position: absolute;
-  inset: 0;
-  background-color: rgba(235, 229, 194, 0.90);
-  border-radius: inherit;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.project-fade-bg.visible {
-  opacity: 1;
-}
-
-.project-bg-fade {
-  position: absolute;
-  inset: 0;
-  background-color: rgba(235, 229, 194, 0.90);
-  border-radius: inherit;
-  z-index: 0;
-}
-
-/* ========== Actions ========== */
-.project-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  gap: 20px;
-  margin-top: 20px;
-}
-
-/* ========== Mobile Styles ========== */
-@media (max-width: 600px) {
-  .tech-stack-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;       /* ← key: aligns everything to the left */
-    gap: 6px;
-    margin: 10px 0 0 0;
-  }
-
-  .tech-tag-wrapper {
-    display: flex;
-    align-items: center;
-    width: auto;                   /* ← remove fixed width */
-    justify-content: center;
-  }
-
-  .tech-purpose-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-    justify-content: center;   /* ensure arrow + purpose align left */
-  }
-
-  .tech-purpose {
-    text-align: center;
-    margin-left: 0;
-  }
-
-  .tech-arrow {
-    display: none;
-  }
-
 }
