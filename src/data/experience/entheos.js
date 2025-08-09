@@ -10,8 +10,7 @@ const entheos = {
     description: `
         Designed and programmed an automated live sound & lighting system (70+ fixtures) using Python and Showbuddy, creating 100+ custom lighting scenes synchronized to instruments and vocals, reducing tour crew costs by $5,000+.
     `,
-    stack: ['Python', 'Showbuddy', 'Logic Pro X'],
-    github: '',
+    stack: ['Python', 'Logic Pro X', 'Showbuddy'],
     images: [
 
     ],

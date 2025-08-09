@@ -43,6 +43,10 @@ import linkedinHover from '../images/linkedin_themed_hover.svg';
 import instagramThemed from '../images/instagram_themed.svg';
 import instagramHover from '../images/instagram_themed_hover.svg';
 import sendIcon from '../images/send.svg';
+import logicIcon from '../images/LogicProX.svg';
+import lambdaIcon from '../images/lambda.svg';
+import chatGPTIcon from '../images/chatGPT.svg';
+import sheetsIcon from '../images/sheets.svg';
 
 const iconMap = {
   'React': reactIcon,
@@ -87,7 +91,11 @@ const iconMap = {
   'LinkedInHover' : linkedinHover,
   'InstagramThemed' : instagramThemed,
   'InstagramHover' : instagramHover,
-  'Send' : sendIcon
+  'Send' : sendIcon,
+  'Logic Pro X' : logicIcon,
+  'AWS Lambda' : lambdaIcon,
+  'OpenAI API' : chatGPTIcon,
+  'Google Sheets API' : sheetsIcon
 };
 
 export default iconMap;
