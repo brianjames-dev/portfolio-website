@@ -171,6 +171,13 @@
   transform: translateY(-4px); /* Tweak this value to nudge horizontally */
 }
 
+/* something simple while the chunk loads */
+.fade-loader {
+  opacity: 0.8;
+  padding: 16px;
+  text-align: center;
+}
+
 /* Thumbnail Strip Container */
 .thumbnail-strip {
   position: absolute;

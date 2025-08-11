@@ -1,5 +1,6 @@
-import { AnimatePresence, motion, useSpring } from "framer-motion";
+import { AnimatePresence, useSpring } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import MotionDiv from "./MotionDiv";
 
 const FADE_DURATION = 0.5; // Content fade duration
 const MORPH_DURATION = 0.5; // Card container morph duration
@@ -102,7 +103,7 @@ export default function Card({
   };
 
   return (
-    <motion.div
+    <MotionDiv
       layout
       layoutId={`card-${id}`}
       className={`project-card ${isExpanded ? "expanded-card" : ""}`}
@@ -123,7 +124,7 @@ export default function Card({
       <div ref={contentRef}>
         <AnimatePresence mode="wait" initial={false}>
           {!isExpanded && (
-            <motion.div
+            <MotionDiv
               key="collapsed-content"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -135,10 +136,10 @@ export default function Card({
             >
               {renderCollapsed({ onExpand: handleToggle })}{" "}
               {/* Pass handleToggle explicitly */}
-            </motion.div>
+            </MotionDiv>
           )}
           {isExpanded && (
-            <motion.div
+            <MotionDiv
               key="expanded-content"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -150,10 +151,10 @@ export default function Card({
               onClick={(e) => e.stopPropagation()}
             >
               {renderExpanded({ onClose: handleToggle })}
-            </motion.div>
+            </MotionDiv>
           )}
         </AnimatePresence>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 }

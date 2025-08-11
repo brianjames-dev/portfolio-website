@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import Card from "../components/Card";
 import CollapsedCard from "../components/CollapsedCard";
 import ExpandedCard from "../components/ExpandedCard";
-import Gallery from "../components/Gallery";
 import experiences from "../data/experience";
 import useCardExpansion from "../hooks/useCardExpansion";
 import "../styles/Projects.css";
+const Gallery = lazy(() => import("../components/Gallery"));
 
 function Experience() {
   const [fullscreenIndex, setFullscreenIndex] = useState(null);
@@ -14,6 +14,7 @@ function Experience() {
   const { isExpanded, toggle } = useCardExpansion();
 
   const onGalleryClick = (images) => {
+    import("../components/Gallery");
     setFullscreenImages(images);
     setFullscreenIndex(0);
   };
@@ -53,15 +54,17 @@ function Experience() {
       </div>
 
       {/* Fullscreen Gallery */}
-      <Gallery
-        images={fullscreenImages}
-        index={fullscreenIndex}
-        setIndex={setFullscreenIndex}
-        onClose={() => {
-          setFullscreenImages([]);
-          setFullscreenIndex(null);
-        }}
-      />
+      <Suspense fallback={<div className="fade-loader">Loading…</div>}>
+        <Gallery
+          images={fullscreenImages}
+          index={fullscreenIndex}
+          setIndex={setFullscreenIndex}
+          onClose={() => {
+            setFullscreenImages([]);
+            setFullscreenIndex(null);
+          }}
+        />
+      </Suspense>
     </section>
   );
 }
