@@ -9,7 +9,9 @@
   background: rgba(235, 229, 194, 0.9);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: box-shadow 0.3s ease, border-radius 0.3s ease; /* Smooth non-layout transitions */
+  transition:
+    box-shadow 0.3s ease,
+    border-radius 0.3s ease; /* Smooth non-layout transitions */
   min-height: 0; /* Prevent min-height constraints */
 }
 
@@ -139,7 +141,9 @@
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transition:
+    background-color 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
 }
 
 .expanded-top-button:hover,
@@ -181,7 +185,7 @@
 
 .tech-stack-item {
   display: grid;
-  grid-template-columns: 160px 1fr; /* fixed width for wrapper */
+  grid-template-columns: 190px 1fr; /* fixed width for wrapper */
   align-items: center;
   gap: 1.5rem;
   margin-left: auto;
@@ -189,7 +193,7 @@
 }
 
 .tech-tag-wrapper {
-  width: 160px; /* fixed width for alignment */
+  width: 190px; /* fixed width for alignment */
   display: flex;
   justify-content: flex-start;
 }
@@ -204,7 +208,9 @@
   border-radius: 8px;
   white-space: nowrap;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 }
 
 .tech-tag:hover {
@@ -258,7 +264,9 @@
   padding-left: 28px;
   position: relative;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 }
 
 .tag:hover {
