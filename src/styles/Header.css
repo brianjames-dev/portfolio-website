@@ -1,7 +1,7 @@
 /* ========== Desktop Styles ========== */
 .site-header {
   height: var(--header-height, 60px);
-  background: #504B38;
+  background: #504b38;
   position: fixed;
   top: 0;
   left: 0;
@@ -13,8 +13,8 @@
   box-shadow: 0 8px 6px rgba(0, 0, 0, 0.1);
 }
 
-  /* Logo */
-  .site-header .logo {
+/* Logo */
+.site-header .logo {
   font-size: 1.3rem;
   font-weight: 700;
   position: absolute;
@@ -22,12 +22,12 @@
   top: 25%;
   transform: translateY(-50%);
 }
-  
+
 .site-header .logo a {
-  color: #F8F3D9;
+  color: #f8f3d9;
   text-decoration: none;
 }
-  
+
 /* Nav */
 .site-header nav {
   position: absolute;
@@ -43,21 +43,21 @@
 .site-header nav a {
   margin: 0 var(--nav-margin, 30px);
   text-decoration: none;
-  color: #F8F3D9;
+  color: #f8f3d9;
   font-weight: 600;
   font-size: var(--nav-font-size, 1rem);
   position: relative; /* for bubble overlap */
-  z-index: 1;         /* Ensures text sits above the indicator */
+  z-index: 1; /* Ensures text sits above the indicator */
 
   transition: color 0.3s ease;
 }
 
 .site-header nav a:hover {
-  color: #B9B28A;
+  color: #b9b28a;
 }
 
 .site-header nav a.active {
-  color: #504B38;
+  color: #504b38;
 }
 
 /* Bubble indicator */
@@ -67,10 +67,13 @@
   transform: translateY(-50%);
   height: 32px;
   border-radius: 10px;
-  background-color: #EBE5C2;
+  background-color: #ebe5c2;
   width: 0;
   left: 0;
-  transition: left 0.3s ease, width 0.3s ease, opacity 0.3s ease;
+  transition:
+    left 0.3s ease,
+    width 0.3s ease,
+    opacity 0.3s ease;
   z-index: 0;
   pointer-events: none; /* Prevent bubble from intercepting clicks */
 }
@@ -90,7 +93,7 @@
   .site-header {
     transition: transform 0.3s ease;
   }
-    
+
   .site-header.hidden {
     transform: translateY(-100%);
   }
@@ -104,7 +107,7 @@
 
   .menu-button {
     display: block;
-    top: 20%
+    top: 20%;
   }
 
   .menu-button img {
@@ -115,7 +118,7 @@
   .site-header nav {
     display: flex;
     flex-direction: column;
-    background: #504B38;
+    background: #504b38;
     position: fixed;
     top: var(--header-height);
     width: 31%;
@@ -132,21 +135,25 @@
     margin: 0;
     padding: 10px;
     text-align: center;
-    border-top: 1px solid #B9B28A;
-    color: #F8F3D9;
+    border-top: 1px solid #b9b28a;
+    color: #f8f3d9;
     text-decoration: none;
   }
 
   .site-header nav a.active {
-    color: #504B38;
+    color: #504b38;
   }
 
   .bubble-indicator {
     display: block; /* Allow bubble to show when menu is open */
     border-radius: 0px; /* Match desktop rounded shape */
-    background-color: #EBE5C2; /* Match desktop color */
+    background-color: #ebe5c2; /* Match desktop color */
     opacity: 0; /* Start hidden, controlled by JS */
-    transition: width 0.3s ease, height 0.3s ease, left 0.3s ease, opacity 0.3s ease; /* Smooth transitions */
+    transition:
+      width 0.3s ease,
+      height 0.3s ease,
+      left 0.3s ease,
+      opacity 0.3s ease; /* Smooth transitions */
     pointer-events: none; /* Prevent interference with clicks */
   }
 

@@ -10,27 +10,27 @@
 }
 
 .block-image {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100px;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .block-image img {
-    width: 100%;
-    height: auto;
-    display: block;
-    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
-    margin-bottom: 0.5rem;
-  }
-  
-  .block-image figcaption {
-    font-size: 0.9rem;
-    color: #504B38;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.block-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
+  margin-bottom: 0.5rem;
+}
+
+.block-image figcaption {
+  font-size: 0.9rem;
+  color: #504b38;
+}
 
 /* ========== Description ========== */
 .desc-group {
@@ -46,9 +46,9 @@
 
 .desc-bookiebot-hero-img {
   position: absolute;
-  width: 140px; 
+  width: 140px;
   height: auto;
-  left: 74%;    /* moves left (-) || right (+) */
+  left: 74%; /* moves left (-) || right (+) */
   bottom: -10%; /* moves down (-) || up    (+)  */
 
   /* border: 1px dashed blue; */
@@ -56,57 +56,55 @@
 
 /* ========== Background ========== */
 
-
 /* ========== Challenge ========== */
-
 
 /* ========== Goal ========== */
 .goal-block {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 150px;
-    margin-bottom: 80px;
-  }
-  
-  .goal-intro {
-    font-size: 1rem;
-    color: #504B38;
-    line-height: 1.5;
-    margin-bottom: 0.7rem;
-  }
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 150px;
+  margin-bottom: 80px;
+}
 
-  .goal-img {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100px;
-    text-align: center;
-  }
-  
-  .understanding-cmds-img {
-    width: 20%;
-    margin-top: 12px;
-    height: auto;
-  }
+.goal-intro {
+  font-size: 1rem;
+  color: #504b38;
+  line-height: 1.5;
+  margin-bottom: 0.7rem;
+}
 
-  .auto-logging-img {
-    width: 22%;
-    height: auto;
-  }
+.goal-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+  text-align: center;
+}
 
-  .bookiebot-inside-img {
-    width: 15%;
-    height: auto;
-  }
+.understanding-cmds-img {
+  width: 20%;
+  margin-top: 12px;
+  height: auto;
+}
 
-  .goal-img figcaption {
-    position: absolute;
-    width: 25%;
-    top: 100%;
-    font-size: 0.9rem;
-    color: #504B38;
-  }
+.auto-logging-img {
+  width: 22%;
+  height: auto;
+}
+
+.bookiebot-inside-img {
+  width: 15%;
+  height: auto;
+}
+
+.goal-img figcaption {
+  position: absolute;
+  width: 25%;
+  top: 100%;
+  font-size: 0.9rem;
+  color: #504b38;
+}
 
 /* ========== Research ========== */
 /* Layout wrapper for each image block */
@@ -154,405 +152,400 @@
   position: relative;
 
   /* border: 1px dashed red; */
-
 }
 
 .techstack-bookiebot-img {
   position: absolute;
-  width: 240px; 
+  width: 240px;
   height: auto;
-  left: 65%;                     /* moves left (-) || right (+) */
-  transform: translateY(-102%);  /* moves down (+) || up    (-)  */
+  left: 65%; /* moves left (-) || right (+) */
+  transform: translateY(-102%); /* moves down (+) || up    (-)  */
 
   /* border: 1px dashed blue; */
 }
 
 /* ========== Key Features ========== */
 .features-block {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    justify-items: center;
-    gap: 40px; /* row gap */
-    margin: 20px 0 0 0;
-  }
-  
-  .feature-img {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    position: relative; /* allow nudging with transforms */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
+  gap: 40px; /* row gap */
+  margin: 20px 0 0 0;
+}
 
-    width: auto; /* <-- important! Don’t constrain by default */
-  }  
-  
-  .feature-img figcaption {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: #504B38;
-    text-align: center;
-    max-width: 100%; /* allow flexibly constrained by override */
-    width: auto;
+.feature-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative; /* allow nudging with transforms */
 
-  }
-  
-  .natural-lang2-img figcaption {
-    width: 220px;
-    max-width: 220px;
-    margin-top: 34px;
-  }
-  
-  .llm-translator-img figcaption {
-    width: 200px;
-    max-width: 200px;
-    margin-top: 39px;
-  }
-  
-  .sheets-sync-img figcaption {
-    width: 220px;
-    max-width: 220px;
-    margin-top: 8px;
-  }
-  
-  .fast-async-img figcaption {
-    width: 190px;
-    max-width: 190px;
-    margin-top: 13px;
-  }
-  
-  .natural-lang2-img {
-    width: 85%;
-    transform: translateY(40px);
-  }
-  
-  .llm-translator-img {
-    width: 80%;
-    transform: translateY(50px);
-  }
-  
-  .sheets-sync-img {
-    width: 70%;
-    transform: translateY(0px);
-  }
-  
-  .fast-async-img {
-    width: 90%;
-    transform: translateY(35px);
-  }
-  
-  
-  /* ========== Impact ========== */
-  .impact-block {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 150px;
-    margin-top: 30px;
-    margin-bottom: 90px;
-  }
-  
-  .impact-img {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 110px;
-    text-align: center;
-  }
-  
-  .impact-img figcaption {
-    position: absolute;
-    width: 25%;
-    top: 100%;
-    font-size: 0.9rem;
-    color: #504B38;
-  }
-  
-  .one-step-img {
-    width: 20%;
-    height: auto;
-  }
-  
-  .analytics-img {
-    width: 18%;
-    height: auto;
-  }
-  
-  /* ========== Reflection & Learnings ========== */
-  .reflection-block {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 100px;
-    margin-top: 30px;
-    margin-bottom: 70px;
-  }
-  
-  .reflection-img {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 110px;
-    text-align: center;
-  }
-  
-  .reflection-img figcaption {
-    position: absolute;
-    width: 25%;
-    top: 100%;
-    font-size: 0.9rem;
-    color: #504B38;
-  }
-  
-  .prompt-reliability-img {
-    width: 30%;
-    height: auto;
-  }
-  
-  .llm-vs-parser-img {
-    width: 18%;
-    height: auto;
-  }
-  
-  .async-design-img {
-    margin-top: 35px;
-    width: 18%;
-    height: auto;
-  }
-  
+  width: auto; /* <-- important! Don’t constrain by default */
+}
+
+.feature-img figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #504b38;
+  text-align: center;
+  max-width: 100%; /* allow flexibly constrained by override */
+  width: auto;
+}
+
+.natural-lang2-img figcaption {
+  width: 220px;
+  max-width: 220px;
+  margin-top: 34px;
+}
+
+.llm-translator-img figcaption {
+  width: 200px;
+  max-width: 200px;
+  margin-top: 39px;
+}
+
+.sheets-sync-img figcaption {
+  width: 220px;
+  max-width: 220px;
+  margin-top: 8px;
+}
+
+.fast-async-img figcaption {
+  width: 190px;
+  max-width: 190px;
+  margin-top: 13px;
+}
+
+.natural-lang2-img {
+  width: 85%;
+  transform: translateY(40px);
+}
+
+.llm-translator-img {
+  width: 80%;
+  transform: translateY(50px);
+}
+
+.sheets-sync-img {
+  width: 70%;
+  transform: translateY(0px);
+}
+
+.fast-async-img {
+  width: 90%;
+  transform: translateY(35px);
+}
+
+/* ========== Impact ========== */
+.impact-block {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 150px;
+  margin-top: 30px;
+  margin-bottom: 90px;
+}
+
+.impact-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 110px;
+  text-align: center;
+}
+
+.impact-img figcaption {
+  position: absolute;
+  width: 25%;
+  top: 100%;
+  font-size: 0.9rem;
+  color: #504b38;
+}
+
+.one-step-img {
+  width: 20%;
+  height: auto;
+}
+
+.analytics-img {
+  width: 18%;
+  height: auto;
+}
+
+/* ========== Reflection & Learnings ========== */
+.reflection-block {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 100px;
+  margin-top: 30px;
+  margin-bottom: 70px;
+}
+
+.reflection-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 110px;
+  text-align: center;
+}
+
+.reflection-img figcaption {
+  position: absolute;
+  width: 25%;
+  top: 100%;
+  font-size: 0.9rem;
+  color: #504b38;
+}
+
+.prompt-reliability-img {
+  width: 30%;
+  height: auto;
+}
+
+.llm-vs-parser-img {
+  width: 18%;
+  height: auto;
+}
+
+.async-design-img {
+  margin-top: 35px;
+  width: 18%;
+  height: auto;
+}
+
 /* ========== What’s Next ========== */
 .future-block {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    justify-items: center;
-    gap: 20px;
-    margin-bottom: 60px;
-  }
-  
-  .future-img {
-    display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
+  gap: 20px;
+  margin-bottom: 60px;
+}
+
+.future-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative; /* for transforms */
+  width: auto; /* don’t constrain */
+}
+
+.future-img figcaption {
+  margin-top: 0.5rem; /* default spacing */
+  font-size: 0.9rem;
+  color: #504b38;
+  text-align: center;
+  width: auto;
+  max-width: 100%;
+}
+
+.mobile-dashboard-img {
+  width: 80%;
+  transform: translateY(30px);
+}
+.mobile-dashboard-img figcaption {
+  width: 160px;
+  max-width: 160px;
+  margin-top: 20px;
+}
+
+.multi-user-img {
+  width: 90%;
+  transform: translateY(25px);
+}
+.multi-user-img figcaption {
+  width: 190px;
+  max-width: 190px;
+  margin-top: 40px;
+}
+
+.visual-insights-img {
+  width: 60%;
+  transform: translateY(40px);
+}
+.visual-insights-img figcaption {
+  width: 175px;
+  max-width: 175px;
+  margin-top: 10px;
+}
+
+.error-handling-img {
+  width: 100%;
+  transform: translateY(45px);
+}
+.error-handling-img figcaption {
+  width: 185px;
+  max-width: 185px;
+  margin-top: 37px;
+}
+
+@media (max-width: 600px) {
+  /* ========== Global ========== */
+  .block-group,
+  .desc-group,
+  .goal-block,
+  .impact-block,
+  .reflection-block {
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    position: relative; /* for transforms */
-    width: auto; /* don’t constrain */
+    gap: 2rem;
+    width: 100%;
+    margin: 0 auto;
   }
-  
-  .future-img figcaption {
-    margin-top: 0.5rem; /* default spacing */
-    font-size: 0.9rem;
-    color: #504B38;
+
+  .block-image,
+  .goal-img,
+  .impact-img,
+  .reflection-img {
+    width: 80% !important;
+    position: relative;
+  }
+
+  .block-image img,
+  .goal-img img,
+  .impact-img img,
+  .reflection-img img {
+    width: 70%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .block-image figcaption,
+  .goal-img figcaption,
+  .impact-img figcaption,
+  .reflection-img figcaption {
+    position: static;
+    width: 100%;
     text-align: center;
-    width: auto;
+    margin-top: 0.5rem;
+  }
+
+  /* ========== Description ========== */
+  .desc-block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Left-side text */
+  .desc-text {
+    width: 100%;
+    margin: 0;
+  }
+
+  /* Right-side hero image */
+  .desc-bookiebot-hero-img {
+    width: 60% !important;
+    height: auto;
+    position: static;
+  }
+
+  /* ========== Goal ========== */
+  .understanding-cmds-img {
+    width: 90% !important;
+  }
+
+  .auto-logging-img {
+    width: 85% !important;
+  }
+
+  .bookiebot-inside-img {
+    width: 72% !important;
+  }
+
+  /* ========== Research ========== */
+  .research-img-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    flex-direction: column;
+  }
+
+  .research-img-block img {
+    position: static !important;
+    display: block;
+    margin: 0 auto;
+    width: 90% !important;
     max-width: 100%;
+    transform: none !important;
   }
-    
-  .mobile-dashboard-img {
-    width: 80%;
-    transform: translateY(30px);
+
+  .gpt-powered-img,
+  .natural-lang-img,
+  .prompt-structure-img {
+    width: 90% !important;
+    max-width: 100% !important;
+    margin: 0 auto;
   }
-  .mobile-dashboard-img figcaption {
-    width: 160px;
-    max-width: 160px;
-    margin-top: 20px;
+
+  .gpt-powered-img {
+    width: 70% !important;
+    margin: 0 auto;
   }
-  
-  .multi-user-img {
+
+  .natural-lang-img {
+    width: 100% !important;
+    margin: 10px auto 5px auto;
+  }
+
+  .prompt-structure-img {
+    width: 100% !important;
+    margin: 10px auto 0 auto;
+  }
+  /* ========== Tech Stack ========== */
+  .techstack-bookiebot-img {
+    position: static;
     width: 90%;
-    transform: translateY(25px);
+    margin: 1rem auto;
+    transform: none;
   }
-  .multi-user-img figcaption {
-    width: 190px;
-    max-width: 190px;
+
+  /* ========== Features ========== */
+  .features-block {
+    display: block;
     margin-top: 40px;
   }
-  
-  .visual-insights-img {
-    width: 60%;
-    transform: translateY(40px);
+
+  .feature-img {
+    margin-bottom: 3rem;
+    width: 80%;
   }
-  .visual-insights-img figcaption {
-    width: 175px;
-    max-width: 175px;
-    margin-top: 10px;
+
+  .feature-img figcaption {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin-top: 1rem !important;
   }
-  
-  .error-handling-img {
-    width: 100%;
-    transform: translateY(45px);
+
+  .natural-lang2-img,
+  .llm-translator-img,
+  .sheets-sync-img,
+  .fast-async-img {
+    width: 100% !important;
+    transform: none !important;
   }
-  .error-handling-img figcaption {
-    width: 185px;
-    max-width: 185px;
-    margin-top: 37px;
-  }  
-  
 
-  @media (max-width: 600px) {
-    /* ========== Global ========== */
-    .block-group,
-    .desc-group,
-    .goal-block,
-    .impact-block,
-    .reflection-block {
-      flex-direction: column;
-      align-items: center;
-      gap:  2rem;
-      width: 100%;
-      margin: 0 auto;
-    }
+  .natural-lang2-img {
+    width: 95% !important;
+    margin: 0 auto 30px auto;
+  }
 
-    .block-image,
-    .goal-img,
-    .impact-img,
-    .reflection-img {
-      width: 80% !important;
-      position: relative;
-    }
-  
-    .block-image img,
-    .goal-img img,
-    .impact-img img,
-    .reflection-img img {
-      width: 70%;
-      height: auto;
-      margin: 0 auto;
-    }
-  
-    .block-image figcaption,
-    .goal-img figcaption,
-    .impact-img figcaption,
-    .reflection-img figcaption {
-      position: static;
-      width: 100%;
-      text-align: center;
-      margin-top: 0.5rem;
-    }
-  
-    /* ========== Description ========== */
-    .desc-block {
-      display: flex;
-      flex-direction: column;
-    }
+  .llm-translator-img {
+    width: 75% !important;
+    margin: 0 auto 30px auto;
+  }
 
-    /* Left-side text */
-    .desc-text {
-      width: 100%;
-      margin: 0;
-    }
+  .sheets-sync-img {
+    width: 80% !important;
+    margin: 0 auto 30px auto;
+  }
 
-    /* Right-side hero image */
-    .desc-bookiebot-hero-img {
-      width: 60% !important;
-      height: auto;
-      position: static;
-    }
-
-    /* ========== Goal ========== */    
-      .understanding-cmds-img {
-        width: 90% !important;
-      }
-
-      .auto-logging-img {
-        width: 85% !important;
-      }
-
-      .bookiebot-inside-img {
-        width: 72% !important;
-      }
-
-    /* ========== Research ========== */
-    .research-img-block {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 2rem 0;
-      flex-direction: column;
-    }
-
-    .research-img-block img {
-      position: static !important;
-      display: block;
-      margin: 0 auto;
-      width: 90% !important;
-      max-width: 100%;
-      transform: none !important;
-    }
-
-    .gpt-powered-img,
-    .natural-lang-img,
-    .prompt-structure-img {
-      width: 90% !important;
-      max-width: 100% !important;
-      margin: 0 auto;
-    }
-
-    .gpt-powered-img {
-      width: 70% !important;
-      margin: 0 auto;
-
-    }
-
-    .natural-lang-img{
-      width: 100% !important;
-      margin: 10px auto 5px auto;
-    }
-
-    .prompt-structure-img {
-      width: 100% !important;
-       margin: 10px auto 0 auto;
-    }
-    /* ========== Tech Stack ========== */
-    .techstack-bookiebot-img {
-      position: static;
-      width: 90%;
-      margin: 1rem auto;
-      transform: none;
-    }
-
-    /* ========== Features ========== */
-    .features-block {
-      display: block;
-      margin-top: 40px;
-    }
-  
-    .feature-img {
-      margin-bottom: 3rem;
-      width: 80%;
-    }
-  
-    .feature-img figcaption {
-      max-width: 100% !important;
-      width: 100% !important;
-      margin-top: 1rem !important;
-    }
-  
-    .natural-lang2-img,
-    .llm-translator-img,
-    .sheets-sync-img,
-    .fast-async-img {
-      width: 100% !important;
-      transform: none !important;
-    }
-
-    .natural-lang2-img {
-      width: 95% !important;
-      margin: 0 auto 30px auto;
-    }
-
-    .llm-translator-img {
-      width: 75% !important;
-      margin: 0 auto 30px auto;
-    }
-
-    .sheets-sync-img {
-      width: 80% !important;
-      margin: 0 auto 30px auto;
-    }
-
-    .fast-async-img {
-      width: 80% !important;
-      margin: 0 auto 30px auto;
-    }
+  .fast-async-img {
+    width: 80% !important;
+    margin: 0 auto 30px auto;
+  }
 
   /* ========== Impact ========== */
   .one-step-img {
@@ -560,60 +553,59 @@
     height: auto;
     margin: 20px auto;
   }
-  
+
   .analytics-img {
     width: 78% !important;
     height: auto;
     margin: 0 auto 20px auto;
   }
-  
+
   /* ========== Reflection & Learnings ========== */
   .prompt-reliability-img {
     width: 90% !important;
     height: auto;
     margin: 20px auto;
   }
-  
+
   .llm-vs-parser-img {
     width: 75% !important;
     height: auto;
     margin: 0 auto 20px auto;
   }
-  
+
   .async-design-img {
     width: 80% !important;
     height: auto;
     margin: 0 auto 20px auto;
   }
 
-    /* ========== What's Next ========== */
-    .future-block {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .mobile-dashboard-img {
-      width: 75% !important;
-      height: auto;
-      margin: 20px auto;
-    }
-
-    .multi-user-img {
-      width: 95% !important;
-      height: auto;
-      margin: 0 auto 20px auto;
-    }
-
-    .visual-insights-img {
-      width: 63% !important;
-      height: auto;
-      margin: 0 auto 20px auto;
-    }
-
-    .error-handling-img {
-      width: 92% !important;
-      height: auto;
-      margin: 0 auto 70px auto;
-    }
+  /* ========== What's Next ========== */
+  .future-block {
+    display: flex;
+    flex-direction: column;
   }
-  
+
+  .mobile-dashboard-img {
+    width: 75% !important;
+    height: auto;
+    margin: 20px auto;
+  }
+
+  .multi-user-img {
+    width: 95% !important;
+    height: auto;
+    margin: 0 auto 20px auto;
+  }
+
+  .visual-insights-img {
+    width: 63% !important;
+    height: auto;
+    margin: 0 auto 20px auto;
+  }
+
+  .error-handling-img {
+    width: 92% !important;
+    height: auto;
+    margin: 0 auto 70px auto;
+  }
+}

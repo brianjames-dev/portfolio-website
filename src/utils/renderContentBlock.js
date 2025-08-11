@@ -2,18 +2,15 @@
 export function renderContentBlock(block, i) {
   if (!block || !block.type) return null;
 
-  if (block.type === 'text') {
+  if (block.type === "text") {
     return (
-      <div
-        key={`text-${i}`}
-        className={block.className || ''}
-      >
+      <div key={`text-${i}`} className={block.className || ""}>
         <p dangerouslySetInnerHTML={{ __html: block.content }} />
       </div>
     );
   }
 
-  if (block.type === 'bullet') {
+  if (block.type === "bullet") {
     const items = Array.isArray(block.items) ? block.items : [];
     return (
       <ul key={`bullet-${i}`} className="custom-bullet-list">
@@ -27,13 +24,13 @@ export function renderContentBlock(block, i) {
     );
   }
 
-  if (block.type === 'image') {
+  if (block.type === "image") {
     return (
-      <figure key={`image-${i}`} className={`block-image ${block.className || ''}`}>
-        <img
-          src={block.src}
-          alt={block.alt || ''}
-        />
+      <figure
+        key={`image-${i}`}
+        className={`block-image ${block.className || ""}`}
+      >
+        <img src={block.src} alt={block.alt || ""} />
         {block.caption && (
           <figcaption dangerouslySetInnerHTML={{ __html: block.caption }} />
         )}
@@ -41,16 +38,16 @@ export function renderContentBlock(block, i) {
     );
   }
 
-  if (block.type === 'group') {
+  if (block.type === "group") {
     return (
-      <div 
-        key={`group-${i}`} 
-        className={`block-group ${block.className || ''}`}
-        >
+      <div
+        key={`group-${i}`}
+        className={`block-group ${block.className || ""}`}
+      >
         {block.blocks.map((child, j) => renderContentBlock(child, `${i}-${j}`))}
       </div>
     );
   }
-  
+
   return null;
 }

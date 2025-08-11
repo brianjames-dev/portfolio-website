@@ -81,7 +81,9 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
 
         return (
           <React.Fragment key={label}>
-            {label !== "Short Description" && <div className="section-divider" />}
+            {label !== "Short Description" && (
+              <div className="section-divider" />
+            )}
             <motion.div
               className="project-section"
               initial={{ opacity: 0, y: 60 }}
@@ -95,7 +97,9 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
               {label === "Tech Stack" ? (
                 <>
                   <div className="tech-timeline">
-                    {project.stack.map((tech, i) => renderTechStackItem(tech, i))}
+                    {project.stack.map((tech, i) =>
+                      renderTechStackItem(tech, i)
+                    )}
                   </div>
                   {project.expanded?.techStack?.map?.((block, i) =>
                     renderContentBlock(block, i)
@@ -109,8 +113,12 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
                     .split("\n")
                     .map((line) => line.trim())
                     .filter(Boolean);
-                  const bulletLines = lines.filter((line) => line.startsWith("-"));
-                  const normalLines = lines.filter((line) => !line.startsWith("-"));
+                  const bulletLines = lines.filter((line) =>
+                    line.startsWith("-")
+                  );
+                  const normalLines = lines.filter(
+                    (line) => !line.startsWith("-")
+                  );
                   return (
                     <>
                       {normalLines.map((line, i) => (

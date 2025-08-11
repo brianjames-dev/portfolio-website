@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Card from "../components/Card";
 import CollapsedCard from "../components/CollapsedCard";
 import ExpandedCard from "../components/ExpandedCard";
 import Gallery from "../components/Gallery";
-import useCardExpansion from "../hooks/useCardExpansion";
 import projects from "../data/projects";
+import useCardExpansion from "../hooks/useCardExpansion";
 import "../styles/Projects.css";
 
 function Projects() {
   const [fullscreenIndex, setFullscreenIndex] = useState(null);
   const [fullscreenImages, setFullscreenImages] = useState([]);
 
-  const { isExpanded, toggle, close } = useCardExpansion();
+  const { isExpanded, toggle } = useCardExpansion();
 
   const onGalleryClick = (images) => {
     setFullscreenImages(images);

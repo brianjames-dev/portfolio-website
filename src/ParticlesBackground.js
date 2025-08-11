@@ -1,7 +1,7 @@
 // ParticlesBackground.js
-import React, { useCallback } from 'react';
-import Particles from 'react-tsparticles';
-import { loadFull } from 'tsparticles';
+import { useCallback } from "react";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
 
 const ParticlesBackground = () => {
   const particlesInit = useCallback(async (engine) => {
@@ -49,7 +49,7 @@ const ParticlesBackground = () => {
           },
           move: {
             enable: true,
-            speed: .5,
+            speed: 0.5,
             outModes: {
               default: "bounce",
             },
@@ -81,7 +81,6 @@ const ParticlesBackground = () => {
       }}
     />
   );
-}
-
+};
 
 export default ParticlesBackground;

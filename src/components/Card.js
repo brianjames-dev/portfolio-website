@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useSpring } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const FADE_DURATION = 0.5; // Content fade duration
 const MORPH_DURATION = 0.5; // Card container morph duration
@@ -13,7 +13,6 @@ export default function Card({
   canExpand = true, // New prop to control expandability
 }) {
   const [isAnimating, setIsAnimating] = useState(false);
-  const [targetHeight, setTargetHeight] = useState("auto");
   const cardRef = useRef(null);
   const contentRef = useRef(null); // Ref for inner content
 
@@ -30,7 +29,7 @@ export default function Card({
       // Temporarily remove height constraint to measure natural height
       const prevHeight = cardRef.current.style.height;
       cardRef.current.style.height = "auto";
-      
+
       // Get bounding rect and compute margins for content
       const contentStyle = window.getComputedStyle(contentRef.current);
       const contentRect = contentRef.current.getBoundingClientRect();
@@ -43,42 +42,50 @@ export default function Card({
       const paddingBottom = parseFloat(cardStyle.paddingBottom) || 0;
 
       // Calculate total height: content height + margins + card padding
-      let height = contentRect.height + marginTop + marginBottom + paddingTop + paddingBottom;
+      let height =
+        contentRect.height +
+        marginTop +
+        marginBottom +
+        paddingTop +
+        paddingBottom;
 
       // Ensure minimum height to avoid collapse
       height = Math.max(height, 100); // Prevent collapsing to near-zero
       cardRef.current.style.height = prevHeight; // Restore height
       springHeight.set(height); // Update spring with measured height
-      setTargetHeight(height); // Store for reference
       // console.log(`Measured height for ${isExpanded ? "expanded" : "collapsed"}: ${height}px (content: ${contentRect.height}, margins: ${marginTop + marginBottom}, padding: ${paddingTop + paddingBottom})`);
     }
-  }, [isExpanded, springHeight]);
+  }, [springHeight]);
 
   // Measure height after render and on state changes
   useEffect(() => {
-    // Initial measurement with delay to ensure content is rendered
+    // Snapshot refs & derived lists for this effect instance
+    const el = contentRef.current;
+    const children = el ? Array.from(el.querySelectorAll("*")) : [];
+
+    // Timers
     const initialTimeout = setTimeout(measureHeight, 100);
+    const animationTimeout = setTimeout(
+      measureHeight,
+      (FADE_DURATION + MORPH_DURATION) * 1000
+    );
 
-    // Re-measure after animation completes to catch late-rendering content
-    const animationTimeout = setTimeout(measureHeight, (FADE_DURATION + MORPH_DURATION) * 1000);
-
-    // Set up ResizeObserver for dynamic content changes
+    // Observe size changes
     const observer = new ResizeObserver(measureHeight);
-    if (contentRef.current) {
-      observer.observe(contentRef.current);
-      // Observe child elements to catch margin changes
-      const children = contentRef.current.querySelectorAll("*");
+    if (el) {
+      observer.observe(el);
       children.forEach((child) => observer.observe(child));
     }
 
+    // Cleanup uses ONLY the snapshots above
     return () => {
       clearTimeout(initialTimeout);
       clearTimeout(animationTimeout);
-      if (contentRef.current) {
-        observer.unobserve(contentRef.current);
-        const children = contentRef.current.querySelectorAll("*");
+      if (el) {
+        observer.unobserve(el);
         children.forEach((child) => observer.unobserve(child));
       }
+      // (optional) observer.disconnect(); // safe if you’re done with it entirely
     };
   }, [isExpanded, measureHeight]);
 
@@ -86,9 +93,12 @@ export default function Card({
     if (isAnimating || !canExpand) return; // Prevent toggling if not expandable
     setIsAnimating(true);
     onToggle();
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, (FADE_DURATION + MORPH_DURATION) * 1000);
+    setTimeout(
+      () => {
+        setIsAnimating(false);
+      },
+      (FADE_DURATION + MORPH_DURATION) * 1000
+    );
   };
 
   return (
@@ -123,7 +133,8 @@ export default function Card({
                 ease: "easeInOut",
               }}
             >
-              {renderCollapsed({ onExpand: handleToggle })} {/* Pass handleToggle explicitly */}
+              {renderCollapsed({ onExpand: handleToggle })}{" "}
+              {/* Pass handleToggle explicitly */}
             </motion.div>
           )}
           {isExpanded && (

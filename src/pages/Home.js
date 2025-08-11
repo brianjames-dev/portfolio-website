@@ -1,21 +1,15 @@
-import React from 'react';
-import alphaHeadshot from '../images/alpha_headshot.png';
-import iconMap from '../data/iconMap.js'
-import '../styles/Home.css'
+import iconMap from "../data/iconMap.js";
+import alphaHeadshot from "../images/alpha_headshot.png";
+import "../styles/Home.css";
 
 function Home() {
   return (
     <section id="home" className="home" data-snap-target>
       <div className="container home-card">
-
         {/* Row 1: Image + Intro */}
         <div className="home-content">
           <div className="home-left">
-            <img
-              src={alphaHeadshot}
-              alt="Brian avatar"
-              className="avatar"
-            />
+            <img src={alphaHeadshot} alt="Brian avatar" className="avatar" />
           </div>
 
           <div className="home-right">
@@ -23,9 +17,9 @@ function Home() {
             <h2 className="name">Brian James</h2>
             <p className="subtitle">Full Stack Developer</p>
             <p className="description">
-              From touring musician to upcoming CS graduate, 
-              I thrive on solving tough problems, providing clean designs, 
-              and creating scalable architecture in all of my coding endeavors.
+              From touring musician to upcoming CS graduate, I thrive on solving
+              tough problems, providing clean designs, and creating scalable
+              architecture in all of my coding endeavors.
             </p>
           </div>
         </div>
@@ -35,61 +29,84 @@ function Home() {
 
         {/* Row 3: Links */}
         <div className="home-under-line">
+          {/* Resume & Email buttons aligned under avatar */}
+          <div className="home-action-buttons">
+            <a href="/resume.pdf" download>
+              <button>
+                <img src={iconMap["Download"]} alt="Download icon" />
+                Résumé
+              </button>
+            </a>
 
-        {/* Resume & Email buttons aligned under avatar */}
-        <div className="home-action-buttons">
-          <a href="/resume.pdf" download>
-            <button>
-              <img src={iconMap['Download']} alt="Download icon" />
-              Résumé
-            </button>
-          </a>
+            <a href="mailto:brianjames.dev@gmail.com">
+              <button>
+                <img src={iconMap["Send"]} alt="Email Send icon" />
+                Email Me
+              </button>
+            </a>
+          </div>
 
-          <a href="mailto:brianjames.dev@gmail.com">
-            <button>
-              <img src={iconMap['Send']} alt="Email Send icon" />
-              Email Me
-            </button>
-          </a>
-        </div>
-
-        {/* Social media links */}
-        <div className="home-social-links">
-          <a
-            href="https://github.com/brianjames-dev"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="icon-wrapper">
-              <img src={iconMap['GitHubThemed']} alt="GitHub" className="default" />
-              <img src={iconMap['GitHubHover']} alt="GitHub" className="hover" />
-            </span>
-          </a>
-          <a
-            href="https://www.linkedin.com/in/brianjames-dev/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="icon-wrapper">
-              <img src={iconMap['LinkedInThemed']} alt="LinkedIn" className="default" />
-              <img src={iconMap['LinkedInThemed']} alt="LinkedIn" className="hover" />
-            </span>
-          </a>
-          <a
-            href="https://www.instagram.com/brianallenjames"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="icon-wrapper">
-              <img src={iconMap['InstagramThemed']} alt="Instagram" className="default" />
-              <img src={iconMap['InstagramThemed']} alt="Instagram" className="hover" />
-            </span>
-          </a>
+          {/* Social media links */}
+          <div className="home-social-links">
+            <a
+              href="https://github.com/brianjames-dev"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="icon-wrapper">
+                <img
+                  src={iconMap["GitHubThemed"]}
+                  alt="GitHub"
+                  className="default"
+                />
+                <img
+                  src={iconMap["GitHubHover"]}
+                  alt="GitHub"
+                  className="hover"
+                />
+              </span>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/brianjames-dev/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="icon-wrapper">
+                <img
+                  src={iconMap["LinkedInThemed"]}
+                  alt="LinkedIn"
+                  className="default"
+                />
+                <img
+                  src={iconMap["LinkedInThemed"]}
+                  alt="LinkedIn"
+                  className="hover"
+                />
+              </span>
+            </a>
+            <a
+              href="https://www.instagram.com/brianallenjames"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="icon-wrapper">
+                <img
+                  src={iconMap["InstagramThemed"]}
+                  alt="Instagram"
+                  className="default"
+                />
+                <img
+                  src={iconMap["InstagramThemed"]}
+                  alt="Instagram"
+                  className="hover"
+                />
+              </span>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
     </section>
-);
+  );
 }
 
 export default Home;

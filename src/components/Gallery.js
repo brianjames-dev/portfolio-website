@@ -1,8 +1,7 @@
 // /components/ProjectGallery.js
-import React, { useEffect, useRef, useState } from 'react';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import iconMap from '../data/iconMap.js';
-
+import { useEffect, useRef, useState } from "react";
+import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
+import iconMap from "../data/iconMap.js";
 
 function ProjectGallery({ images, index, setIndex, onClose }) {
   const [isSuperZoomed, setIsSuperZoomed] = useState(false);
@@ -14,84 +13,82 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
   const hasShownSwipeHintRef = useRef(false);
   const hintTimeoutRef = useRef(null);
 
-
   const scrollToThumbnail = (i, smooth = true) => {
     const el = thumbnailRefs.current[i];
-    const strip = document.querySelector('.thumbnail-strip');
+    const strip = document.querySelector(".thumbnail-strip");
     if (!el || !strip) return;
     const elLeft = el.offsetLeft;
     const elWidth = el.offsetWidth;
     const stripWidth = strip.offsetWidth;
-    const scrollX = elLeft - (stripWidth / 2) + (elWidth / 2);
-    strip.scrollTo({ left: scrollX, behavior: smooth ? 'smooth' : 'auto' });
+    const scrollX = elLeft - stripWidth / 2 + elWidth / 2;
+    strip.scrollTo({ left: scrollX, behavior: smooth ? "smooth" : "auto" });
   };
 
   // Re-centering thumbnail scroll logic
   useEffect(() => {
-    const strip = document.querySelector('.thumbnail-strip');
+    const strip = document.querySelector(".thumbnail-strip");
     if (!strip || index === null) return;
-  
+
     let scrollTimeout;
-  
+
     const handleScroll = () => {
       if (scrollTimeout) clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         scrollToThumbnail(index, true); // Recenter after 1s of no activity
       }, 1000);
     };
-  
-    strip.addEventListener('scroll', handleScroll);
-  
+
+    strip.addEventListener("scroll", handleScroll);
+
     return () => {
-      strip.removeEventListener('scroll', handleScroll);
+      strip.removeEventListener("scroll", handleScroll);
       clearTimeout(scrollTimeout);
     };
   }, [index]);
 
-  
   // Thumbnail row drag-scroll
   useEffect(() => {
-    const strip = document.querySelector('.thumbnail-strip');
+    const strip = document.querySelector(".thumbnail-strip");
     if (!strip) return;
-  
+
     let isDragging = false;
     let startX;
     let scrollLeft;
-  
+
     const startDrag = (e) => {
       isDragging = true;
       startX = e.pageX || e.touches[0].pageX;
       scrollLeft = strip.scrollLeft;
     };
-  
+
     const drag = (e) => {
       if (!isDragging) return;
       const x = e.pageX || e.touches[0].pageX;
       strip.scrollLeft = scrollLeft - (x - startX);
     };
-  
+
     const stopDrag = () => (isDragging = false);
-  
-    strip.addEventListener('mousedown', startDrag);
-    strip.addEventListener('mousemove', drag);
-    strip.addEventListener('mouseup', stopDrag);
-    strip.addEventListener('mouseleave', stopDrag);
-  
-    strip.addEventListener('touchstart', startDrag);
-    strip.addEventListener('touchmove', drag);
-    strip.addEventListener('touchend', stopDrag);
-  
+
+    strip.addEventListener("mousedown", startDrag);
+    strip.addEventListener("mousemove", drag);
+    strip.addEventListener("mouseup", stopDrag);
+    strip.addEventListener("mouseleave", stopDrag);
+
+    strip.addEventListener("touchstart", startDrag);
+    strip.addEventListener("touchmove", drag);
+    strip.addEventListener("touchend", stopDrag);
+
     return () => {
-      strip.removeEventListener('mousedown', startDrag);
-      strip.removeEventListener('mousemove', drag);
-      strip.removeEventListener('mouseup', stopDrag);
-      strip.removeEventListener('mouseleave', stopDrag);
-  
-      strip.removeEventListener('touchstart', startDrag);
-      strip.removeEventListener('touchmove', drag);
-      strip.removeEventListener('touchend', stopDrag);
+      strip.removeEventListener("mousedown", startDrag);
+      strip.removeEventListener("mousemove", drag);
+      strip.removeEventListener("mouseup", stopDrag);
+      strip.removeEventListener("mouseleave", stopDrag);
+
+      strip.removeEventListener("touchstart", startDrag);
+      strip.removeEventListener("touchmove", drag);
+      strip.removeEventListener("touchend", stopDrag);
     };
-  }, []);  
+  }, []);
 
   // Preload adjacent images
   useEffect(() => {
@@ -106,44 +103,45 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
       preload(index - 1);
     }
   }, [index, images]);
-  
 
   // Prevent background touchmove scroll
   useEffect(() => {
     const preventScroll = (e) => {
-      const inThumbnailStrip = e.target.closest('.thumbnail-strip');
+      const inThumbnailStrip = e.target.closest(".thumbnail-strip");
       if (!inThumbnailStrip) {
         e.preventDefault();
       }
     };
-  
+
     if (index !== null) {
-      document.body.addEventListener('touchmove', preventScroll, { passive: false });
+      document.body.addEventListener("touchmove", preventScroll, {
+        passive: false,
+      });
     }
-  
+
     return () => {
-      document.body.removeEventListener('touchmove', preventScroll);
+      document.body.removeEventListener("touchmove", preventScroll);
     };
-  }, [index]);  
+  }, [index]);
 
   // Scroll lock when overlay is open
   useEffect(() => {
     const entering = index !== null;
     if (entering) {
       const y = window.scrollY;
-      document.body.classList.add('no-scroll');
+      document.body.classList.add("no-scroll");
       document.body.style.top = `-${y}px`;
     }
-  
+
     return () => {
       if (entering) {
-        const y = parseInt(document.body.style.top || '0') * -1;
-        document.body.classList.remove('no-scroll');
-        document.body.style.top = '';
+        const y = parseInt(document.body.style.top || "0") * -1;
+        document.body.classList.remove("no-scroll");
+        document.body.style.top = "";
         window.scrollTo(0, y);
       }
     };
-  }, [index]);  
+  }, [index]);
 
   // Reset thumbnailRefs on image change
   useEffect(() => {
@@ -158,19 +156,15 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
   // Show swipe hint once
   useEffect(() => {
     // Show the hint only once per full page load (session)
-    if (
-      index !== null &&
-      images.length > 0 &&
-      !hasShownSwipeHintRef.current
-    ) {
+    if (index !== null && images.length > 0 && !hasShownSwipeHintRef.current) {
       hasShownSwipeHintRef.current = true;
       setShowSwipeHint(true);
-  
+
       hintTimeoutRef.current = setTimeout(() => {
         setShowSwipeHint(false);
       }, 2000);
     }
-  
+
     return () => {
       clearTimeout(hintTimeoutRef.current);
     };
@@ -178,20 +172,20 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
 
   // Keyboard escape
   useEffect(() => {
-    const handleEsc = (e) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
+    const handleEsc = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
   }, [onClose]);
 
   // Mobile swipe
   useEffect(() => {
-    const overlay = document.querySelector('.fullscreen-overlay');
+    const overlay = document.querySelector(".fullscreen-overlay");
     if (!overlay) return;
 
     let lastTouchX = null;
     const handleTouchStart = (e) => {
       if (e.touches.length !== 1) return;
-      if (e.target.closest('.thumbnail-strip')) return;
+      if (e.target.closest(".thumbnail-strip")) return;
       lastTouchX = e.touches[0].clientX;
     };
 
@@ -209,14 +203,16 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
 
     const resetTouch = () => (lastTouchX = null);
 
-    overlay.addEventListener('touchstart', handleTouchStart, { passive: false });
-    overlay.addEventListener('touchmove', handleTouchMove, { passive: false });
-    overlay.addEventListener('touchend', resetTouch);
+    overlay.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    overlay.addEventListener("touchmove", handleTouchMove, { passive: false });
+    overlay.addEventListener("touchend", resetTouch);
 
     return () => {
-      overlay.removeEventListener('touchstart', handleTouchStart);
-      overlay.removeEventListener('touchmove', handleTouchMove);
-      overlay.removeEventListener('touchend', resetTouch);
+      overlay.removeEventListener("touchstart", handleTouchStart);
+      overlay.removeEventListener("touchmove", handleTouchMove);
+      overlay.removeEventListener("touchend", resetTouch);
     };
   }, [index, images.length, setIndex]);
 
@@ -237,15 +233,18 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     >
       {/* Swipe Hint */}
       {showSwipeHint && (
-        <img src={iconMap['Swipe']} alt="Swipe hint" className="swipe-hint" />
+        <img src={iconMap["Swipe"]} alt="Swipe hint" className="swipe-hint" />
       )}
 
       {/* Centered Image */}
       <div className="fullscreen-center-area">
         <div
-          className={`fullscreen-image-wrapper ${isSuperZoomed ? 'superzoom-mode' : ''}`}
+          className={`fullscreen-image-wrapper ${
+            isSuperZoomed ? "superzoom-mode" : ""
+          }`}
           onClick={(e) => {
-            const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            const isTouch =
+              "ontouchstart" in window || navigator.maxTouchPoints > 0;
             if (isTouch || mouseWasDraggedRef.current) e.stopPropagation();
           }}
         >
@@ -285,7 +284,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
                     src={image?.src}
                     alt={image?.caption || "Fullscreen"}
                     className="fullscreen-image superzoomed"
-                    style={{ touchAction: 'none' }}
+                    style={{ touchAction: "none" }}
                   />
                 </div>
               </TransformComponent>
@@ -295,7 +294,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
               src={image?.src}
               alt={image?.caption || "Fullscreen"}
               className="fullscreen-image"
-              style={{ transform: 'scale(1)', cursor: 'zoom-in' }}
+              style={{ transform: "scale(1)", cursor: "zoom-in" }}
               onClick={(e) => {
                 e.stopPropagation();
                 setIsSuperZoomed(true);
@@ -310,11 +309,11 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
       </div>
 
       {/* Thumbnails */}
-      <div className={`thumbnail-strip ${isSuperZoomed ? 'hidden' : ''}`}>
+      <div className={`thumbnail-strip ${isSuperZoomed ? "hidden" : ""}`}>
         {images.map((img, i) => (
           <div
             key={i}
-            className={`thumbnail-container ${i === index ? 'active' : ''}`}
+            className={`thumbnail-container ${i === index ? "active" : ""}`}
             ref={(el) => (thumbnailRefs.current[i] = el)}
             onClick={(e) => {
               e.stopPropagation();
@@ -341,29 +340,33 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
         }}
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <img src={iconMap['Close']} alt="Close" />
+        <img src={iconMap["Close"]} alt="Close" />
       </button>
 
       {/* Arrows */}
-      <button 
-        className={`carousel-arrow left ${(index > 0 && !isSuperZoomed) ? '' : 'hidden'}`}
+      <button
+        className={`carousel-arrow left ${
+          index > 0 && !isSuperZoomed ? "" : "hidden"
+        }`}
         onClick={(e) => {
-            e.stopPropagation();
-            setIndex(index - 1);
+          e.stopPropagation();
+          setIndex(index - 1);
         }}
-        >
+      >
         <span className="arrow-inner">‹</span>
-        </button>
+      </button>
 
-        <button 
-        className={`carousel-arrow right ${(index < images.length - 1 && !isSuperZoomed) ? '' : 'hidden'}`}
+      <button
+        className={`carousel-arrow right ${
+          index < images.length - 1 && !isSuperZoomed ? "" : "hidden"
+        }`}
         onClick={(e) => {
-            e.stopPropagation();
-            setIndex(index + 1);
+          e.stopPropagation();
+          setIndex(index + 1);
         }}
-        >
+      >
         <span className="arrow-inner">›</span>
-        </button>
+      </button>
     </div>
   );
 }

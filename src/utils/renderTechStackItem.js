@@ -1,19 +1,19 @@
 // /utils/renderTechStackItem.js
-import iconMap from '../data/iconMap';
+import iconMap from "../data/iconMap";
 
 const purposeMap = {
-  'Python': 'Core language for logic and async architecture',
-  'Discord.py': 'Real-time messaging via Discord integration',
-  'Git': 'Version control and Railway deployment system',
-  'OpenAI API': 'LLM parsing of natural language input',
-  'Google Sheets API': 'Expense logging to cloud spreadsheet',
-  'Railway': 'Scalable cloud deployment and 24/7 hosting',
+  Python: "Core language for logic and async architecture",
+  "Discord.py": "Real-time messaging via Discord integration",
+  Git: "Version control and Railway deployment system",
+  "OpenAI API": "LLM parsing of natural language input",
+  "Google Sheets API": "Expense logging to cloud spreadsheet",
+  Railway: "Scalable cloud deployment and 24/7 hosting",
 };
 
 export function renderTechStackItem(tech, i) {
   const icon = iconMap[tech];
-  const purpose = purposeMap[tech] || 'Used in project';
-  
+  const purpose = purposeMap[tech] || "Used in project";
+
   return (
     <div key={i} className="tech-stack-row">
       <div className="tech-stack-item">
@@ -29,6 +29,5 @@ export function renderTechStackItem(tech, i) {
         </div>
       </div>
     </div>
-  );  
+  );
 }
-  

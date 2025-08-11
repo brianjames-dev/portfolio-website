@@ -132,7 +132,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  color: #F8F3D9;
+  color: #f8f3d9;
   height: 40px;
   padding: 10px 14px;
   border: none;
@@ -199,7 +199,7 @@
   align-items: center;
   height: 36px;
   gap: 8px;
-  background-color: #B9B28A;
+  background-color: #b9b28a;
   padding: 6px 12px;
   border-radius: 8px;
   white-space: nowrap;
@@ -221,12 +221,12 @@
 .tech-name {
   font-weight: 700;
   font-size: 1rem;
-  color: #F8F3D9;
+  color: #f8f3d9;
 }
 
 .tech-purpose {
   font-size: 0.95rem;
-  color: #504B38;
+  color: #504b38;
   line-height: 1.5;
   margin: 0 !important;
 }
@@ -239,7 +239,7 @@
 
 .tech-arrow {
   font-weight: bold;
-  color: #504B38;
+  color: #504b38;
   flex-shrink: 0;
 }
 
@@ -247,8 +247,8 @@
 .tag {
   display: inline-flex;
   align-items: center;
-  background: #B9B28A;
-  color: #F8F3D9;
+  background: #b9b28a;
+  color: #f8f3d9;
   margin: 3px 6px 3px 0;
   padding: 4px 10px;
   border-radius: 4px;
@@ -320,7 +320,7 @@
 
 /* ========== Project Divider ========== */
 .project-divider {
-  background-color: #504B38;
+  background-color: #504b38;
   display: flex;
   justify-content: center;
   align-items: center;

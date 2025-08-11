@@ -1,8 +1,6 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { renderTag } from "../utils/renderTag.js";
 import iconMap from "../data/iconMap.js";
 import "../styles/CollapsedCard.css";
+import { renderTag } from "../utils/renderTag.js";
 
 function CollapsedCard({ project, onExpand, onGalleryClick }) {
   const canExpand = !!project.expanded; // Check if project has expanded content
@@ -55,7 +53,11 @@ function CollapsedCard({ project, onExpand, onGalleryClick }) {
                 onGalleryClick(project.images);
               }}
             >
-              <img src={iconMap["Gallery"]} alt="Gallery" className="button-icon" />
+              <img
+                src={iconMap["Gallery"]}
+                alt="Gallery"
+                className="button-icon"
+              />
               Gallery
             </button>
           )}

@@ -9,7 +9,7 @@ export function scrollToCollapsedCard(cardId, yOffset = -60) {
 
     window.scrollTo({
       top: y + yOffset,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   }
 }
@@ -17,6 +17,6 @@ export function scrollToCollapsedCard(cardId, yOffset = -60) {
 export function scrollToYPosition(y, yOffset = -60) {
   window.scrollTo({
     top: y + yOffset,
-    behavior: 'smooth',
+    behavior: "smooth",
   });
 }
