@@ -10,8 +10,8 @@
   margin: 0;
 
   background: rgba(235, 229, 194, 0.9); /* translucent version of #EBE5C2 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Optional: adds depth */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Optional: frosty border */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* adds depth */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* frosty border */
 }
 
 /* Left side (Avatar) */
@@ -22,10 +22,16 @@
   align-items: center;
 }
 
+.home-left picture {
+  display: block; /* was inline */
+  line-height: 0; /* belt-and-suspenders */
+}
+
 .home-left .avatar {
-  position: relative;
+  position: block;
   width: 250px;
   height: auto;
+  vertical-align: bottom; /* safe extra nudge */
   filter: drop-shadow(-10px 0px 6px rgba(0, 0, 0, 0.3));
 }
 
