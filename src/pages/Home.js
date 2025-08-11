@@ -16,7 +16,7 @@ function Home() {
                 width="200"
                 height="261"
                 alt="Brian avatar"
-                fetchPriority="high"
+                fetchpriority="high"
                 decoding="async"
                 className="avatar"
               />
