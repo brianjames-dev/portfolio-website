@@ -48,6 +48,8 @@ function CollapsedCard({ project, onExpand, onGalleryClick }) {
           {project.images?.length > 0 && (
             <button
               className="learn-more-btn"
+              onMouseEnter={() => import("../components/Gallery")}
+              onFocus={() => import("../components/Gallery")}
               onClick={(e) => {
                 e.stopPropagation();
                 onGalleryClick(project.images);

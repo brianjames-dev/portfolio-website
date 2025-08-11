@@ -32,6 +32,8 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
           {project.images?.length > 0 && (
             <button
               className="expanded-top-button"
+              onMouseEnter={() => import("../components/Gallery")}
+              onFocus={() => import("../components/Gallery")}
               onClick={(e) => {
                 e.stopPropagation();
                 onGalleryClick(project.images);
@@ -153,6 +155,8 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
         {project.images?.length > 0 && (
           <button
             className="learn-more-btn"
+            onMouseEnter={() => import("../components/Gallery")}
+            onFocus={() => import("../components/Gallery")}
             onClick={(e) => {
               e.stopPropagation();
               onGalleryClick(project.images);
