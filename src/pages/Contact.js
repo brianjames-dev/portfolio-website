@@ -30,24 +30,22 @@ function Contact() {
     import("react-google-recaptcha");
   }, []);
 
-  // Reveal captcha when section scrolls into view (or close to it)
+  // When the section approaches, just prefetch the React component chunk
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
-
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
-          setShowCaptcha(true);
+          prefetchRecaptcha();
           io.disconnect();
         }
       },
-      { rootMargin: "200px 0px" } // start a bit early
+      { rootMargin: "100px 0px" }
     );
-
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [prefetchRecaptcha]);
 
   const validate = () => {
     const newErrors = {};
@@ -130,11 +128,13 @@ function Contact() {
           </p>
 
           <form onSubmit={handleSubmit} noValidate>
-            <label>
+            <label htmlFor="name">
               Name *
               <input
+                id="name"
                 type="text"
                 name="name"
+                autoComplete="name"
                 value={form.name}
                 onChange={handleChange}
                 className={errors.name ? "input-error" : ""}
@@ -142,11 +142,13 @@ function Contact() {
               {errors.name && <span className="error">{errors.name}</span>}
             </label>
 
-            <label>
+            <label htmlFor="email">
               Email *
               <input
+                id="email"
                 type="email"
                 name="email"
+                autoComplete="email"
                 value={form.email}
                 onChange={handleChange}
                 className={errors.email ? "input-error" : ""}
@@ -154,11 +156,13 @@ function Contact() {
               {errors.email && <span className="error">{errors.email}</span>}
             </label>
 
-            <label>
+            <label htmlFor="message">
               Message *
               <textarea
+                id="message"
                 name="message"
                 rows="5"
+                autoComplete="off"
                 value={form.message}
                 onChange={handleChange}
                 className={errors.message ? "input-error" : ""}

@@ -4,14 +4,15 @@
   "private": true,
   "dependencies": {
     "@aws-sdk/client-ses": "^3.848.0",
+    "@tsparticles/engine": "^3.9.1",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.9.1",
     "framer-motion": "^12.23.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-google-recaptcha": "^3.1.0",
     "react-scripts": "^5.0.0",
-    "react-tsparticles": "^2.12.0",
-    "react-zoom-pan-pinch": "^3.7.0",
-    "tsparticles": "^2.12.0"
+    "react-zoom-pan-pinch": "^3.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
