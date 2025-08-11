@@ -5,10 +5,6 @@ import { renderTag } from "../utils/renderTag.js";
 function CollapsedCard({ project, onExpand, onGalleryClick }) {
   const canExpand = !!project.expanded; // Check if project has expanded content
 
-  const prewarmGallery = () => {
-    import("../components/Gallery");
-  };
-
   return (
     <>
       {/* Header */}
@@ -52,8 +48,6 @@ function CollapsedCard({ project, onExpand, onGalleryClick }) {
           {project.images?.length > 0 && (
             <button
               className="learn-more-btn"
-              onMouseEnter={prewarmGallery}
-              onFocus={prewarmGallery}
               onClick={(e) => {
                 e.stopPropagation();
                 onGalleryClick(project.images);

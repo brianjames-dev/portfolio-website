@@ -1,19 +1,15 @@
 // src/components/ExpandedCard.js
+import { motion } from "framer-motion";
 import React from "react";
 import iconMap from "../data/iconMap.js";
 import "../styles/BookieBot.css";
 import "../styles/CollapsedCard.css"; // for shared section styles
 import { renderContentBlock } from "../utils/renderContentBlock.js";
 import { renderTechStackItem } from "../utils/renderTechStackItem.js";
-import MotionDiv from "./MotionDiv";
 
 const CONTENT_FADE_DURATION = 0.5;
 
 function ExpandedCard({ project, onGalleryClick, handleClose }) {
-  const prewarmGallery = () => {
-    import("../components/Gallery");
-  };
-
   return (
     <div className="expanded-block">
       {/* Expanded Title / Subtitle / Close */}
@@ -36,8 +32,6 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
           {project.images?.length > 0 && (
             <button
               className="expanded-top-button"
-              onMouseEnter={prewarmGallery}
-              onFocus={prewarmGallery}
               onClick={(e) => {
                 e.stopPropagation();
                 onGalleryClick(project.images);
@@ -90,7 +84,7 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
             {label !== "Short Description" && (
               <div className="section-divider" />
             )}
-            <MotionDiv
+            <motion.div
               className="project-section"
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
@@ -149,7 +143,7 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
                   );
                 })()
               )}
-            </MotionDiv>
+            </motion.div>
           </React.Fragment>
         );
       })}
@@ -159,8 +153,6 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
         {project.images?.length > 0 && (
           <button
             className="learn-more-btn"
-            onMouseEnter={prewarmGallery}
-            onFocus={prewarmGallery}
             onClick={(e) => {
               e.stopPropagation();
               onGalleryClick(project.images);
