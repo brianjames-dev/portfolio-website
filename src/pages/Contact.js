@@ -1,7 +1,16 @@
-import { useState } from "react";
-import ReCAPTCHA from "react-google-recaptcha";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import iconMap from "../data/iconMap.js";
 import "../styles/Contact.css";
+
+// Lazy-load the library so it doesn't bloat your main bundle
+const LazyReCAPTCHA = lazy(() => import("react-google-recaptcha"));
 
 function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -10,6 +19,35 @@ function Contact() {
   const [status, setStatus] = useState(null);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Control when we actually mount the ReCAPTCHA component
+  const [showCaptcha, setShowCaptcha] = useState(false);
+  const sectionRef = useRef(null);
+
+  // Prefetch the recaptcha chunk on user intent (hover/focus)
+  const prefetchRecaptcha = useCallback(() => {
+    // Starts loading the lazy chunk before we render it
+    import("react-google-recaptcha");
+  }, []);
+
+  // Reveal captcha when section scrolls into view (or close to it)
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setShowCaptcha(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "200px 0px" } // start a bit early
+    );
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const validate = () => {
     const newErrors = {};
@@ -22,8 +60,7 @@ function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (loading) return; // Prevent double-clicks
+    if (loading) return;
 
     if (!validate() || !captchaToken) {
       setStatus("error");
@@ -31,8 +68,7 @@ function Contact() {
       return;
     }
 
-    setLoading(true); // Start spinner
-
+    setLoading(true);
     try {
       const response = await fetch(
         "https://7ohwfvw4b9.execute-api.us-west-1.amazonaws.com/default/contactFormHandler",
@@ -44,7 +80,6 @@ function Contact() {
       );
 
       const data = await response.json();
-
       if (response.ok) {
         setStatus("success");
         setMessage("Message sent! I'll get back to you soon.");
@@ -62,7 +97,7 @@ function Contact() {
       setStatus("error");
       setMessage("Failed to send. Check your internet connection.");
     } finally {
-      setLoading(false); // Stop spinner
+      setLoading(false);
     }
   };
 
@@ -70,14 +105,28 @@ function Contact() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // If user interacts with the form before IntersectionObserver fires,
+  // show the captcha immediately and prefetch its chunk.
+  const onFirstInteract = () => {
+    prefetchRecaptcha();
+    setShowCaptcha(true);
+  };
+
   return (
-    <section id="contact" className="contact-section" data-snap-target>
+    <section
+      id="contact"
+      className="contact-section"
+      data-snap-target
+      ref={sectionRef}
+      onFocusCapture={onFirstInteract}
+      onMouseEnter={onFirstInteract}
+    >
       <div className="contact-card">
         <div className="contact-left">
           <h2>Get In Touch</h2>
           <p>
-            Feel free to fill out the form below, <br></br> or contact me
-            directly by email.
+            Feel free to fill out the form below, <br /> or contact me directly
+            by email.
           </p>
 
           <form onSubmit={handleSubmit} noValidate>
@@ -121,13 +170,21 @@ function Contact() {
 
             <div className="contact-submit-row">
               <div className="recaptcha-wrapper">
-                <div className="recaptcha">
-                  <ReCAPTCHA
-                    sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
-                    onChange={(token) => setCaptchaToken(token)}
-                  />
+                <div className="recaptcha" style={{ minHeight: 78 }}>
+                  {showCaptcha ? (
+                    <Suspense fallback={<div style={{ height: 78 }} />}>
+                      <LazyReCAPTCHA
+                        sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+                        onChange={(token) => setCaptchaToken(token)}
+                      />
+                    </Suspense>
+                  ) : (
+                    // Reserve space to avoid layout shift before we mount it
+                    <div style={{ height: 78 }} />
+                  )}
                 </div>
               </div>
+
               <button type="submit" disabled={loading}>
                 {loading ? (
                   <svg
@@ -176,6 +233,7 @@ function Contact() {
               <strong>Links</strong>
             </p>
             <div className="contact-social-links">
+              {/* ... your icon links unchanged ... */}
               <a
                 href="https://github.com/brianjames-dev"
                 target="_blank"

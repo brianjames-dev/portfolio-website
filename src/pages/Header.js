@@ -9,6 +9,11 @@ function Header({ activeSection }) {
   const navRef = useRef(null);
   const bubbleRef = useRef(null);
 
+  // Preload the lazy chunk for react-google-recaptcha
+  const preloadRecaptcha = () => {
+    import("react-google-recaptcha");
+  };
+
   // Handle header hide/show on scroll
   useEffect(() => {
     const header = document.querySelector(".site-header");
@@ -142,7 +147,17 @@ function Header({ activeSection }) {
                 key={section}
                 className={activeSection === section ? "active" : ""}
                 href={`#${section}`}
-                onClick={() => setMenuOpen(false)}
+                onClick={() => {
+                  setMenuOpen(false);
+                  if (section === "contact") preloadRecaptcha();
+                }}
+                onMouseEnter={
+                  section === "contact" ? preloadRecaptcha : undefined
+                }
+                onFocus={section === "contact" ? preloadRecaptcha : undefined}
+                onTouchStart={
+                  section === "contact" ? preloadRecaptcha : undefined
+                }
               >
                 {section.charAt(0).toUpperCase() + section.slice(1)}
               </a>
