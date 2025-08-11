@@ -1,5 +1,4 @@
 import iconMap from "../data/iconMap.js";
-import alphaHeadshot from "../images/alpha_headshot.png";
 import "../styles/Home.css";
 
 function Home() {
@@ -9,7 +8,19 @@ function Home() {
         {/* Row 1: Image + Intro */}
         <div className="home-content">
           <div className="home-left">
-            <img src={alphaHeadshot} alt="Brian avatar" className="avatar" />
+            <picture>
+              <source srcSet="/img/alpha_headshot.avif" type="image/avif" />
+              <source srcSet="/img/alpha_headshot.webp" type="image/webp" />
+              <img
+                src="/img/alpha_headshot.jpg"
+                width="200"
+                height="261"
+                alt="Brian avatar"
+                fetchPriority="high"
+                decoding="async"
+                className="avatar"
+              />
+            </picture>
           </div>
 
           <div className="home-right">
