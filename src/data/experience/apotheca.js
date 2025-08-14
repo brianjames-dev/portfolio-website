@@ -19,7 +19,7 @@ const apotheca = {
   title: "Full-stack Developer",
   team: "Apotheca | Remote | Part-time",
   description:
-    "Design, maintain, and evolve the SkinPro desktop application in collaboration with the business owner, managing 300+ client records and 2,000+ appointments, saving 1,000+ hours/year of manual work and $3,000+ in software costs.",
+    "Spearheaded the SkinPro desktop application in collaboration with the business owner, managing 300+ client records and 2,000+ appointments, saving 1,000+ hours/year of manual work and $3,000+ in software costs.",
   stack: [
     "Python",
     "SQLite",
@@ -60,8 +60,9 @@ const apotheca = {
         `,
 
     description: `
-            •  Design, maintain, and evolve the SkinPro desktop application [Github] in collaboration with the business owner, managing 300+ client records and 2,000+ appointments, saving 1,000+ hours/year of manual work and $3,000+ in software costs.
-            •  Integrated a QR-based mobile-to-desktop photo upload system and a dynamic PDF prescription generator—reducing photo management time by 90% and supporting customizable care routines.
+            •  Spearheaded the SkinPro desktop application in collaboration with the business owner, managing 300+ client records and 2,000+ appointments, saving 1,000+ hours/year of manual work and $3,000+ in software costs.
+            •  Integrated a QR-based mobile-to-desktop photo upload system using Flask, cutting image management time by 90%.
+            •  Constructed a dynamic PDF prescription generator with ReportLab, turning a handwritten process into an automated workflow.
             •  Built modern, responsive UIs with CTkinter and a local SQLite database with weekly backups, saving $500+ per year on cloud costs.
         `,
   },
