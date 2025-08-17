@@ -5,7 +5,7 @@
 const entheos = {
   id: "entheos",
   title: "Stage Automation Engineer",
-  team: "Entheos | Various Locations | Full-time",
+  team: "Entheos | Global | Full-time",
   description: `
         Designed and programmed an automated live sound & lighting system (70+ fixtures) using Python and Showbuddy, creating 100+ custom lighting scenes synchronized to instruments and vocals, reducing tour crew costs by $5,000+.
     `,
@@ -18,7 +18,7 @@ const entheos = {
         `,
 
     subtitle: `
-            Entheos | Various Locations | Full-time
+            Entheos | Global | Full-time
         `,
 
     github: `
