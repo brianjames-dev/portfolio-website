@@ -2,7 +2,7 @@
 import js from "@eslint/js";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
-import unusedImports from "eslint-plugin-unused-imports"; // <--- add this
+import unusedImports from "eslint-plugin-unused-imports";
 import globals from "globals";
 
 export default [
@@ -32,7 +32,7 @@ export default [
     plugins: {
       react,
       "react-hooks": reactHooks,
-      "unused-imports": unusedImports, // <--- add this
+      "unused-imports": unusedImports,
     },
     rules: {
       // React rules
@@ -43,7 +43,7 @@ export default [
       "react/jsx-uses-vars": "warn",
 
       // Autofix unused imports
-      "unused-imports/no-unused-imports": "error", // removes them on save
+      "unused-imports/no-unused-imports": "error",
 
       // Disable default unused vars rule for imports (handled above)
       "no-unused-vars": "off",
