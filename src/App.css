@@ -165,6 +165,22 @@ section.home {
   display: block;
 }
 
+@media (min-width: 601px) {
+  section.home {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100lvh;
+    min-height: 100dvh;
+    padding-top: var(--header-height);
+    padding-bottom: 0;
+  }
+
+  section.home .home-card {
+    margin: 0 auto;
+  }
+}
+
 section.about,
 section.experience,
 section.projects {

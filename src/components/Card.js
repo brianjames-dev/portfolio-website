@@ -17,6 +17,20 @@ export default function Card({
   const contentRef = useRef(null); // Ref for inner content
   const scrollTimeoutRef = useRef(null);
 
+  const isCardTopVisible = useCallback(() => {
+    if (typeof window === "undefined") return true;
+    const cardEl = cardRef.current;
+    if (!cardEl) return true;
+    const rect = cardEl.getBoundingClientRect();
+    const doc = document.documentElement;
+    const headerVar = getComputedStyle(doc)
+      .getPropertyValue("--header-height")
+      .trim();
+    const headerOffset = parseInt(headerVar || "60", 10) || 60;
+    const safeTop = headerOffset + 4; // keep a small buffer under the header
+    return rect.top >= safeTop;
+  }, []);
+
   // Spring animation for height
   const springHeight = useSpring(0, {
     stiffness: 200,
@@ -111,11 +125,15 @@ export default function Card({
     (options = {}) => {
       if (isAnimating || !canExpand) return; // Prevent toggling if not expandable
       const collapsing = isExpanded;
-      const shouldScroll = Boolean(options.scrollToTop && collapsing);
+      const { scrollToTop, scrollIfOffscreen } = options;
+      const shouldScroll = Boolean(collapsing && scrollToTop);
+      const shouldScrollIfOffscreen =
+        collapsing && scrollIfOffscreen && !isCardTopVisible();
+      const willScroll = shouldScroll || shouldScrollIfOffscreen;
       setIsAnimating(true);
       onToggle();
 
-      if (shouldScroll) {
+      if (willScroll) {
         if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
         scrollTimeoutRef.current = setTimeout(() => {
           scrollCardIntoView();
@@ -129,7 +147,14 @@ export default function Card({
         (FADE_DURATION + MORPH_DURATION) * 1000
       );
     },
-    [canExpand, isAnimating, isExpanded, onToggle, scrollCardIntoView]
+    [
+      canExpand,
+      isAnimating,
+      isExpanded,
+      isCardTopVisible,
+      onToggle,
+      scrollCardIntoView,
+    ]
   );
 
   useEffect(() => {
@@ -188,7 +213,8 @@ export default function Card({
             >
               {renderExpanded({
                 onClose: handleToggle,
-                onCloseAndScroll: () => handleToggle({ scrollToTop: true }),
+                onCloseAndScroll: () =>
+                  handleToggle({ scrollIfOffscreen: true }),
               })}
             </motion.div>
           )}
