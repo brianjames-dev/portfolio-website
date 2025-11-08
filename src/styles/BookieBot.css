@@ -172,7 +172,13 @@
   grid-template-columns: repeat(4, 1fr);
   justify-items: center;
   gap: 40px; /* row gap */
-  margin: 20px 0 0 0;
+  margin: 6px 0 0 0;
+}
+
+.feature-text {
+  width: 100%;
+  text-align: left;
+  margin: 0;
 }
 
 .feature-img {
@@ -529,7 +535,7 @@
   /* ========== Features ========== */
   .features-block {
     display: block;
-    margin-top: 40px;
+    margin-top: 12px;
   }
 
   .feature-img {

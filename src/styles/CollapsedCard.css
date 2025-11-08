@@ -118,7 +118,7 @@
 
 /* ========== Expanded View Header ========== */
 .expanded-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .expanded-title-row {
@@ -148,7 +148,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 20px;
-  margin: 0;
+  margin: 12px 0 0 0;
 }
 
 .expanded-top-button,
@@ -267,6 +267,29 @@
   flex-shrink: 0;
 }
 
+@media (max-width: 600px) {
+  .tech-stack-item {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    text-align: left;
+  }
+
+  .tech-tag-wrapper {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .tech-purpose-wrapper {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .tech-arrow {
+    margin-top: 4px;
+  }
+}
+
 /* ========== Tag List ========== */
 .tag {
   display: inline-flex;
@@ -368,6 +391,4 @@
 [data-theme="dark"] .tech-name {
   color: var(--color-text);
 }
-
-
 

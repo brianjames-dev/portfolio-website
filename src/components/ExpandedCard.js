@@ -1,6 +1,6 @@
 // src/components/ExpandedCard.js
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import iconMap from "../data/iconMap.js";
 import "../styles/BookieBot.css";
 import "../styles/CollapsedCard.css"; // for shared section styles
@@ -9,7 +9,36 @@ import { renderTechStackItem } from "../utils/renderTechStackItem.js";
 
 const CONTENT_FADE_DURATION = 0.5;
 
-function ExpandedCard({ project, onGalleryClick, handleClose }) {
+function ExpandedCard({
+  project,
+  onGalleryClick,
+  handleClose,
+  handleCloseAndScroll,
+}) {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof document === "undefined") return false;
+    return document.documentElement.getAttribute("data-theme") === "dark";
+  });
+  const hasGallery = (project.images?.length || 0) > 0;
+  const hasGithub = Boolean(project.expanded?.github);
+  const hasTopButtons = hasGallery || hasGithub;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+    const root = document.documentElement;
+    if (!root) return undefined;
+
+    const updateMode = () =>
+      setIsDarkMode(root.getAttribute("data-theme") === "dark");
+    updateMode();
+
+    const observer = new MutationObserver(updateMode);
+    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
+
+  const closeIconKey = isDarkMode ? "Close" : "CloseDark";
+
   return (
     <div className="expanded-block">
       {/* Expanded Title / Subtitle / Close */}
@@ -17,7 +46,7 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
         <div className="expanded-title-row">
           <h3>{project.expanded?.title}</h3>
           <img
-            src={iconMap["CloseDark"]}
+            src={iconMap[closeIconKey]}
             alt="Close"
             className="close-button-icon"
             onClick={(e) => {
@@ -28,42 +57,44 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
         </div>
         <p className="expanded-subtitle">{project.expanded?.subtitle}</p>
 
-        <div className="expanded-buttons-row">
-          {project.images?.length > 0 && (
-            <button
-              className="expanded-top-button"
-              onMouseEnter={() => import("../components/Gallery")}
-              onFocus={() => import("../components/Gallery")}
-              onClick={(e) => {
-                e.stopPropagation();
-                onGalleryClick(project.images);
-              }}
-            >
-              <img
-                src={iconMap["Gallery"]}
-                alt="Gallery"
-                className="button-icon"
-              />
-              Gallery
-            </button>
-          )}
-          {project.expanded?.github && (
-            <button
-              className="expanded-top-button"
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(project.expanded.github, "_blank");
-              }}
-            >
-              <img
-                src={iconMap["GitLight"]}
-                alt="GitHub"
-                className="button-icon"
-              />
-              GitHub
-            </button>
-          )}
-        </div>
+        {hasTopButtons && (
+          <div className="expanded-buttons-row">
+            {hasGallery && (
+              <button
+                className="expanded-top-button"
+                onMouseEnter={() => import("../components/Gallery")}
+                onFocus={() => import("../components/Gallery")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onGalleryClick(project.images);
+                }}
+              >
+                <img
+                  src={iconMap["Gallery"]}
+                  alt="Gallery"
+                  className="button-icon"
+                />
+                Gallery
+              </button>
+            )}
+            {hasGithub && (
+              <button
+                className="expanded-top-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(project.expanded.github, "_blank");
+                }}
+              >
+                <img
+                  src={iconMap["GitLight"]}
+                  alt="GitHub"
+                  className="button-icon"
+                />
+                GitHub
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Sections */}
@@ -100,7 +131,7 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
                 <>
                   <div className="tech-timeline">
                     {project.stack.map((tech, i) =>
-                      renderTechStackItem(tech, i)
+                      renderTechStackItem(tech, i, project.id)
                     )}
                   </div>
                   {project.expanded?.techStack?.map?.((block, i) =>
@@ -174,7 +205,7 @@ function ExpandedCard({ project, onGalleryClick, handleClose }) {
           className="learn-more-btn"
           onClick={(e) => {
             e.stopPropagation();
-            handleClose();
+            (handleCloseAndScroll || handleClose)();
           }}
         >
           <img

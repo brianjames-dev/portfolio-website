@@ -42,11 +42,12 @@ function Experience() {
                 onGalleryClick={() => onGalleryClick(exp.images)}
               />
             )}
-            renderExpanded={({ onClose }) => (
+            renderExpanded={({ onClose, onCloseAndScroll }) => (
               <ExpandedCard
                 project={exp}
                 onGalleryClick={() => onGalleryClick(exp.images)}
                 handleClose={onClose}
+                handleCloseAndScroll={onCloseAndScroll}
               />
             )}
           />

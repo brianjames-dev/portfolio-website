@@ -42,11 +42,12 @@ function Projects() {
                 onGalleryClick={() => onGalleryClick(proj.images)}
               />
             )}
-            renderExpanded={({ onClose }) => (
+            renderExpanded={({ onClose, onCloseAndScroll }) => (
               <ExpandedCard
                 project={proj}
                 onGalleryClick={() => onGalleryClick(proj.images)}
                 handleClose={onClose}
+                handleCloseAndScroll={onCloseAndScroll}
               />
             )}
           />

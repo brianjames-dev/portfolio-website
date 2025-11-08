@@ -10,16 +10,21 @@ import cplusplusIcon from "../images/icons/cplusplus.svg";
 import cSharpIcon from "../images/icons/cSharp.svg";
 import cssIcon from "../images/icons/css.svg";
 import discordIcon from "../images/icons/discord.svg";
+import dockerIcon from "../images/icons/docker.svg";
 import downloadIcon from "../images/icons/download.svg";
 import expressIcon from "../images/icons/express.svg";
+import fastApiIcon from "../images/icons/fastAPI.svg";
+import firebaseIcon from "../images/icons/firebase.svg";
 import flaskIcon from "../images/icons/flask.svg";
 import fullscreenIcon from "../images/icons/fullscreen.svg";
 import galleryIcon from "../images/icons/gallery.svg";
+import gcpIcon from "../images/icons/gcp.svg";
 import gitIcon from "../images/icons/git.svg";
 import githubIcon from "../images/icons/github.svg";
 import githubLight from "../images/icons/github_light.svg";
 import githubThemed from "../images/icons/github_themed.svg";
 import githubHover from "../images/icons/github_themed_hover.svg";
+import googleAdsIcon from "../images/icons/googleAds.svg";
 import htmlIcon from "../images/icons/html.svg";
 import infoIcon from "../images/icons/info.svg";
 import instagramIcon from "../images/icons/instagram.svg";
@@ -42,18 +47,24 @@ import dotNetIcon from "../images/icons/NET.svg";
 import nodejsIcon from "../images/icons/nodejs.svg";
 import numpyIcon from "../images/icons/numpy.svg";
 import pandasIcon from "../images/icons/pandas.svg";
+import playwrightIcon from "../images/icons/playwright.svg";
+import postgresqlIcon from "../images/icons/postgreSQL.svg";
 import powerbiIcon from "../images/icons/powerbi.svg";
 import pythonIcon from "../images/icons/python.svg";
 import reactIcon from "../images/icons/react.svg";
+import redisIcon from "../images/icons/redis.svg";
 import scikitlearnIcon from "../images/icons/scikitlearn.svg";
 import seabornIcon from "../images/icons/seaborn.svg";
 import sendIcon from "../images/icons/send.svg";
 import sheetsIcon from "../images/icons/sheets.svg";
 import sqliteIcon from "../images/icons/sqlite.svg";
+import swiftIcon from "../images/icons/swift.svg";
 import sunIcon from "../images/icons/sun.svg";
 import swipeIcon from "../images/icons/swipe.svg";
+import typescriptIcon from "../images/icons/typescript.svg";
 import visualStudio2022Icon from "../images/icons/visual_studio_2022.svg";
 import xmlIcon from "../images/icons/XML.svg";
+import xcodeIcon from "../images/icons/xcode.svg";
 
 const iconMap = {
   Moon: moonIcon,
@@ -69,13 +80,20 @@ const iconMap = {
   cSharp: cSharpIcon,
   CPlusPlus: cplusplusIcon,
   CSS: cssIcon,
+  Docker: dockerIcon,
   HTML: htmlIcon,
   JavaScript: javascriptIcon,
   "Node.js": nodejsIcon,
+  TypeScript: typescriptIcon,
+  Swift: swiftIcon,
   MongoDB: mongodbIcon,
+  PostgreSQL: postgresqlIcon,
+  Redis: redisIcon,
   SQLite: sqliteIcon,
   Flask: flaskIcon,
+  FastAPI: fastApiIcon,
   Python: pythonIcon,
+  Playwright: playwrightIcon,
   Git: gitIcon,
   GitHub: githubIcon,
   Java: javaIcon,
@@ -88,6 +106,9 @@ const iconMap = {
   "Power BI": powerbiIcon,
   "Scikit-learn": scikitlearnIcon,
   Seaborn: seabornIcon,
+  Firebase: firebaseIcon,
+  "Firebase Auth": firebaseIcon,
+  Firestore: firebaseIcon,
   Instagram: instagramIcon,
   Close: closeIcon,
   Download: downloadIcon,
@@ -109,8 +130,13 @@ const iconMap = {
   Send: sendIcon,
   "Logic Pro X": logicIcon,
   "AWS Lambda": lambdaIcon,
+  GCP: gcpIcon,
+  "Google Cloud Platform": gcpIcon,
+  "Google Ads": googleAdsIcon,
+  "Google Ads API": googleAdsIcon,
   "OpenAI API": chatGPTIcon,
   "Google Sheets API": sheetsIcon,
+  Xcode: xcodeIcon,
 };
 
 export default iconMap;

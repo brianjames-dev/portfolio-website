@@ -15,6 +15,7 @@ export default function Card({
   const [isAnimating, setIsAnimating] = useState(false);
   const cardRef = useRef(null);
   const contentRef = useRef(null); // Ref for inner content
+  const scrollTimeoutRef = useRef(null);
 
   // Spring animation for height
   const springHeight = useSpring(0, {
@@ -89,17 +90,53 @@ export default function Card({
     };
   }, [isExpanded, measureHeight]);
 
-  const handleToggle = async () => {
-    if (isAnimating || !canExpand) return; // Prevent toggling if not expandable
-    setIsAnimating(true);
-    onToggle();
-    setTimeout(
-      () => {
-        setIsAnimating(false);
-      },
-      (FADE_DURATION + MORPH_DURATION) * 1000
-    );
-  };
+  const scrollCardIntoView = useCallback(() => {
+    if (typeof window === "undefined") return;
+    const cardEl = cardRef.current;
+    if (!cardEl) return;
+    const rect = cardEl.getBoundingClientRect();
+    const doc = document.documentElement;
+    const headerVar = getComputedStyle(doc)
+      .getPropertyValue("--header-height")
+      .trim();
+    const headerOffset = parseInt(headerVar || "60", 10) || 60;
+    const targetTop = rect.top + window.pageYOffset - headerOffset - 8;
+    window.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: "smooth",
+    });
+  }, []);
+
+  const handleToggle = useCallback(
+    (options = {}) => {
+      if (isAnimating || !canExpand) return; // Prevent toggling if not expandable
+      const collapsing = isExpanded;
+      const shouldScroll = Boolean(options.scrollToTop && collapsing);
+      setIsAnimating(true);
+      onToggle();
+
+      if (shouldScroll) {
+        if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = setTimeout(() => {
+          scrollCardIntoView();
+        }, 50);
+      }
+
+      setTimeout(
+        () => {
+          setIsAnimating(false);
+        },
+        (FADE_DURATION + MORPH_DURATION) * 1000
+      );
+    },
+    [canExpand, isAnimating, isExpanded, onToggle, scrollCardIntoView]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
+  }, []);
 
   return (
     <motion.div
@@ -149,7 +186,10 @@ export default function Card({
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              {renderExpanded({ onClose: handleToggle })}
+              {renderExpanded({
+                onClose: handleToggle,
+                onCloseAndScroll: () => handleToggle({ scrollToTop: true }),
+              })}
             </motion.div>
           )}
         </AnimatePresence>
