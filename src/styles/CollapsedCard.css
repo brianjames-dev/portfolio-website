@@ -379,6 +379,24 @@
   line-height: 1.5;
 }
 
+.embedded-video {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  margin-top: 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+}
+
+.embedded-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 /* ========== Project Divider ========== */
 .project-divider {
   background-color: var(--color-text);

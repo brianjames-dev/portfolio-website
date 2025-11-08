@@ -22,6 +22,12 @@ function ExpandedCard({
   const hasGallery = (project.images?.length || 0) > 0;
   const hasGithub = Boolean(project.expanded?.github);
   const hasTopButtons = hasGallery || hasGithub;
+  const videoEmbed = project.expanded?.video;
+  const rawVideoId = videoEmbed?.id;
+  const videoEmbedId =
+    typeof rawVideoId === "string" ? rawVideoId.trim() : "";
+  const hasVideoEmbed =
+    videoEmbed?.provider === "youtube" && Boolean(videoEmbedId);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -110,7 +116,10 @@ function ExpandedCard({
         ["Reflection & Learnings", project.expanded?.reflection],
         ["What’s Next?", project.expanded?.future],
       ].map(([label, content], idx) => {
-        if (!content) return null;
+        const shouldRenderSection =
+          Boolean(content) ||
+          (label === "Short Description" && hasVideoEmbed);
+        if (!shouldRenderSection) return null;
 
         return (
           <React.Fragment key={label}>
@@ -140,7 +149,7 @@ function ExpandedCard({
                 </>
               ) : Array.isArray(content) ? (
                 content.map((block, i) => renderContentBlock(block, i))
-              ) : (
+              ) : typeof content === "string" ? (
                 (() => {
                   const lines = content
                     .split("\n")
@@ -175,6 +184,16 @@ function ExpandedCard({
                     </>
                   );
                 })()
+              ) : null}
+              {label === "Short Description" && hasVideoEmbed && (
+                <div className="embedded-video">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${videoEmbedId}?rel=0`}
+                    title={videoEmbed.title || project.expanded?.title || "Demo video"}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
               )}
             </motion.div>
           </React.Fragment>
