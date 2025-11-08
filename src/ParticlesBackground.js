@@ -1,7 +1,14 @@
 // ParticlesBackground.js
 import { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
-import { lazy, memo, Suspense, useEffect, useMemo, useState } from "react";
+import {
+  lazy,
+  memo,
+  Suspense,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 
 const engineReadyPromise = initParticlesEngine(async (engine) => {
@@ -17,12 +24,39 @@ function ParticlesBackground() {
   const [mounted, setMounted] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [backgroundColor, setBackgroundColor] = useState("#f8f3d9");
 
   useEffect(() => {
     import("@tsparticles/react");
     engineReadyPromise.then(() => setEngineReady(true));
     const raf = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(raf);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const { document, MutationObserver: Observer } = window;
+    if (!document?.documentElement || !Observer) return undefined;
+
+    const root = document.documentElement;
+
+    const readColor = () => {
+      const value = getComputedStyle(root)
+        .getPropertyValue("--color-bg")
+        .trim();
+
+      if (value) {
+        setBackgroundColor(value);
+      }
+    };
+
+    readColor();
+
+    const observer = new Observer(readColor);
+    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -49,7 +83,7 @@ function ParticlesBackground() {
 
     return {
       fullScreen: { enable: true, zIndex: 0 },
-      background: { color: "transparent" },
+      background: { color: backgroundColor },
       detectRetina: true,
       fpsLimit: fps,
       pauseOnBlur: true,
@@ -83,7 +117,7 @@ function ParticlesBackground() {
         },
       },
     };
-  }, []);
+  }, [backgroundColor]);
 
   if (!engineReady || !mounted) return null;
 

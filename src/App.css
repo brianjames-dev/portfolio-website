@@ -41,8 +41,12 @@ main {
   z-index: 1;
 }
 
+html {
+  background-color: var(--color-bg);
+}
+
 body {
-  background-color: #f8f3d9;
+  background-color: transparent;
 }
 
 html,
