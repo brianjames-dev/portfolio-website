@@ -1,57 +1,68 @@
 // /data/iconMap.js
 
 // Import all your icons explicitly
-import awsIcon from "../images/AWS.svg";
-import logicIcon from "../images/LogicProX.svg";
-import chatGPTIcon from "../images/chatGPT.svg";
-import closeIcon from "../images/close.svg";
-import closeDark from "../images/close_dark.svg";
-import collapseIcon from "../images/collapse.svg";
-import cplusplusIcon from "../images/cplusplus.svg";
-import cssIcon from "../images/css.svg";
-import discordIcon from "../images/discord.svg";
-import downloadIcon from "../images/download.svg";
-import expressIcon from "../images/express.svg";
-import flaskIcon from "../images/flask.svg";
-import fullscreenIcon from "../images/fullscreen.svg";
-import galleryIcon from "../images/gallery.svg";
-import gitIcon from "../images/git.svg";
-import githubIcon from "../images/github.svg";
-import githubLight from "../images/github_light.svg";
-import githubThemed from "../images/github_themed.svg";
-import githubHover from "../images/github_themed_hover.svg";
-import htmlIcon from "../images/html.svg";
-import infoIcon from "../images/info.svg";
-import instagramIcon from "../images/instagram.svg";
-import instagramThemed from "../images/instagram_themed.svg";
-import instagramHover from "../images/instagram_themed_hover.svg";
-import javaIcon from "../images/java.svg";
-import javascriptIcon from "../images/javascript.svg";
-import lambdaIcon from "../images/lambda.svg";
-import linkedinIcon from "../images/linkedin.svg";
-import linkedinThemed from "../images/linkedin_themed.svg";
-import linkedinHover from "../images/linkedin_themed_hover.svg";
-import mariadbIcon from "../images/mariadb.svg";
-import matplotlibIcon from "../images/matplotlib.svg";
-import menuIcon from "../images/menu.svg";
-import mongodbIcon from "../images/mongodb.svg";
-import nodejsIcon from "../images/nodejs.svg";
-import numpyIcon from "../images/numpy.svg";
-import pandasIcon from "../images/pandas.svg";
-import powerbiIcon from "../images/powerbi.svg";
-import pythonIcon from "../images/python.svg";
-import reactIcon from "../images/react.svg";
-import scikitlearnIcon from "../images/scikitlearn.svg";
-import seabornIcon from "../images/seaborn.svg";
-import sendIcon from "../images/send.svg";
-import sheetsIcon from "../images/sheets.svg";
-import sqliteIcon from "../images/sqlite.svg";
-import swipeIcon from "../images/swipe.svg";
+import awsIcon from "../images/icons/AWS.svg";
+import chatGPTIcon from "../images/icons/chatGPT.svg";
+import closeIcon from "../images/icons/close.svg";
+import closeDark from "../images/icons/close_dark.svg";
+import collapseIcon from "../images/icons/collapse.svg";
+import cplusplusIcon from "../images/icons/cplusplus.svg";
+import cSharpIcon from "../images/icons/cSharp.svg";
+import cssIcon from "../images/icons/css.svg";
+import discordIcon from "../images/icons/discord.svg";
+import downloadIcon from "../images/icons/download.svg";
+import expressIcon from "../images/icons/express.svg";
+import flaskIcon from "../images/icons/flask.svg";
+import fullscreenIcon from "../images/icons/fullscreen.svg";
+import galleryIcon from "../images/icons/gallery.svg";
+import gitIcon from "../images/icons/git.svg";
+import githubIcon from "../images/icons/github.svg";
+import githubLight from "../images/icons/github_light.svg";
+import githubThemed from "../images/icons/github_themed.svg";
+import githubHover from "../images/icons/github_themed_hover.svg";
+import htmlIcon from "../images/icons/html.svg";
+import infoIcon from "../images/icons/info.svg";
+import instagramIcon from "../images/icons/instagram.svg";
+import instagramThemed from "../images/icons/instagram_themed.svg";
+import instagramHover from "../images/icons/instagram_themed_hover.svg";
+import javaIcon from "../images/icons/java.svg";
+import javascriptIcon from "../images/icons/javascript.svg";
+import lambdaIcon from "../images/icons/lambda.svg";
+import linkedinIcon from "../images/icons/linkedin.svg";
+import linkedinThemed from "../images/icons/linkedin_themed.svg";
+import linkedinHover from "../images/icons/linkedin_themed_hover.svg";
+import logicIcon from "../images/icons/LogicProX.svg";
+import mariadbIcon from "../images/icons/mariadb.svg";
+import matplotlibIcon from "../images/icons/matplotlib.svg";
+import menuIcon from "../images/icons/menu.svg";
+import microsoftSQLIcon from "../images/icons/microsoft_sql_server.svg";
+import mongodbIcon from "../images/icons/mongodb.svg";
+import dotNetIcon from "../images/icons/NET.svg";
+import nodejsIcon from "../images/icons/nodejs.svg";
+import numpyIcon from "../images/icons/numpy.svg";
+import pandasIcon from "../images/icons/pandas.svg";
+import powerbiIcon from "../images/icons/powerbi.svg";
+import pythonIcon from "../images/icons/python.svg";
+import reactIcon from "../images/icons/react.svg";
+import scikitlearnIcon from "../images/icons/scikitlearn.svg";
+import seabornIcon from "../images/icons/seaborn.svg";
+import sendIcon from "../images/icons/send.svg";
+import sheetsIcon from "../images/icons/sheets.svg";
+import sqliteIcon from "../images/icons/sqlite.svg";
+import swipeIcon from "../images/icons/swipe.svg";
+import visualStudio2022Icon from "../images/icons/visual_studio_2022.svg";
+import xmlIcon from "../images/icons/XML.svg";
 
 const iconMap = {
+  XML: xmlIcon,
+  "C#": cSharpIcon,
+  ".NET": dotNetIcon,
+  "VS 2022": visualStudio2022Icon,
+  "Microsoft SQL Server": microsoftSQLIcon,
   React: reactIcon,
   AWS: awsIcon,
   "C++": cplusplusIcon,
+  cSharp: cSharpIcon,
   CPlusPlus: cplusplusIcon,
   CSS: cssIcon,
   HTML: htmlIcon,

@@ -1,7 +1,7 @@
 const sharp = require("sharp");
 
 (async () => {
-  const src = "src/images/alpha_headshot.png";
+  const src = "src/images/headshots/alpha_headshot.png";
   const outBase = "public/img/alpha_headshot";
   const width = 400; // 2x for ~200px display
 
