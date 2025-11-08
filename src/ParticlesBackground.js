@@ -25,6 +25,7 @@ function ParticlesBackground() {
   const [loaded, setLoaded] = useState(false);
   const [visible, setVisible] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState("#f8f3d9");
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     import("@tsparticles/react");
@@ -49,6 +50,7 @@ function ParticlesBackground() {
       if (value) {
         setBackgroundColor(value);
       }
+      setIsDarkMode(root.getAttribute("data-theme") === "dark");
     };
 
     readColor();
@@ -69,6 +71,8 @@ function ParticlesBackground() {
   }, [engineReady, mounted, loaded]);
 
   const options = useMemo(() => {
+    const particleColor = isDarkMode ? "#F8F3D9" : "#504B38";
+
     const dpr =
       typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
     const small =
@@ -90,14 +94,14 @@ function ParticlesBackground() {
       pauseOnOutsideViewport: true,
       particles: {
         number: { value: count, density: { enable: true, area: 800 } },
-        color: { value: "#504B38" },
+        color: { value: particleColor },
         shape: { type: "circle" },
         opacity: { value: 0.7 },
         size: { value: { min: 1, max: 4 } },
         links: {
           enable: true,
           distance: linkDist,
-          color: "#504B38",
+          color: particleColor,
           opacity: 0.5,
           width: 1,
         },
@@ -117,7 +121,7 @@ function ParticlesBackground() {
         },
       },
     };
-  }, [backgroundColor]);
+  }, [backgroundColor, isDarkMode]);
 
   if (!engineReady || !mounted) return null;
 

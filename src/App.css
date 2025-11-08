@@ -160,6 +160,9 @@ section.home {
   background: transparent !important;
   position: relative;
   overflow: visible;
+  min-height: auto;
+  padding-top: var(--header-height);
+  display: block;
 }
 
 section.about,

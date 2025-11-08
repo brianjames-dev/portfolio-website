@@ -27,6 +27,13 @@ function Header({ activeSection }) {
       const currentScrollY = window.scrollY;
       const scrollDelta = currentScrollY - lastScrollY;
 
+      // Always show header when near the very top (mobile bounce, refreshed page, etc.)
+      if (currentScrollY <= threshold) {
+        header.classList.remove("hidden");
+        lastScrollY = currentScrollY;
+        return;
+      }
+
       if (Math.abs(scrollDelta) < threshold) return;
 
       if (scrollDelta > 0) {
