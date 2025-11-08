@@ -347,6 +347,10 @@
   margin: 2.5rem 0 1.5rem;
 }
 
+[data-theme="dark"] .section-divider {
+  border-top-color: #f4edc4;
+}
+
 .project-description {
   font-size: 1rem;
   line-height: 1.5;
@@ -385,10 +389,13 @@
   height: 1px;
   margin: 0;
 }
+
+[data-theme="dark"] .project-divider {
+  background-color: #f4edc4;
+}
 [data-theme="dark"] .tag {
   color: var(--color-text);
 }
 [data-theme="dark"] .tech-name {
   color: var(--color-text);
 }
-

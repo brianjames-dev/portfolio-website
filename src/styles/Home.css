@@ -79,6 +79,10 @@
   width: 100%;
 }
 
+[data-theme="dark"] .home-divider {
+  background-color: #f4edc4;
+}
+
 /* Links under description */
 .home-under-line {
   display: flex;
