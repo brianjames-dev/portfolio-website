@@ -133,6 +133,14 @@ h3 {
   align-items: center;
 }
 
+.about .container {
+  max-width: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* Default section style */
 section {
   color: var(--color-text);
