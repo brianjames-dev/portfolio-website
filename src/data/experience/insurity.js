@@ -19,7 +19,7 @@ const insurity = {
   title: "AI Associate Developer",
   team: "Insurity | Remote | Part-time",
   description:
-    "Sussed out code smells in a legacy codebase to improve maintainability and reduce technical debt.",
+    "Currently eliminating code smells in a legacy codebase to improve maintainability and reduce technical debt.",
   stack: [
     "C#",
     ".NET",
@@ -62,7 +62,7 @@ const insurity = {
     //     `,
 
     description: `
-            •  Sussed out code smells in a legacy codebase to improve maintainability and reduce technical debt.
+            •  Currently eliminating code smells in a legacy codebase to improve maintainability and reduce technical debt.
         `,
   },
 };

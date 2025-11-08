@@ -17,12 +17,22 @@ function CollapsedCard({ project, onExpand, onGalleryClick }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
+            aria-label="GitHub repository"
           >
-            <img
-              src={iconMap["GitHub"]}
-              alt="GitHub"
-              className="github-link-icon"
-            />
+            <span className="github-icon-wrapper">
+              <img
+                src={iconMap["GitHubThemed"]}
+                alt=""
+                className="default"
+                aria-hidden="true"
+              />
+              <img
+                src={iconMap["GitHubHover"]}
+                alt=""
+                className="hover"
+                aria-hidden="true"
+              />
+            </span>
           </a>
         )}
       </div>

@@ -2,16 +2,23 @@
 .about-card {
   border-radius: 10px;
   max-width: 800px;
-  margin: 0;
+  margin: 20px auto;
+  padding: 20px;
 
-  background: rgba(235, 229, 194, 0.9); /* translucent version of #EBE5C2 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Optional: adds depth */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Optional: frosty border */
+  background: var(--surface-card);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-soft);
 }
 
-.about .header {
-  margin: 0 0 20px 0;
-  text-align: center;
+.about h2 {
+  margin: 0; /* Match Experience/Projects titles */
+  text-align: center; /* Center the About title */
+}
+
+.about .project-header-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Center the header card horizontally */
 }
 
 .about .description {

@@ -37,6 +37,7 @@ import matplotlibIcon from "../images/icons/matplotlib.svg";
 import menuIcon from "../images/icons/menu.svg";
 import microsoftSQLIcon from "../images/icons/microsoft_sql_server.svg";
 import mongodbIcon from "../images/icons/mongodb.svg";
+import moonIcon from "../images/icons/moon.svg";
 import dotNetIcon from "../images/icons/NET.svg";
 import nodejsIcon from "../images/icons/nodejs.svg";
 import numpyIcon from "../images/icons/numpy.svg";
@@ -49,11 +50,14 @@ import seabornIcon from "../images/icons/seaborn.svg";
 import sendIcon from "../images/icons/send.svg";
 import sheetsIcon from "../images/icons/sheets.svg";
 import sqliteIcon from "../images/icons/sqlite.svg";
+import sunIcon from "../images/icons/sun.svg";
 import swipeIcon from "../images/icons/swipe.svg";
 import visualStudio2022Icon from "../images/icons/visual_studio_2022.svg";
 import xmlIcon from "../images/icons/XML.svg";
 
 const iconMap = {
+  Moon: moonIcon,
+  Sun: sunIcon,
   XML: xmlIcon,
   "C#": cSharpIcon,
   ".NET": dotNetIcon,

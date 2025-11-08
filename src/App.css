@@ -6,6 +6,13 @@
   --color-text: #504b38;
   --color-accent: #b9b28a;
   --color-secondary: #ebe5c2;
+
+  /* Derived surfaces */
+  --surface-card: rgba(235, 229, 194, 0.9);
+  --border-soft: rgba(255, 255, 255, 0.2);
+  --on-surface: var(--color-text);
+  --button-text: #f8f3d9;
+  --color-accent-hover: #504b38;
 }
 
 [data-theme="dark"] {
@@ -13,6 +20,13 @@
   --color-text: #f8f3d9;
   --color-accent: #8a845f;
   --color-secondary: #3e3a2a;
+
+  /* Dark surfaces */
+  --surface-card: rgba(62, 58, 42, 0.9);
+  --border-soft: rgba(255, 255, 255, 0.15);
+  --on-surface: var(--color-bg);
+  --button-text: #f8f3d9;
+  --color-accent-hover: #504b38;
 }
 
 .particles-layer {
@@ -21,7 +35,7 @@
   z-index: 0;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 500ms ease;
+  transition: opacity 800ms ease-in-out;
 }
 .particles-layer.is-visible {
   opacity: 1;
@@ -66,17 +80,33 @@ body.no-scroll {
 
 button {
   font-weight: 700;
-  background-color: #b9b28a;
+  background-color: var(--color-accent);
+  color: var(--button-text);
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 button:hover {
-  background-color: #504b38;
+  background-color: var(--color-accent-hover);
 }
 
 h1,
 h2,
 h3 {
   font-weight: 700;
+}
+
+/* ========== Section Header Cards ========== */
+.project-header-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.project-header-card {
+  background: var(--surface-card);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 10px 16px;
 }
 
 .container {
@@ -105,7 +135,7 @@ h3 {
 
 /* Default section style */
 section {
-  color: #504b38;
+  color: var(--color-text);
   background: transparent;
 
   min-height: 100lvh;
@@ -153,4 +183,16 @@ section.projects {
   section.projects {
     padding-bottom: 0px;
   }
+}
+
+
+/* Smooth theme transitions for common surfaces */
+body,
+section,
+.project-header-card,
+.project-card,
+.about-card,
+.contact-card,
+.home-card {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }

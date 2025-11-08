@@ -30,22 +30,23 @@ function Contact() {
     import("react-google-recaptcha");
   }, []);
 
-  // When the section approaches, just prefetch the React component chunk
+  // When the section approaches, mount the ReCAPTCHA (not just prefetch)
   useEffect(() => {
     const el = sectionRef.current;
-    if (!el) return;
+    if (!el || showCaptcha) return; // already mounted
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
           prefetchRecaptcha();
+          setShowCaptcha(true); // ensure it mounts as we approach
           io.disconnect();
         }
       },
-      { rootMargin: "100px 0px" }
+      { rootMargin: "200px 0px" } // start a bit before entering viewport
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [prefetchRecaptcha]);
+  }, [prefetchRecaptcha, showCaptcha]);
 
   const validate = () => {
     const newErrors = {};
@@ -120,11 +121,21 @@ function Contact() {
       onMouseEnter={onFirstInteract}
     >
       <div className="contact-card">
+        <div className="availability-badge">
+          <span
+            className="availability-icon icon-mask-info"
+            aria-hidden="true"
+          />
+          <div className="availability-text">
+            <strong>Open to Opportunities</strong>
+            <span>Full-time • Contract • Remote</span>
+          </div>
+        </div>
         <div className="contact-left">
           <h2>Get In Touch</h2>
           <p>
-            Feel free to fill out the form below, <br /> or contact me directly
-            by email.
+            Feel free to fill out the form below to send me a message, or
+            contact me directly by email.
           </p>
 
           <form onSubmit={handleSubmit} noValidate>

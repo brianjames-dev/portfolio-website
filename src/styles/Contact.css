@@ -14,9 +14,66 @@
   flex-wrap: wrap;
   position: relative;
 
-  background: rgba(235, 229, 194, 0.9); /* translucent version of #EBE5C2 */
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* slightly deeper shadow for depth */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* optional frosty border */
+  background: var(--surface-card);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-soft);
+}
+
+/* Availability badge in top-right of contact card */
+.availability-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--color-text); /* dark chip */
+  color: var(--color-bg);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  pointer-events: none; /* purely informational */
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 240px;
+  max-width: 320px;
+  min-height: 64px;
+  z-index: 1;
+}
+
+.availability-icon {
+  width: 28px;
+  height: 28px;
+  opacity: 0.95;
+}
+
+/* Masked icon for precise color control */
+.icon-mask-info {
+  display: inline-block;
+  background-color: var(--color-bg); /* light text color on dark chip in light mode */
+  -webkit-mask: url("../images/icons/info.svg") no-repeat center / contain;
+  mask: url("../images/icons/info.svg") no-repeat center / contain;
+}
+
+/* Dark mode: exact dark tone for the icon */
+[data-theme="dark"] .icon-mask-info {
+  background-color: #3e3a2a; /* dark swatch to match design */
+}
+
+.availability-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.availability-text strong {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.availability-text span {
+  font-size: 0.9rem;
+  opacity: 0.9;
 }
 
 .contact-left,
@@ -56,7 +113,7 @@ textarea {
   margin-top: 5px;
   border: 1px solid #504b38;
   background-color: #f8f3d9 !important;
-  color: #504b38;
+  color: var(--color-bg);
   border-radius: 8px;
   resize: none;
 }
@@ -103,8 +160,8 @@ input:valid {
 }
 
 .contact-submit-row button {
-  background-color: #b9b28a;
-  color: #f8f3d9;
+  background-color: var(--color-accent);
+  color: var(--button-text);
   font-size: 1rem;
   min-width: 148.65px;
   min-height: 44px;
@@ -112,7 +169,7 @@ input:valid {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 
   width: auto;
   margin-top: 10px;
@@ -120,7 +177,7 @@ input:valid {
 }
 
 .contact-submit-row button:hover {
-  background-color: #504b38;
+  background-color: var(--color-accent-hover);
 }
 
 /* Spinner animation */
@@ -169,14 +226,14 @@ input:valid {
 }
 
 .contact-email a {
-  color: #504b38;
+  color: var(--color-text);
   text-decoration: none;
   font-weight: 500;
 }
 
 .contact-email a:hover {
   text-decoration: underline;
-  color: #b9b28a;
+  color: var(--color-accent);
 }
 
 .contact-links-row {
@@ -208,7 +265,9 @@ input:valid {
   position: absolute;
   top: 0;
   left: 0;
-  transition: opacity 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.2s ease; /* ease only for contact social icons */
   width: 100%;
   height: auto;
 }
@@ -219,6 +278,7 @@ input:valid {
 
 .contact-icon-wrapper:hover img.hover {
   opacity: 1;
+  transform: scale(1.1); /* scale up on hover */
 }
 
 .contact-icon-wrapper:hover img.default {
@@ -227,6 +287,17 @@ input:valid {
 
 /* ========== Mobile Styles ========== */
 @media (max-width: 600px) {
+  .contact-card {
+    flex-direction: column; /* stack vertically on mobile */
+  }
+
+  .availability-badge { position: static; order: 99; align-self: flex-end; justify-content: flex-end; text-align: right; margin-left: auto; margin: 12px 0 0 0; padding: 12px; max-width: 90%; min-width: 0; min-height: auto; gap: 8px; }
+
+  .availability-icon {
+    width: 24px;
+    height: 24px;
+  }
+
   .contact-left h2,
   .contact-left p {
     text-align: center;
@@ -246,3 +317,4 @@ input:valid {
     margin: 10px 0;
   }
 }
+

@@ -23,7 +23,9 @@
   width: 100%;
   height: auto;
   display: block;
-  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
+  /* Remove all shadows in expanded view */
+  filter: none;
+  box-shadow: none;
   margin-bottom: 0.5rem;
 }
 
@@ -339,6 +341,28 @@
   text-align: center;
   width: auto;
   max-width: 100%;
+}
+
+/* ========== Dark Mode Overrides (Expanded view) ========== */
+[data-theme="dark"] .expanded-block {
+  color: var(--color-text);
+}
+[data-theme="dark"] .expanded-block p,
+[data-theme="dark"] .expanded-block h3,
+[data-theme="dark"] .expanded-block h4,
+[data-theme="dark"] .expanded-block li,
+[data-theme="dark"] .expanded-block figcaption,
+[data-theme="dark"] .expanded-block .goal-intro,
+[data-theme="dark"] .expanded-block .goal-img figcaption,
+[data-theme="dark"] .expanded-block .reflection-img figcaption,
+[data-theme="dark"] .expanded-block .future-img figcaption {
+  color: var(--color-text);
+}
+
+/* Ensure no shadows on any images inside the expanded view */
+.expanded-block img {
+  filter: none !important;
+  box-shadow: none !important;
 }
 
 .mobile-dashboard-img {

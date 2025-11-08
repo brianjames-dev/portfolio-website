@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import iconMap from "../data/iconMap.js";
+import ThemeToggle from "../components/ThemeToggle";
 import "../styles/Header.css";
 
 let hasAnimatedIn = false;
@@ -50,6 +51,10 @@ function Header({ activeSection }) {
     if (!nav) return;
 
     function handleResize() {
+      // Prevent nav transform animation during responsive breakpoint changes
+      nav.classList.add("no-animate");
+      setTimeout(() => nav.classList.remove("no-animate"), 300);
+
       const isMobile = window.innerWidth <= 600;
       if (isMobile && !hasAnimatedIn) {
         nav.classList.add("hidden-on-load");
@@ -140,6 +145,9 @@ function Header({ activeSection }) {
           />
         </div>
 
+        {/* Theme toggle (visible on all viewports) */}
+        <ThemeToggle />
+
         <nav ref={navRef} className={menuOpen ? "active" : ""}>
           {["home", "about", "experience", "projects", "contact"].map(
             (section) => (
@@ -147,9 +155,34 @@ function Header({ activeSection }) {
                 key={section}
                 className={activeSection === section ? "active" : ""}
                 href={`#${section}`}
-                onClick={() => {
+                onClick={(e) => {
+                  // Always close the menu on click
                   setMenuOpen(false);
+
+                  // Prefetch captcha when going to contact
                   if (section === "contact") preloadRecaptcha();
+
+                  // Mobile-only custom scroll offset: subtract 60px only
+                  // when the target is below current position (scrolling down).
+                  const isMobile = window.innerWidth <= 600;
+                  if (isMobile) {
+                    e.preventDefault();
+                    const el = document.getElementById(section);
+                    if (el) {
+                      const root = document.documentElement;
+                      const headerVar = getComputedStyle(root)
+                        .getPropertyValue("--header-height")
+                        .trim();
+                      const headerPx = parseInt(headerVar || "60", 10) || 60;
+                      const targetTop =
+                        el.getBoundingClientRect().top + window.pageYOffset;
+                      const isScrollingDown = targetTop > window.pageYOffset;
+                      const extra = isScrollingDown ? 60 : 0; // only subtract when scrolling down
+                      const offset = Math.max(0, headerPx - extra);
+                      const top = targetTop - offset;
+                      window.scrollTo({ top, behavior: "smooth" });
+                    }
+                  }
                 }}
                 onMouseEnter={
                   section === "contact" ? preloadRecaptcha : undefined

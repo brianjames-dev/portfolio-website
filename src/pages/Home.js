@@ -89,7 +89,7 @@ function Home() {
                   className="default"
                 />
                 <img
-                  src={iconMap["LinkedInThemed"]}
+                  src={iconMap["LinkedInHover"]}
                   alt="LinkedIn"
                   className="hover"
                 />
@@ -107,7 +107,7 @@ function Home() {
                   className="default"
                 />
                 <img
-                  src={iconMap["InstagramThemed"]}
+                  src={iconMap["InstagramHover"]}
                   alt="Instagram"
                   className="hover"
                 />
