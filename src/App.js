@@ -13,43 +13,32 @@ function App() {
   const [expandedProjectIndex, setExpandedProjectIndex] = useState(null); // Updated to include setter
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPos = window.scrollY; // Using top of viewport for simplicity
-      const sections = document.querySelectorAll("section");
-      let newActive = activeSection;
+    const sections = Array.from(document.querySelectorAll("section[id]"));
+    if (!sections.length || !("IntersectionObserver" in window)) {
+      return undefined;
+    }
 
-      sections.forEach((section) => {
-        const top = section.offsetTop;
-        const bottom = top + section.offsetHeight;
-        const id = section.getAttribute("id");
-        // console.log(`Section: ${id}, Top: ${top}, Bottom: ${bottom}, ScrollPos: ${scrollPos}`); // Log each section's bounds
-        if (scrollPos >= top - 100 && scrollPos < bottom) {
-          // Buffer for tolerance
-          newActive = id;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible.length) {
+          const newActive = visible[0].target.id;
+          setActiveSection((prev) => (prev === newActive ? prev : newActive));
         }
-      });
-
-      // console.log('ScrollPos:', scrollPos, 'NewActive:', newActive, 'CurrentActive:', activeSection); // Debug log
-
-      if (newActive !== activeSection) {
-        setActiveSection(newActive);
+      },
+      {
+        threshold: [0.25, 0.5, 0.75],
+        rootMargin: "-30% 0px -40% 0px", // bias toward elements centered in the viewport
       }
-    };
+    );
 
-    // console.log('Adding scroll listener'); // Debug: Confirm listener is added
-    window.addEventListener("scroll", handleScroll, { passive: true }); // Use passive for performance
-    window.addEventListener("resize", handleScroll, { passive: true });
-    window.addEventListener("load", handleScroll);
+    sections.forEach((section) => observer.observe(section));
 
-    handleScroll(); // Trigger once on load
-
-    return () => {
-      // console.log('Removing scroll listener'); // Debug: Confirm listener is removed
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-      window.removeEventListener("load", handleScroll);
-    };
-  }, [activeSection]); // Dependency array
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="App">
