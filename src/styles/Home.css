@@ -110,7 +110,6 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background-color: #b9b28a;
   color: var(--button-text);
   font-weight: 500;
   border: none;
@@ -127,9 +126,9 @@
   height: 24px;
 }
 
-  .home-action-buttons button:hover {
-    background-color: var(--color-accent-hover);
-  }
+.home-action-buttons button:hover {
+  background-color: var(--color-accent-hover);
+}
 
 /* Resume + Social links shared styles */
 .home-resume-button a,
@@ -334,24 +333,29 @@
   }
 }
 
-[data-theme="dark"] .home-action-buttons button { background-color: var(--color-accent); color: var(--button-text); }
-[data-theme="dark"] .home-action-buttons button:hover { background-color: var(--color-accent-hover); }
+[data-theme="dark"] .home-action-buttons button {
+  background-color: var(--color-accent);
+  color: var(--button-text);
+}
+[data-theme="dark"] .home-action-buttons button:hover {
+  background-color: var(--color-accent-hover);
+}
 
-  /* Dark mode: use a compact card like Contact, not full-screen */
-  [data-theme="dark"] .home-card {
-    min-height: auto;
-    height: auto;
-    background: var(--surface-card);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--border-soft);
-    margin: 0 auto 20px auto; /* flush with header at top */
-  }
-  /* Light mode: also ensure the home card is compact and flush under header */
-  [data-theme="light"] .home-card {
-    min-height: auto;
-    height: auto;
-    background: var(--surface-card);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--border-soft);
-    margin: 0 auto 20px auto;
-  }
+/* Dark mode: use a compact card like Contact, not full-screen */
+[data-theme="dark"] .home-card {
+  min-height: auto;
+  height: auto;
+  background: var(--surface-card);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-soft);
+  margin: 0 auto 20px auto; /* flush with header at top */
+}
+/* Light mode: also ensure the home card is compact and flush under header */
+[data-theme="light"] .home-card {
+  min-height: auto;
+  height: auto;
+  background: var(--surface-card);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-soft);
+  margin: 0 auto 20px auto;
+}

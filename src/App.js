@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import "./App.css";
 import ParticlesBackground from "./ParticlesBackground";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Experience from "./pages/Experience";
 import Header from "./pages/Header";
 import Home from "./pages/Home";
-import Projects from "./pages/Projects";
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Experience = lazy(() => import("./pages/Experience"));
+const Projects = lazy(() => import("./pages/Projects"));
 
 function App() {
   const [activeSection, setActiveSection] = useState("home");
@@ -60,13 +60,15 @@ function App() {
       <ParticlesBackground />
       <main>
         <Home />
-        <About />
-        <Experience />
-        <Projects
-          expandedProjectIndex={expandedProjectIndex}
-          setExpandedProjectIndex={setExpandedProjectIndex} // Added setter prop
-        />
-        <Contact />
+        <Suspense fallback={null}>
+          <About />
+          <Experience />
+          <Projects
+            expandedProjectIndex={expandedProjectIndex}
+            setExpandedProjectIndex={setExpandedProjectIndex} // Added setter prop
+          />
+          <Contact />
+        </Suspense>
       </main>
     </div>
   );
