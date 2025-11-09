@@ -21,9 +21,9 @@ const entheos = {
             Entheos | Global | Full-time
         `,
 
-    github: `
-        
-        `,
+    // github: `
+
+    //     `,
 
     description: `
             •  Independently programmed a live sound & lighting system (70+ fixtures) in Python and Showbuddy, synchronizing lights with instruments and vocals for 60,000+ fans—reducing tour crew costs by $5,000+ while elevating show quality and merch sales.

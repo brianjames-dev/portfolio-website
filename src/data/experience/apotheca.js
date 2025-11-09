@@ -30,7 +30,7 @@ const apotheca = {
     "Tkinter",
     "ReportLab",
   ],
-  github: "",
+  github: "https://github.com/brianjames-dev/SkinPro",
   images: [
     { src: skinpro1, caption: "🚪 Splash Screen" },
     { src: skinpro2, caption: "👩 Clients Tab" },
@@ -56,7 +56,7 @@ const apotheca = {
         `,
 
     github: `
-        
+          https://github.com/brianjames-dev/SkinPro
         `,
 
     description: `
