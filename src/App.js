@@ -13,8 +13,7 @@ function App() {
   const [expandedProjectIndex, setExpandedProjectIndex] = useState(null); // Updated to include setter
 
   useEffect(() => {
-    const sections = Array.from(document.querySelectorAll("section[id]"));
-    if (!sections.length || !("IntersectionObserver" in window)) {
+    if (!("IntersectionObserver" in window)) {
       return undefined;
     }
 
@@ -35,9 +34,31 @@ function App() {
       }
     );
 
-    sections.forEach((section) => observer.observe(section));
+    const observed = new Set();
+    const observeSections = () => {
+      document.querySelectorAll("section[id]").forEach((section) => {
+        if (!observed.has(section)) {
+          observer.observe(section);
+          observed.add(section);
+        }
+      });
+    };
 
-    return () => observer.disconnect();
+    observeSections();
+
+    const mutationObserver = new MutationObserver(() => {
+      observeSections();
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
   }, []);
 
   return (
