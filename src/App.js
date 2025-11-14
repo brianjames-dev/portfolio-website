@@ -13,41 +13,56 @@ function App() {
   const [expandedProjectIndex, setExpandedProjectIndex] = useState(null); // Updated to include setter
 
   useEffect(() => {
-    if (!("IntersectionObserver" in window)) {
-      return undefined;
-    }
+    const getSections = () =>
+      Array.from(document.querySelectorAll("section[id]"));
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+    let sections = getSections();
 
-        if (visible.length) {
-          const newActive = visible[0].target.id;
-          setActiveSection((prev) => (prev === newActive ? prev : newActive));
+    const updateActiveSectionFromViewport = () => {
+      if (!sections.length) return;
+
+      const viewportHeight = window.innerHeight || 1;
+      const viewportCenter = viewportHeight / 2;
+      const bandOffset = viewportHeight * 0.1; // 20% band centered in viewport
+
+      const measurements = sections
+        .map((section) => {
+          const rect = section.getBoundingClientRect();
+          const intersects = rect.bottom > 0 && rect.top < viewportHeight;
+          if (!intersects) return null;
+
+          const center = rect.top + rect.height / 2;
+          const distance = Math.abs(center - viewportCenter);
+          const inBand = distance <= bandOffset;
+
+          return {
+            id: section.id,
+            distance,
+            inBand,
+          };
+        })
+        .filter(Boolean);
+
+      if (!measurements.length) return;
+
+      const bandCandidates = measurements.filter((m) => m.inBand);
+      const candidates = bandCandidates.length ? bandCandidates : measurements;
+
+      const best = candidates.reduce((closest, current) => {
+        if (!closest || current.distance < closest.distance) {
+          return current;
         }
-      },
-      {
-        threshold: [0.25, 0.5, 0.75],
-        rootMargin: "-30% 0px -40% 0px", // bias toward elements centered in the viewport
+        return closest;
+      }, null);
+
+      if (best) {
+        setActiveSection((prev) => (prev === best.id ? prev : best.id));
       }
-    );
-
-    const observed = new Set();
-    const observeSections = () => {
-      document.querySelectorAll("section[id]").forEach((section) => {
-        if (!observed.has(section)) {
-          observer.observe(section);
-          observed.add(section);
-        }
-      });
     };
 
-    observeSections();
-
     const mutationObserver = new MutationObserver(() => {
-      observeSections();
+      sections = getSections();
+      updateActiveSectionFromViewport();
     });
 
     mutationObserver.observe(document.body, {
@@ -55,9 +70,17 @@ function App() {
       subtree: true,
     });
 
+    window.addEventListener("scroll", updateActiveSectionFromViewport, {
+      passive: true,
+    });
+    window.addEventListener("resize", updateActiveSectionFromViewport);
+
+    updateActiveSectionFromViewport();
+
     return () => {
-      observer.disconnect();
       mutationObserver.disconnect();
+      window.removeEventListener("scroll", updateActiveSectionFromViewport);
+      window.removeEventListener("resize", updateActiveSectionFromViewport);
     };
   }, []);
 
