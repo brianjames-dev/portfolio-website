@@ -1,14 +1,7 @@
 // ParticlesBackground.js
 import { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
-import {
-  lazy,
-  memo,
-  Suspense,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { lazy, memo, Suspense, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
 const engineReadyPromise = initParticlesEngine(async (engine) => {
@@ -56,7 +49,10 @@ function ParticlesBackground() {
     readColor();
 
     const observer = new Observer(readColor);
-    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
 
     return () => observer.disconnect();
   }, []);
@@ -80,7 +76,7 @@ function ParticlesBackground() {
       window.matchMedia?.("(max-width: 600px)")?.matches;
 
     const count = Math.round(120 * (dpr > 1.5 ? 0.7 : 1)); // scale on hi-DPR
-    const fps = small ? 45 : 60;
+    const fps = 120;
     const linkDist = small ? 150 : 200;
     const repulseDist = small ? 70 : 100;
     const repulseDuration = 0.25;
