@@ -17,18 +17,22 @@ import skinpro7 from "../../images/skinpro_imgs/Upload_Photos.jpeg";
 const apotheca = {
   id: "apotheca",
   title: "Full-stack Developer",
-  team: "Apotheca | Remote | Part-time",
+  team: "Apotheca | Remote | Contractual",
   description:
-    "Spearheaded the SkinPro desktop application in collaboration with the business owner, managing 300+ client records and 2,000+ appointments, saving 1,000+ hours/year of manual work and $3,000+ in software costs.",
+    "Built SkinPro with the business owner to manage 300+ clients and 2,000+ appointments, saving 1,000+ hours/year and $3,000+ in software costs by adding QR-based single-use-token photo uploads (90% faster image handling), automated PDF prescriptions, and an offline-first Next.js UI on local SQLite that avoids $500+/year in cloud fees.",
   stack: [
-    "Python",
+    "Typescript",
+    "JavaScript",
+    "Node.js",
+    "Next.js",
+    "React",
     "SQLite",
     "Flask",
     "HTML",
     "CSS",
     "Git",
-    "Tkinter",
-    "ReportLab",
+    "PDFKit",
+    "Codex",
   ],
   github: "https://github.com/brianjames-dev/SkinPro",
   images: [
@@ -60,10 +64,10 @@ const apotheca = {
         `,
 
     description: `
-            •  Spearheaded the SkinPro desktop application in collaboration with the business owner, managing 300+ client records and 2,000+ appointments, saving 1,000+ hours/year of manual work and $3,000+ in software costs.
-            •  Integrated a QR-based mobile-to-desktop photo upload system using Flask, cutting image management time by 90%.
-            •  Constructed a dynamic PDF prescription generator with ReportLab, turning a handwritten process into an automated workflow.
-            •  Built modern, responsive UIs with CTkinter and a local SQLite database with weekly backups, saving $500+ per year on cloud costs.
+            •  Spearheaded the SkinPro web application build with the business owner, managing 300+ client records and 2,000+ appointments and saving 1,000+ hours/year of manual work and $3,000+ in software costs.
+            •  Implemented QR-based mobile-to-web photo uploads with single-use tokens, cutting image management time by 90%.
+            •  Automated prescription output with a dynamic PDFKit generator, replacing handwritten workflows with print-ready outputs.
+            •  Built a responsive Next.js UI over a local SQLite store with offline-friendly workflows, avoiding recurring cloud costs.
         `,
   },
 };

@@ -26,11 +26,11 @@ function Home() {
           <div className="home-right">
             <p className="greeting">Hey! I'm</p>
             <h2 className="name">Brian James</h2>
-            <p className="subtitle">Full Stack Developer</p>
+            <p className="subtitle">Software Developer</p>
             <p className="description">
-              From touring musician to upcoming CS graduate, I thrive on solving
-              tough problems, providing clean designs, and creating scalable
-              architecture in all of my coding endeavors.
+              From touring musician to Oregon State University CS graduate, I
+              thrive on solving tough problems, providing clean designs, and
+              creating scalable architecture in all of my coding endeavors.
             </p>
           </div>
         </div>
