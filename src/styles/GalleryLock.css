@@ -1,0 +1,138 @@
+.gallery-lock-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 15, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 9998;
+}
+
+.gallery-lock-modal {
+  width: min(440px, 92vw);
+  background: var(--surface-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  padding: 24px;
+  color: var(--color-text);
+}
+
+.gallery-lock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.gallery-lock-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.gallery-lock-close {
+  background: transparent;
+  color: var(--color-text);
+  border: 1px solid var(--border-soft);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.gallery-lock-close:hover {
+  background-color: var(--color-secondary);
+}
+
+.gallery-lock-hint {
+  margin: 12px 0 18px 0;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+.gallery-lock-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gallery-lock-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.gallery-lock-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.gallery-lock-input:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.gallery-lock-error {
+  margin: 0;
+  color: #b23b3b;
+  font-size: 0.9rem;
+}
+
+.gallery-lock-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.gallery-lock-submit,
+.gallery-lock-cancel {
+  flex: 1;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+}
+
+.gallery-lock-submit {
+  background: var(--color-accent);
+  color: var(--button-text);
+}
+
+.gallery-lock-submit:hover {
+  background: var(--color-accent-hover);
+}
+
+.gallery-lock-cancel {
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  color: var(--color-text);
+}
+
+.gallery-lock-cancel:hover {
+  background: var(--color-secondary);
+}
+
+.gallery-lock-pill {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  color: var(--button-text);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 600px) {
+  .gallery-lock-modal {
+    padding: 20px;
+  }
+
+  .gallery-lock-actions {
+    flex-direction: column;
+  }
+}

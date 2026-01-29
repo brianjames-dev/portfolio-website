@@ -71,6 +71,10 @@
   z-index: 10000;
 }
 
+[data-theme="light"] .fullscreen-caption {
+  color: #f8f3d9;
+}
+
 .fullscreen-caption.hidden {
   display: none;
 }

@@ -12,6 +12,7 @@ const CONTENT_FADE_DURATION = 0.5;
 function ExpandedCard({
   project,
   onGalleryClick,
+  isGalleryLocked = false,
   handleClose,
   handleCloseAndScroll,
 }) {
@@ -68,6 +69,7 @@ function ExpandedCard({
             {hasGallery && (
               <button
                 className="expanded-top-button"
+                data-locked={isGalleryLocked}
                 onMouseEnter={() => import("../components/Gallery")}
                 onFocus={() => import("../components/Gallery")}
                 onClick={(e) => {
@@ -81,6 +83,9 @@ function ExpandedCard({
                   className="button-icon"
                 />
                 Gallery
+                {isGalleryLocked && (
+                  <span className="gallery-lock-pill">Locked</span>
+                )}
               </button>
             )}
             {hasGithub && (
@@ -205,6 +210,7 @@ function ExpandedCard({
         {project.images?.length > 0 && (
           <button
             className="learn-more-btn"
+            data-locked={isGalleryLocked}
             onMouseEnter={() => import("../components/Gallery")}
             onFocus={() => import("../components/Gallery")}
             onClick={(e) => {
@@ -218,6 +224,9 @@ function ExpandedCard({
               className="button-icon"
             />
             Gallery
+            {isGalleryLocked && (
+              <span className="gallery-lock-pill">Locked</span>
+            )}
           </button>
         )}
         <button

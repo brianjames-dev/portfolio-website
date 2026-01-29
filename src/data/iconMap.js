@@ -2,6 +2,7 @@
 
 // Import all your icons explicitly
 import awsIcon from "../images/icons/AWS.svg";
+import azureIcon from "../images/icons/azure.svg";
 import chatGPTIcon from "../images/icons/chatGPT.svg";
 import closeIcon from "../images/icons/close.svg";
 import closeDark from "../images/icons/close_dark.svg";
@@ -33,6 +34,7 @@ import instagramHover from "../images/icons/instagram_themed_hover.svg";
 import javaIcon from "../images/icons/java.svg";
 import javascriptIcon from "../images/icons/javascript.svg";
 import lambdaIcon from "../images/icons/lambda.svg";
+import langraphIcon from "../images/icons/langgraph.svg";
 import linkedinIcon from "../images/icons/linkedin.svg";
 import linkedinThemed from "../images/icons/linkedin_themed.svg";
 import linkedinHover from "../images/icons/linkedin_themed_hover.svg";
@@ -44,27 +46,32 @@ import microsoftSQLIcon from "../images/icons/microsoft_sql_server.svg";
 import mongodbIcon from "../images/icons/mongodb.svg";
 import moonIcon from "../images/icons/moon.svg";
 import dotNetIcon from "../images/icons/NET.svg";
+import nextJSIcon from "../images/icons/nextjs.svg";
 import nodejsIcon from "../images/icons/nodejs.svg";
 import numpyIcon from "../images/icons/numpy.svg";
 import pandasIcon from "../images/icons/pandas.svg";
 import playwrightIcon from "../images/icons/playwright.svg";
 import postgresqlIcon from "../images/icons/postgreSQL.svg";
 import powerbiIcon from "../images/icons/powerbi.svg";
+import pydanticIcon from "../images/icons/pydantic.svg";
 import pythonIcon from "../images/icons/python.svg";
+import railwayIcon from "../images/icons/railway.svg";
 import reactIcon from "../images/icons/react.svg";
 import redisIcon from "../images/icons/redis.svg";
+import replitIcon from "../images/icons/replit.svg";
 import scikitlearnIcon from "../images/icons/scikitlearn.svg";
 import seabornIcon from "../images/icons/seaborn.svg";
 import sendIcon from "../images/icons/send.svg";
 import sheetsIcon from "../images/icons/sheets.svg";
+import sqlAlchemyIcon from "../images/icons/sqlalchemy.svg";
 import sqliteIcon from "../images/icons/sqlite.svg";
-import swiftIcon from "../images/icons/swift.svg";
 import sunIcon from "../images/icons/sun.svg";
+import swiftIcon from "../images/icons/swift.svg";
 import swipeIcon from "../images/icons/swipe.svg";
 import typescriptIcon from "../images/icons/typescript.svg";
 import visualStudio2022Icon from "../images/icons/visual_studio_2022.svg";
-import xmlIcon from "../images/icons/XML.svg";
 import xcodeIcon from "../images/icons/xcode.svg";
+import xmlIcon from "../images/icons/XML.svg";
 
 const iconMap = {
   Moon: moonIcon,
@@ -101,6 +108,7 @@ const iconMap = {
   MariaDB: mariadbIcon,
   Matplotlib: matplotlibIcon,
   Menu: menuIcon,
+  NextJS: nextJSIcon,
   NumPy: numpyIcon,
   Pandas: pandasIcon,
   "Power BI": powerbiIcon,
@@ -137,6 +145,14 @@ const iconMap = {
   "OpenAI API": chatGPTIcon,
   "Google Sheets API": sheetsIcon,
   Xcode: xcodeIcon,
+  SQLAlchemy: sqlAlchemyIcon,
+  Azure: azureIcon,
+  "Azure OpenAI": azureIcon,
+  Codex: chatGPTIcon,
+  Replit: replitIcon,
+  Pydantic: pydanticIcon,
+  Railway: railwayIcon,
+  LangGraph: langraphIcon,
 };
 
 export default iconMap;

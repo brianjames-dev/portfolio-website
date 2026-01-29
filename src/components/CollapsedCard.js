@@ -2,7 +2,12 @@ import iconMap from "../data/iconMap.js";
 import "../styles/CollapsedCard.css";
 import { renderTag } from "../utils/renderTag.js";
 
-function CollapsedCard({ project, onExpand, onGalleryClick }) {
+function CollapsedCard({
+  project,
+  onExpand,
+  onGalleryClick,
+  isGalleryLocked = false,
+}) {
   const canExpand = !!project.expanded; // Check if project has expanded content
 
   return (
@@ -58,6 +63,7 @@ function CollapsedCard({ project, onExpand, onGalleryClick }) {
           {project.images?.length > 0 && (
             <button
               className="learn-more-btn"
+              data-locked={isGalleryLocked}
               onMouseEnter={() => import("../components/Gallery")}
               onFocus={() => import("../components/Gallery")}
               onClick={(e) => {
@@ -71,6 +77,9 @@ function CollapsedCard({ project, onExpand, onGalleryClick }) {
                 className="button-icon"
               />
               Gallery
+              {isGalleryLocked && (
+                <span className="gallery-lock-pill">Locked</span>
+              )}
             </button>
           )}
           {canExpand && (

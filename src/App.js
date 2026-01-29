@@ -23,7 +23,15 @@ function App() {
 
       const viewportHeight = window.innerHeight || 1;
       const viewportCenter = viewportHeight / 2;
-      const bandOffset = viewportHeight * 0.1; // 20% band centered in viewport
+      const bandOffset = viewportHeight * 0.1; // 20% band around center
+      const root = document.documentElement;
+      const headerVar = getComputedStyle(root)
+        .getPropertyValue("--header-height")
+        .trim();
+      const headerHeight = parseInt(headerVar || "60", 10) || 60;
+      const originalBandTop = viewportCenter - bandOffset;
+      const bandTop = Math.min(originalBandTop, headerHeight);
+      const bandBottom = viewportCenter + bandOffset;
 
       const measurements = sections
         .map((section) => {
@@ -33,7 +41,7 @@ function App() {
 
           const center = rect.top + rect.height / 2;
           const distance = Math.abs(center - viewportCenter);
-          const inBand = distance <= bandOffset;
+          const inBand = center >= bandTop && center <= bandBottom;
 
           return {
             id: section.id,
