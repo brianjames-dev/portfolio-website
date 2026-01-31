@@ -1,16 +1,16 @@
 // /data/experience/insurity.js
 
 // Import all project images
-import chat from "./imgs/chat.png";
-import deploy from "./imgs/deploy.png";
-import discovery from "./imgs/discovery.png";
-import login from "./imgs/login.png";
-import monitor from "./imgs/monitor.png";
-import semantics from "./imgs/semantics.png";
-import simulate1 from "./imgs/simulate1.png";
-import simulate2 from "./imgs/simulate2.png";
-import stage from "./imgs/stage.png";
-import timeline from "./imgs/timeline.png";
+import chat from "./imgs/chat.jpeg";
+import deploy from "./imgs/deploy.jpeg";
+import discovery from "./imgs/discovery.jpeg";
+import login from "./imgs/login.jpeg";
+import monitor from "./imgs/monitor.jpeg";
+import semantics from "./imgs/semantics.jpeg";
+import simulate1 from "./imgs/simulate1.jpeg";
+import simulate2 from "./imgs/simulate2.jpeg";
+import stage from "./imgs/stage.jpeg";
+import timeline from "./imgs/timeline.jpeg";
 
 const insurity = {
   id: "insurity",
