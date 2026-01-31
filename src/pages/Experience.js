@@ -3,6 +3,7 @@ import Card from "../components/Card";
 import CollapsedCard from "../components/CollapsedCard";
 import ExpandedCard from "../components/ExpandedCard";
 import GalleryLockModal from "../components/GalleryLockModal";
+import VideoOverlay from "../components/VideoOverlay";
 import experiences from "../data/experience";
 import useCardExpansion from "../hooks/useCardExpansion";
 import useGalleryLock from "../hooks/useGalleryLock";
@@ -14,6 +15,7 @@ function Experience() {
   const [fullscreenImages, setFullscreenImages] = useState([]);
   const [pendingImages, setPendingImages] = useState(null);
   const [isGateOpen, setIsGateOpen] = useState(false);
+  const [activeDemo, setActiveDemo] = useState(null);
 
   const { isExpanded, toggle } = useCardExpansion();
   const { isUnlocked, unlock } = useGalleryLock();
@@ -24,12 +26,23 @@ function Experience() {
     setFullscreenIndex(0);
   };
 
-  const onGalleryClick = (images) => {
-    if (isUnlocked) {
-      openGallery(images);
+  const openDemo = (video) => {
+    if (!video) return;
+    setActiveDemo(video);
+  };
+
+  const onLockedAction = (action, isLocked, payload) => {
+    if (!isLocked) {
+      action(payload);
       return;
     }
-    setPendingImages(images);
+
+    if (isUnlocked) {
+      action(payload);
+      return;
+    }
+
+    setPendingImages(payload);
     setIsGateOpen(true);
   };
 
@@ -38,13 +51,17 @@ function Experience() {
     setPendingImages(null);
   };
 
-  const handleUnlock = (password) => {
-    const result = unlock(password);
+  const handleUnlock = async (password) => {
+    const result = await unlock(password);
     if (!result.ok) return result;
 
     setIsGateOpen(false);
-    if (pendingImages?.length) {
-      openGallery(pendingImages);
+    if (pendingImages) {
+      if (Array.isArray(pendingImages)) {
+        openGallery(pendingImages);
+      } else {
+        openDemo(pendingImages);
+      }
     }
     setPendingImages(null);
     return result;
@@ -58,7 +75,6 @@ function Experience() {
             <h2>Experience</h2>
           </div>
         </div>
-
         {experiences.map((exp) => (
           <Card
             key={exp.id}
@@ -70,15 +86,31 @@ function Experience() {
               <CollapsedCard
                 project={exp}
                 onExpand={() => toggle(exp.id)}
-                onGalleryClick={() => onGalleryClick(exp.images)}
-                isGalleryLocked={!isUnlocked}
+                onGalleryClick={() =>
+                  onLockedAction(openGallery, exp.galleryLocked, exp.images)
+                }
+                isGalleryLocked={exp.galleryLocked && !isUnlocked}
+                isLockable={exp.galleryLocked}
+                showGalleryButton={exp.showGalleryButton}
+                showDemoButton={Boolean(exp.demoVideo)}
+                onDemoClick={(video) =>
+                  onLockedAction(openDemo, exp.galleryLocked, video)
+                }
               />
             )}
             renderExpanded={({ onClose, onCloseAndScroll }) => (
               <ExpandedCard
                 project={exp}
-                onGalleryClick={() => onGalleryClick(exp.images)}
-                isGalleryLocked={!isUnlocked}
+                onGalleryClick={() =>
+                  onLockedAction(openGallery, exp.galleryLocked, exp.images)
+                }
+                isGalleryLocked={exp.galleryLocked && !isUnlocked}
+                isLockable={exp.galleryLocked}
+                showGalleryButton={exp.showGalleryButton}
+                showDemoButton={Boolean(exp.demoVideo)}
+                onDemoClick={(video) =>
+                  onLockedAction(openDemo, exp.galleryLocked, video)
+                }
                 handleClose={onClose}
                 handleCloseAndScroll={onCloseAndScroll}
               />
@@ -91,6 +123,12 @@ function Experience() {
         isOpen={isGateOpen}
         onClose={handleGateClose}
         onUnlock={handleUnlock}
+      />
+
+      <VideoOverlay
+        isOpen={Boolean(activeDemo)}
+        video={activeDemo}
+        onClose={() => setActiveDemo(null)}
       />
 
       {/* Fullscreen Gallery */}

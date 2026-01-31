@@ -1,20 +1,20 @@
 // /data/projects/marketscope.js
 
 // Import all project images (leave commented for now; will add later)
-// import marketscopeIcon from "../../images/marketscope_imgs/marketscope-icon.png";
-// import ms_dashboard from "../../images/marketscope_imgs/dashboard.png";
-// import ms_pipeline from "../../images/marketscope_imgs/pipeline.png";
-// import ms_keyword_report from "../../images/marketscope_imgs/keyword-report.png";
-// import ms_domain_audit from "../../images/marketscope_imgs/domain-audit.png";
-// import ms_geo_heatmap from "../../images/marketscope_imgs/geo-heatmap.png";
+// import marketscopeIcon from "./imgs/marketscope-icon.png";
+// import ms_dashboard from "./imgs/dashboard.png";
+// import ms_pipeline from "./imgs/pipeline.png";
+// import ms_keyword_report from "./imgs/keyword-report.png";
+// import ms_domain_audit from "./imgs/domain-audit.png";
+// import ms_geo_heatmap from "./imgs/geo-heatmap.png";
 
 // // Import all storyboard images (leave commented as a guide/template)
-// import sb_problem from "../../images/marketscope_imgs/storyboard/problem.png";
-// import sb_hypothesis from "../../images/marketscope_imgs/storyboard/hypothesis.png";
-// import sb_system from "../../images/marketscope_imgs/storyboard/system.png";
-// import sb_scoring from "../../images/marketscope_imgs/storyboard/scoring.png";
-// import sb_value from "../../images/marketscope_imgs/storyboard/value.png";
-// import sb_future from "../../images/marketscope_imgs/storyboard/future.png";
+// import sb_problem from "./imgs/storyboard/problem.png";
+// import sb_hypothesis from "./imgs/storyboard/hypothesis.png";
+// import sb_system from "./imgs/storyboard/system.png";
+// import sb_scoring from "./imgs/storyboard/scoring.png";
+// import sb_value from "./imgs/storyboard/value.png";
+// import sb_future from "./imgs/storyboard/future.png";
 
 const marketscope = {
   id: "marketscope",

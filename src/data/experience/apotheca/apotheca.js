@@ -1,17 +1,17 @@
 // /data/experience/apotheca.js
 
 // Import all project images
-import skinpro12 from "../../images/skinpro_imgs/alerts_tab.jpeg";
-import skinpro4 from "../../images/skinpro_imgs/appt_tab.jpeg";
-import skinpro2 from "../../images/skinpro_imgs/client_tab.jpeg";
-import skinpro3 from "../../images/skinpro_imgs/info_tab.jpeg";
-import skinpro5 from "../../images/skinpro_imgs/photos_tab_blur.jpeg";
-import skinpro6 from "../../images/skinpro_imgs/QR_upload.jpeg";
-import skinpro10 from "../../images/skinpro_imgs/rx_generator.jpeg";
-import skinpro11 from "../../images/skinpro_imgs/rx_preview.jpeg";
-import skinpro9 from "../../images/skinpro_imgs/rx_tab.jpeg";
-import skinpro8 from "../../images/skinpro_imgs/Upload_Complete.jpeg";
-import skinpro7 from "../../images/skinpro_imgs/Upload_Photos.jpeg";
+import skinpro12 from "./imgs/alerts_tab.jpeg";
+import skinpro4 from "./imgs/appt_tab.jpeg";
+import skinpro2 from "./imgs/client_tab.jpeg";
+import skinpro3 from "./imgs/info_tab.jpeg";
+import skinpro5 from "./imgs/photos_tab_blur.jpeg";
+import skinpro6 from "./imgs/QR_upload.jpeg";
+import skinpro10 from "./imgs/rx_generator.jpeg";
+import skinpro11 from "./imgs/rx_preview.jpeg";
+import skinpro9 from "./imgs/rx_tab.jpeg";
+import skinpro8 from "./imgs/Upload_Complete.jpeg";
+import skinpro7 from "./imgs/Upload_Photos.jpeg";
 
 const apotheca = {
   id: "apotheca",

@@ -7,6 +7,7 @@ const ses = new SESClient({ region: "us-west-1" });
 const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
 const TO_EMAIL = process.env.SES_TO_EMAIL;
 const FROM_EMAIL = process.env.SES_FROM_EMAIL || "no-reply@brianjames.dev";
+const APPROVAL_BASE_URL = process.env.GALLERY_APPROVAL_BASE_URL || "";
 
 export const handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
@@ -41,13 +42,20 @@ export const handler = async (event) => {
     };
   }
 
+  const approveUrl = APPROVAL_BASE_URL
+    ? `${APPROVAL_BASE_URL}?email=${encodeURIComponent(email)}`
+    : "";
+  const approveHint = approveUrl
+    ? `Approve request: ${approveUrl}`
+    : "Approve request by replying with the password when you're ready.";
+
   const emailParams = {
     Destination: { ToAddresses: [TO_EMAIL] },
     Message: {
-      Subject: { Data: `Contact Form Submission from ${name}` },
+      Subject: { Data: `Gallery Access Request from ${name}` },
       Body: {
         Text: {
-          Data: `New message from ${name} <${email}>:\n\n${message}`
+          Data: `Gallery access request from ${name} <${email}>:\n\n${message}\n\n${approveHint}`,
         },
       },
     },
@@ -57,38 +65,34 @@ export const handler = async (event) => {
 
   try {
     await ses.send(new SendEmailCommand(emailParams));
-  
+
     const confirmationParams = {
-      Destination: {
-        ToAddresses: [email],
-      },
+      Destination: { ToAddresses: [email] },
       Message: {
-        Subject: {
-          Data: "Thanks for the message!",
-        },
+        Subject: { Data: "Access request received" },
         Body: {
           Text: {
-            Data: `Hey ${name},\n\nThanks for checking out my portfolio, I really appreciate the time. If you're expecting an email back, I'll be replying as soon as I can.\n\nHere’s a copy of what you sent:\n\n"${message}"\n\n— Brian James`,
+            Data: `Hey ${name},\n\nThanks for the request. I review these manually and will follow up soon.\n\nHere’s a copy of what you sent:\n\n"${message}"\n\n— Brian James`,
           },
         },
       },
       Source: FROM_EMAIL,
       ReplyToAddresses: [TO_EMAIL],
     };
-  
+
     await ses.send(new SendEmailCommand(confirmationParams));
-  
+
     return {
       statusCode: 200,
       headers: corsHeaders(),
-      body: JSON.stringify({ message: "Email sent successfully" }),
+      body: JSON.stringify({ message: "Request sent successfully" }),
     };
   } catch (err) {
     console.error("SES error:", JSON.stringify(err, null, 2));
     return {
       statusCode: 500,
       headers: corsHeaders(),
-      body: JSON.stringify({ error: "Failed to send email", details: err.message || err }),
+      body: JSON.stringify({ error: "Failed to send email" }),
     };
   }
 };

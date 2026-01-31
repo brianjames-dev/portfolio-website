@@ -13,6 +13,10 @@ function ExpandedCard({
   project,
   onGalleryClick,
   isGalleryLocked = false,
+  isLockable = false,
+  showGalleryButton = false,
+  showDemoButton = false,
+  onDemoClick,
   handleClose,
   handleCloseAndScroll,
 }) {
@@ -20,9 +24,11 @@ function ExpandedCard({
     if (typeof document === "undefined") return false;
     return document.documentElement.getAttribute("data-theme") === "dark";
   });
-  const hasGallery = (project.images?.length || 0) > 0;
+  const hasGallery =
+    (project.images?.length || 0) > 0 || Boolean(showGalleryButton);
+  const hasDemo = Boolean(showDemoButton);
   const hasGithub = Boolean(project.expanded?.github);
-  const hasTopButtons = hasGallery || hasGithub;
+  const hasTopButtons = hasGallery || hasDemo || hasGithub;
   const videoEmbed = project.expanded?.video;
   const rawVideoId = videoEmbed?.id;
   const videoEmbedId =
@@ -83,9 +89,65 @@ function ExpandedCard({
                   className="button-icon"
                 />
                 Gallery
-                {isGalleryLocked && (
-                  <span className="gallery-lock-pill">Locked</span>
-                )}
+                {isLockable &&
+                  (isGalleryLocked ? (
+                    <span
+                      className="lock-state-icon icon-mask"
+                      aria-label="Locked"
+                      style={{
+                        WebkitMaskImage: `url(${iconMap["Locked"]})`,
+                        maskImage: `url(${iconMap["Locked"]})`,
+                      }}
+                    />
+                  ) : (
+                    <span
+                      className="lock-state-icon icon-mask"
+                      aria-label="Unlocked"
+                      style={{
+                        WebkitMaskImage: `url(${iconMap["Unlocked"]})`,
+                        maskImage: `url(${iconMap["Unlocked"]})`,
+                      }}
+                    />
+                  ))}
+              </button>
+            )}
+            {hasDemo && (
+              <button
+                className="expanded-top-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDemoClick?.(project.demoVideo);
+                }}
+              >
+                <span
+                  className="button-icon icon-mask"
+                  aria-label="Video"
+                  style={{
+                    WebkitMaskImage: `url(${iconMap["Video"]})`,
+                    maskImage: `url(${iconMap["Video"]})`,
+                }}
+              />
+                View Demo
+                {isLockable &&
+                  (isGalleryLocked ? (
+                    <span
+                      className="lock-state-icon icon-mask"
+                      aria-label="Locked"
+                      style={{
+                        WebkitMaskImage: `url(${iconMap["Locked"]})`,
+                        maskImage: `url(${iconMap["Locked"]})`,
+                      }}
+                    />
+                  ) : (
+                    <span
+                      className="lock-state-icon icon-mask"
+                      aria-label="Unlocked"
+                      style={{
+                        WebkitMaskImage: `url(${iconMap["Unlocked"]})`,
+                        maskImage: `url(${iconMap["Unlocked"]})`,
+                      }}
+                    />
+                  ))}
               </button>
             )}
             {hasGithub && (
@@ -207,7 +269,7 @@ function ExpandedCard({
 
       {/* Bottom Actions */}
       <div className="project-actions">
-        {project.images?.length > 0 && (
+        {hasGallery && (
           <button
             className="learn-more-btn"
             data-locked={isGalleryLocked}
@@ -224,9 +286,65 @@ function ExpandedCard({
               className="button-icon"
             />
             Gallery
-            {isGalleryLocked && (
-              <span className="gallery-lock-pill">Locked</span>
-            )}
+            {isLockable &&
+              (isGalleryLocked ? (
+                <span
+                  className="lock-state-icon icon-mask"
+                  aria-label="Locked"
+                  style={{
+                    WebkitMaskImage: `url(${iconMap["Locked"]})`,
+                    maskImage: `url(${iconMap["Locked"]})`,
+                  }}
+                />
+              ) : (
+                <span
+                  className="lock-state-icon icon-mask"
+                  aria-label="Unlocked"
+                  style={{
+                    WebkitMaskImage: `url(${iconMap["Unlocked"]})`,
+                    maskImage: `url(${iconMap["Unlocked"]})`,
+                  }}
+                />
+              ))}
+          </button>
+        )}
+        {hasDemo && (
+          <button
+            className="learn-more-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDemoClick?.(project.demoVideo);
+            }}
+          >
+            <span
+              className="button-icon icon-mask"
+              aria-label="Video"
+              style={{
+                WebkitMaskImage: `url(${iconMap["Video"]})`,
+                maskImage: `url(${iconMap["Video"]})`,
+              }}
+            />
+            View Demo
+            {isLockable &&
+              (isGalleryLocked ? (
+                <span
+                  className="lock-state-icon icon-mask"
+                  aria-label="Locked"
+                  style={{
+                    WebkitMaskImage: `url(${iconMap["Locked"]})`,
+                    maskImage: `url(${iconMap["Locked"]})`,
+                  }}
+                />
+              ) : (
+                <span
+                  className="lock-state-icon icon-mask"
+                  aria-label="Unlocked"
+                  style={{
+                    WebkitMaskImage: `url(${iconMap["Unlocked"]})`,
+                    maskImage: `url(${iconMap["Unlocked"]})`,
+                  }}
+                />
+              ))}
           </button>
         )}
         <button

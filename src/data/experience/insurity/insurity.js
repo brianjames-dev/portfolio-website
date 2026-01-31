@@ -1,18 +1,16 @@
 // /data/experience/insurity.js
 
 // Import all project images
-// import skinpro12 from "../../images/skinpro_imgs/alerts_tab.jpg";
-// import skinpro4 from "../../images/skinpro_imgs/appt_tab.jpg";
-// import skinpro2 from "../../images/skinpro_imgs/client_tab.jpg";
-// import skinpro3 from "../../images/skinpro_imgs/info_tab.jpg";
-// import skinpro5 from "../../images/skinpro_imgs/photos_tab_blur.jpg";
-// import skinpro6 from "../../images/skinpro_imgs/QR_upload.jpg";
-// import skinpro10 from "../../images/skinpro_imgs/rx_generator.jpg";
-// import skinpro11 from "../../images/skinpro_imgs/rx_preview.jpg";
-// import skinpro9 from "../../images/skinpro_imgs/rx_tab.jpg";
-// import skinpro1 from "../../images/skinpro_imgs/splash_screen.jpg";
-// import skinpro8 from "../../images/skinpro_imgs/Upload_Complete.jpeg";
-// import skinpro7 from "../../images/skinpro_imgs/Upload_Photos.jpeg";
+import chat from "./imgs/chat.png";
+import deploy from "./imgs/deploy.png";
+import discovery from "./imgs/discovery.png";
+import login from "./imgs/login.png";
+import monitor from "./imgs/monitor.png";
+import semantics from "./imgs/semantics.png";
+import simulate1 from "./imgs/simulate1.png";
+import simulate2 from "./imgs/simulate2.png";
+import stage from "./imgs/stage.png";
+import timeline from "./imgs/timeline.png";
 
 const insurity = {
   id: "insurity",
@@ -44,19 +42,24 @@ const insurity = {
     "REST API",
   ],
   github: "",
+  galleryLocked: true,
+  showGalleryButton: true,
+  demoVideo: {
+    provider: "youtube",
+    id: "OlipJCRyRo4",
+    title: "AI Associate Developer Demo",
+  },
   images: [
-    // { src: skinpro1, caption: "🚪 Splash Screen" },
-    // { src: skinpro2, caption: "👩 Clients Tab" },
-    // { src: skinpro3, caption: "📝 Info Tab (Client Demographics & History)" },
-    // { src: skinpro4, caption: "📅 Appointments Tab" },
-    // { src: skinpro5, caption: "📷 Photos Tab (Before & After Comparison)" },
-    // { src: skinpro6, caption: "📲 QR Upload Window" },
-    // { src: skinpro7, caption: "📲 Upload In Progress" },
-    // { src: skinpro8, caption: "📲 Upload Complete" },
-    // { src: skinpro9, caption: "💊 Prescriptions Tab" },
-    // { src: skinpro10, caption: "🧾 Prescription Generator (Dynamic Form)" },
-    // { src: skinpro11, caption: "🖨️ Finished Prescription Preview (Printable)" },
-    // { src: skinpro12, caption: "🔔 Alerts Tab (Follow-up Reminders)" },
+    { src: login, caption: "Login flow" },
+    { src: discovery, caption: "Discovery view" },
+    { src: semantics, caption: "Semantic analysis" },
+    { src: simulate1, caption: "Simulation view (1)" },
+    { src: simulate2, caption: "Simulation view (2)" },
+    { src: stage, caption: "Staging workflow" },
+    { src: deploy, caption: "Deployment view" },
+    { src: monitor, caption: "Monitoring dashboard" },
+    { src: chat, caption: "Assistant chat" },
+    { src: timeline, caption: "Activity timeline" },
   ],
 
   expanded: {

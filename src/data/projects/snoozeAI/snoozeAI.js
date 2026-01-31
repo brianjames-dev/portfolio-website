@@ -1,21 +1,21 @@
 // /data/projects/snoozeai.js
 
 // Import all project images (leave commented for now; will attach assets later)
-// import snoozeaiIcon from "../../images/snoozeai_imgs/snoozeai-icon.png";
-// import sa_ios_home from "../../images/snoozeai_imgs/ios-home.png";
-// import sa_ios_snooze from "../../images/snoozeai_imgs/ios-snooze-sheet.png";
-// import sa_ios_digest from "../../images/snoozeai_imgs/ios-digest.png";
-// import sa_rules from "../../images/snoozeai_imgs/rules-builder.png";
-// import sa_inbox from "../../images/snoozeai_imgs/inbox-triage.png";
-// import sa_metrics from "../../images/snoozeai_imgs/metrics.png";
+// import snoozeaiIcon from "./imgs/snoozeai-icon.png";
+// import sa_ios_home from "./imgs/ios-home.png";
+// import sa_ios_snooze from "./imgs/ios-snooze-sheet.png";
+// import sa_ios_digest from "./imgs/ios-digest.png";
+// import sa_rules from "./imgs/rules-builder.png";
+// import sa_inbox from "./imgs/inbox-triage.png";
+// import sa_metrics from "./imgs/metrics.png";
 
 // // Import storyboard images (leave commented as a guide/template)
-// import sb_problem from "../../images/snoozeai_imgs/storyboard/problem.png";
-// import sb_flow from "../../images/snoozeai_imgs/storyboard/flow.png";
-// import sb_arch from "../../images/snoozeai_imgs/storyboard/architecture.png";
-// import sb_model from "../../images/snoozeai_imgs/storyboard/model.png";
-// import sb_value from "../../images/snoozeai_imgs/storyboard/value.png";
-// import sb_future from "../../images/snoozeai_imgs/storyboard/future.png";
+// import sb_problem from "./imgs/storyboard/problem.png";
+// import sb_flow from "./imgs/storyboard/flow.png";
+// import sb_arch from "./imgs/storyboard/architecture.png";
+// import sb_model from "./imgs/storyboard/model.png";
+// import sb_value from "./imgs/storyboard/value.png";
+// import sb_future from "./imgs/storyboard/future.png";
 
 const snoozeai = {
   id: "snoozeai",

@@ -146,6 +146,7 @@ function Contact() {
                 type="text"
                 name="name"
                 autoComplete="name"
+                spellCheck={false}
                 value={form.name}
                 onChange={handleChange}
                 className={errors.name ? "input-error" : ""}
@@ -160,6 +161,7 @@ function Contact() {
                 type="email"
                 name="email"
                 autoComplete="email"
+                spellCheck={false}
                 value={form.email}
                 onChange={handleChange}
                 className={errors.email ? "input-error" : ""}
@@ -174,6 +176,7 @@ function Contact() {
                 name="message"
                 rows="5"
                 autoComplete="off"
+                spellCheck={false}
                 value={form.message}
                 onChange={handleChange}
                 className={errors.message ? "input-error" : ""}

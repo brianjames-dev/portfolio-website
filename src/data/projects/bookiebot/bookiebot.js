@@ -1,38 +1,38 @@
 // /data/projects/bookiebot.js
 
 // Import all project images
-import bookiebot1 from "../../images/bookiebot_imgs/bookiebot-icon.png";
-import bookiebot5 from "../../images/bookiebot_imgs/expense-breakdown.png";
-import bookiebot9 from "../../images/bookiebot_imgs/expense-sheet-proof.png";
-import bookiebot4 from "../../images/bookiebot_imgs/intent-desc+example.png";
-import bookiebot2 from "../../images/bookiebot_imgs/intent-list-1.png";
-import bookiebot3 from "../../images/bookiebot_imgs/intent-list-2.png";
-import bookiebot8 from "../../images/bookiebot_imgs/logged-food-expense.png";
-import bookiebot7 from "../../images/bookiebot_imgs/specific-day-expenses.png";
-import bookiebot6 from "../../images/bookiebot_imgs/spending-calendar.png";
+import bookiebot1 from "./imgs/bookiebot-icon.png";
+import bookiebot5 from "./imgs/expense-breakdown.png";
+import bookiebot9 from "./imgs/expense-sheet-proof.png";
+import bookiebot4 from "./imgs/intent-desc+example.png";
+import bookiebot2 from "./imgs/intent-list-1.png";
+import bookiebot3 from "./imgs/intent-list-2.png";
+import bookiebot8 from "./imgs/logged-food-expense.png";
+import bookiebot7 from "./imgs/specific-day-expenses.png";
+import bookiebot6 from "./imgs/spending-calendar.png";
 
 // Import all storyboard images
-import steps5to1 from "../../images/bookiebot_imgs/storyboard_imgs/5stepsTo1.png";
-import asyncArrows from "../../images/bookiebot_imgs/storyboard_imgs/async_arrows.png";
-import autoLogging from "../../images/bookiebot_imgs/storyboard_imgs/automatic_logging.png";
-import bookiebotFuture from "../../images/bookiebot_imgs/storyboard_imgs/bookiebot_future.png";
-import bookiebotHero from "../../images/bookiebot_imgs/storyboard_imgs/bookiebot_hero.png";
-import bookiebotInside from "../../images/bookiebot_imgs/storyboard_imgs/bookiebot_inside.png";
-import brainCircuit from "../../images/bookiebot_imgs/storyboard_imgs/brain_circuit.png";
-import easyBudgeting from "../../images/bookiebot_imgs/storyboard_imgs/easy_budgeting.png";
-import GPTpowered from "../../images/bookiebot_imgs/storyboard_imgs/GPT_powered_bookiebot.png";
-import GPTcloudToJson from "../../images/bookiebot_imgs/storyboard_imgs/GPTcloudToJson.png";
-import increasedUsage from "../../images/bookiebot_imgs/storyboard_imgs/increased_usage.png";
-import lightningBookiebot from "../../images/bookiebot_imgs/storyboard_imgs/lightning_bookiebot.png";
-import llmOutperform from "../../images/bookiebot_imgs/storyboard_imgs/llm_outperform.png";
-import memoryErrorHandling from "../../images/bookiebot_imgs/storyboard_imgs/memory_error_handling.png";
-import multiUser from "../../images/bookiebot_imgs/storyboard_imgs/multi_user.png";
-import naturalLanguageLogging from "../../images/bookiebot_imgs/storyboard_imgs/natural_language_logging.png";
-import nrmlDialogueConf from "../../images/bookiebot_imgs/storyboard_imgs/normal_dialogue_confirmation.png";
-import structurePromptsReliable from "../../images/bookiebot_imgs/storyboard_imgs/structure_prompts_reliable.png";
-import techStack from "../../images/bookiebot_imgs/storyboard_imgs/techstack.png";
-import understandingCmds from "../../images/bookiebot_imgs/storyboard_imgs/understanding_cmds.png";
-import visualGPTsummaries from "../../images/bookiebot_imgs/storyboard_imgs/visual_GPT_summaries.png";
+import steps5to1 from "./imgs/storyboard_imgs/5stepsTo1.png";
+import asyncArrows from "./imgs/storyboard_imgs/async_arrows.png";
+import autoLogging from "./imgs/storyboard_imgs/automatic_logging.png";
+import bookiebotFuture from "./imgs/storyboard_imgs/bookiebot_future.png";
+import bookiebotHero from "./imgs/storyboard_imgs/bookiebot_hero.png";
+import bookiebotInside from "./imgs/storyboard_imgs/bookiebot_inside.png";
+import brainCircuit from "./imgs/storyboard_imgs/brain_circuit.png";
+import easyBudgeting from "./imgs/storyboard_imgs/easy_budgeting.png";
+import GPTpowered from "./imgs/storyboard_imgs/GPT_powered_bookiebot.png";
+import GPTcloudToJson from "./imgs/storyboard_imgs/GPTcloudToJson.png";
+import increasedUsage from "./imgs/storyboard_imgs/increased_usage.png";
+import lightningBookiebot from "./imgs/storyboard_imgs/lightning_bookiebot.png";
+import llmOutperform from "./imgs/storyboard_imgs/llm_outperform.png";
+import memoryErrorHandling from "./imgs/storyboard_imgs/memory_error_handling.png";
+import multiUser from "./imgs/storyboard_imgs/multi_user.png";
+import naturalLanguageLogging from "./imgs/storyboard_imgs/natural_language_logging.png";
+import nrmlDialogueConf from "./imgs/storyboard_imgs/normal_dialogue_confirmation.png";
+import structurePromptsReliable from "./imgs/storyboard_imgs/structure_prompts_reliable.png";
+import techStack from "./imgs/storyboard_imgs/techstack.png";
+import understandingCmds from "./imgs/storyboard_imgs/understanding_cmds.png";
+import visualGPTsummaries from "./imgs/storyboard_imgs/visual_GPT_summaries.png";
 
 const bookiebot = {
   id: "bookiebot",
