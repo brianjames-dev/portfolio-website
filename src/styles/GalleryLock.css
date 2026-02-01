@@ -267,3 +267,17 @@
   width: 20px;
   height: 20px;
 }
+
+.button-text-short {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .gallery-lock-modal--compact .button-text-full {
+    display: none;
+  }
+
+  .gallery-lock-modal--compact .button-text-short {
+    display: inline;
+  }
+}

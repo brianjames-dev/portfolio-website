@@ -121,7 +121,7 @@ function CollapsedCard({
                   maskImage: `url(${iconMap["Video"]})`,
                 }}
               />
-              View Demo
+              Demo
               {isLockable &&
                 (isGalleryLocked ? (
                   <span

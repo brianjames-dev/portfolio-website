@@ -239,7 +239,12 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
                       maskImage: `url(${iconMap["Locked"]})`,
                     }}
                   />
-                  {unlockLoading ? "Unlocking..." : "Unlock Gallery"}
+                  <span className="button-text-full">
+                    {unlockLoading ? "Unlocking..." : "Unlock Gallery"}
+                  </span>
+                  <span className="button-text-short">
+                    {unlockLoading ? "Unlocking..." : "Unlock"}
+                  </span>
                 </button>
                 <button
                   type="button"
@@ -254,7 +259,8 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
                       maskImage: `url(${iconMap["Send"]})`,
                     }}
                   />
-                  Request Access
+                  <span className="button-text-full">Request Access</span>
+                  <span className="button-text-short">Request</span>
                 </button>
               </div>
               {unlockError && <p className="gallery-lock-error">{unlockError}</p>}

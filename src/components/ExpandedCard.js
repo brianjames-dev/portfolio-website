@@ -127,7 +127,7 @@ function ExpandedCard({
                     maskImage: `url(${iconMap["Video"]})`,
                 }}
               />
-                View Demo
+                Demo
                 {isLockable &&
                   (isGalleryLocked ? (
                     <span
@@ -324,7 +324,7 @@ function ExpandedCard({
                 maskImage: `url(${iconMap["Video"]})`,
               }}
             />
-            View Demo
+            Demo
             {isLockable &&
               (isGalleryLocked ? (
                 <span
