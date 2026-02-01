@@ -34,6 +34,7 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  transition: left 0.25s ease, transform 0.25s ease;
 }
 
 .site-header nav.hidden-on-load {
@@ -49,7 +50,7 @@
   position: relative; /* for bubble overlap */
   z-index: 1; /* Ensures text sits above the indicator */
 
-  transition: color 0.3s ease;
+  transition: color 0.25s ease, font-size 0.25s ease, margin 0.25s ease;
 }
 
 .site-header nav a:hover {
@@ -71,9 +72,9 @@
   width: 0;
   left: 0;
   transition:
-    left 0.3s ease,
-    width 0.3s ease,
-    opacity 0.3s ease;
+    left 0.25s ease,
+    width 0.25s ease,
+    opacity 0.25s ease;
   z-index: 0;
   pointer-events: none; /* Prevent bubble from intercepting clicks */
 }
@@ -182,7 +183,7 @@
     left: auto;      /* ensure no left anchoring */
     width: 31%;
     transform: translateX(100%); /* hidden just off the right edge */
-    transition: transform 0.3s ease; /* animate open/close */
+    transition: transform 0.25s ease; /* animate open/close */
     box-shadow: 0 8px 6px rgba(0, 0, 0, 0.1);
   }
 
@@ -214,10 +215,10 @@
     background-color: #ebe5c2; /* Match desktop color */
     opacity: 0; /* Start hidden, controlled by JS */
     transition:
-      width 0.3s ease,
-      height 0.3s ease,
-      left 0.3s ease,
-      opacity 0.3s ease; /* Smooth transitions */
+      width 0.25s ease,
+      height 0.25s ease,
+      left 0.25s ease,
+      opacity 0.25s ease; /* Smooth transitions */
     pointer-events: none; /* Prevent interference with clicks */
   }
 
@@ -234,7 +235,6 @@
     display: none; /* Hide bubble when menu is closed */
   }
 }
-
 
 
 

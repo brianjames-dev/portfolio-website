@@ -19,6 +19,7 @@ function Header({ activeSection }) {
   useEffect(() => {
     const header = document.querySelector(".site-header");
     if (!header) return;
+    const root = document.documentElement;
 
     let lastScrollY = window.scrollY;
     const threshold = 10;
@@ -30,6 +31,7 @@ function Header({ activeSection }) {
       // Always show header when near the very top (mobile bounce, refreshed page, etc.)
       if (currentScrollY <= threshold) {
         header.classList.remove("hidden");
+        root.classList.remove("header-hidden");
         lastScrollY = currentScrollY;
         return;
       }
@@ -39,17 +41,22 @@ function Header({ activeSection }) {
       if (scrollDelta > 0) {
         // Scrolling down
         header.classList.add("hidden");
+        root.classList.add("header-hidden");
         setMenuOpen(false);
       } else {
         // Scrolling up
         header.classList.remove("hidden");
+        root.classList.remove("header-hidden");
       }
 
       lastScrollY = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      root.classList.remove("header-hidden");
+    };
   }, []);
 
   // Handle mobile menu animation

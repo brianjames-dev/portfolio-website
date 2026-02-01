@@ -7,6 +7,7 @@
   justify-content: center;
   --video-overlay-gap: clamp(24px, 8vh, 160px);
   padding: var(--video-overlay-gap);
+  transition: padding 0.25s ease;
   z-index: 9999;
 }
 
@@ -23,6 +24,7 @@
   border-radius: 12px;
   padding: 18px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  transition: padding 0.25s ease, width 0.25s ease, max-height 0.25s ease;
 }
 
 .video-overlay-close {
@@ -58,11 +60,18 @@
   border: 0;
 }
 
-@media (max-width: 700px) {
-  .video-overlay-card {
-    padding: 14px;
+@media (max-width: 1100px), (max-height: 700px) {
+  .video-overlay {
+    --video-overlay-gap: 15px;
+    padding: 15px;
   }
 
+  .video-overlay-card {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 700px) {
   .video-overlay-close img {
     width: 22px;
     height: 22px;

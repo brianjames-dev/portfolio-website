@@ -82,7 +82,15 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
     const selector =
       activeView === "request" ? "#access-name" : "#gallery-password";
     const timer = window.setTimeout(() => {
-      formRef.current?.querySelector(selector)?.focus();
+      const target = formRef.current?.querySelector(selector);
+      if (!target) return;
+      if (typeof target.focus === "function") {
+        try {
+          target.focus({ preventScroll: true });
+        } catch (error) {
+          target.focus();
+        }
+      }
     }, 0);
     return () => window.clearTimeout(timer);
   }, [isOpen, activeView]);
