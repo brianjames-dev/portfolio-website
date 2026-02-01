@@ -19,6 +19,10 @@
   color: var(--color-text);
 }
 
+.gallery-lock-modal--compact {
+  width: min(420px, 92vw);
+}
+
 .gallery-lock-header {
   display: flex;
   align-items: center;
@@ -67,20 +71,15 @@
   gap: 10px;
 }
 
-.gallery-lock-inline {
-  display: flex;
+.gallery-lock-actions-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
+  margin-top: 20px;
 }
 
-.gallery-lock-inline .gallery-lock-input {
-  flex: 1 1 240px;
-}
-
-.gallery-lock-inline .gallery-lock-submit {
-  flex: 0 0 auto;
-  min-width: 160px;
+.gallery-lock-actions-row .learn-more-btn {
+  width: 100%;
 }
 
 .gallery-lock-label {
@@ -246,6 +245,10 @@
   .gallery-lock-submit-row {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .gallery-lock-submit-row .recaptcha-wrapper {
+    align-self: flex-start;
   }
 }
 .gallery-lock-submit-inline {

@@ -21,6 +21,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
   const [unlockError, setUnlockError] = useState("");
   const [unlockLoading, setUnlockLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [activeView, setActiveView] = useState("unlock");
 
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState({});
@@ -42,6 +43,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
     setPassword("");
     setUnlockError("");
     setUnlockLoading(false);
+    setActiveView("unlock");
     setForm({ name: "", email: "", message: "" });
     setErrors({});
     setCaptchaToken(null);
@@ -49,10 +51,6 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
     setStatusMessage("");
     setRequestLoading(false);
     setShowCaptcha(false);
-
-    const timer = window.setTimeout(() => {
-      formRef.current?.querySelector("input")?.focus();
-    }, 0);
 
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
@@ -73,12 +71,21 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
     document.body.classList.add("no-scroll");
 
     return () => {
-      window.clearTimeout(timer);
       observer.disconnect();
       document.removeEventListener("keydown", handleKeyDown);
       document.body.classList.remove("no-scroll");
     };
   }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const selector =
+      activeView === "request" ? "#access-name" : "#gallery-password";
+    const timer = window.setTimeout(() => {
+      formRef.current?.querySelector(selector)?.focus();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [isOpen, activeView]);
 
   if (!isOpen) return null;
 
@@ -160,6 +167,11 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
     setShowCaptcha(true);
   };
 
+  const handleRequestAccessClick = () => {
+    onFirstInteract();
+    setActiveView("request");
+  };
+
   return (
     <div
       className="gallery-lock-overlay"
@@ -172,9 +184,18 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
         }
       }}
     >
-      <div className="gallery-lock-modal" ref={formRef}>
+      <div
+        className={`gallery-lock-modal${
+          activeView === "unlock" ? " gallery-lock-modal--compact" : ""
+        }`}
+        ref={formRef}
+      >
         <div className="gallery-lock-header">
-          <h3 id="gallery-lock-title">Private Gallery Access</h3>
+          <h3 id="gallery-lock-title">
+            {activeView === "request"
+              ? "Request access"
+              : "Private Gallery Access"}
+          </h3>
           <button
             type="button"
             className="gallery-lock-close"
@@ -188,136 +209,151 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
             />
           </button>
         </div>
-        <p className="gallery-lock-hint">{GALLERY_LOCK_HINT}</p>
-
-        <form className="gallery-lock-form" onSubmit={handleUnlock}>
-          <label className="gallery-lock-label" htmlFor="gallery-password">
-            Password
-          </label>
-          <div className="gallery-lock-inline">
-            <input
-              id="gallery-password"
-              className="gallery-lock-input"
-              type="password"
-              autoComplete="current-password"
-              spellCheck={false}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
-            <button
-              type="submit"
-              className="learn-more-btn gallery-lock-submit-inline"
-              disabled={unlockLoading}
-            >
-              <span
-                className="gallery-lock-button-icon icon-mask gallery-lock-button-icon--small"
-                aria-label="Locked"
-                style={{
-                  WebkitMaskImage: `url(${iconMap["Locked"]})`,
-                  maskImage: `url(${iconMap["Locked"]})`,
-                }}
-              />
-              {unlockLoading ? "Unlocking..." : "Unlock Gallery"}
-            </button>
-          </div>
-          {unlockError && <p className="gallery-lock-error">{unlockError}</p>}
-        </form>
-
-        <div className="gallery-lock-divider" />
-
-        <div
-          className="gallery-access-request"
-          onFocusCapture={onFirstInteract}
-          onMouseEnter={onFirstInteract}
-        >
-          <h4>Request access</h4>
-          <p className="gallery-lock-hint secondary">
-            {GALLERY_ACCESS_REQUEST_HINT}
-          </p>
-          <form onSubmit={handleRequestSubmit} noValidate>
-            <label htmlFor="access-name">
-              Name *
+        {activeView === "unlock" ? (
+          <>
+            <p className="gallery-lock-hint">{GALLERY_LOCK_HINT}</p>
+            <form className="gallery-lock-form" onSubmit={handleUnlock}>
+              <label className="gallery-lock-label" htmlFor="gallery-password">
+                Password
+              </label>
               <input
-                id="access-name"
-                type="text"
-                name="name"
-                autoComplete="name"
+                id="gallery-password"
+                className="gallery-lock-input"
+                type="password"
+                autoComplete="current-password"
                 spellCheck={false}
-                value={form.name}
-                onChange={handleChange}
-                className={errors.name ? "input-error" : ""}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
               />
-              {errors.name && <span className="error">{errors.name}</span>}
-            </label>
-
-            <label htmlFor="access-email">
-              Email *
-              <input
-                id="access-email"
-                type="email"
-                name="email"
-                autoComplete="email"
-                spellCheck={false}
-                value={form.email}
-                onChange={handleChange}
-                className={errors.email ? "input-error" : ""}
-              />
-              {errors.email && <span className="error">{errors.email}</span>}
-            </label>
-
-            <label htmlFor="access-message">
-              Message *
-              <textarea
-                id="access-message"
-                name="message"
-                rows="4"
-                autoComplete="off"
-                spellCheck={false}
-                value={form.message}
-                onChange={handleChange}
-                className={errors.message ? "input-error" : ""}
-              />
-              {errors.message && (
-                <span className="error">{errors.message}</span>
-              )}
-            </label>
-
-            <div className="gallery-lock-submit-row">
-              <div className="recaptcha-wrapper">
-                <div className="recaptcha" style={{ minHeight: 78 }}>
-                  {showCaptcha ? (
-                    <Suspense fallback={<div style={{ height: 78 }} />}>
-                      <LazyReCAPTCHA
-                        sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
-                        onChange={(token) => setCaptchaToken(token)}
-                      />
-                    </Suspense>
-                  ) : (
-                    <div style={{ height: 78 }} />
-                  )}
-                </div>
+              <div className="gallery-lock-actions-row">
+                <button
+                  type="submit"
+                  className="learn-more-btn gallery-lock-submit-inline"
+                  disabled={unlockLoading}
+                >
+                  <span
+                    className="gallery-lock-button-icon icon-mask gallery-lock-button-icon--small"
+                    aria-label="Locked"
+                    style={{
+                      WebkitMaskImage: `url(${iconMap["Locked"]})`,
+                      maskImage: `url(${iconMap["Locked"]})`,
+                    }}
+                  />
+                  {unlockLoading ? "Unlocking..." : "Unlock Gallery"}
+                </button>
+                <button
+                  type="button"
+                  className="learn-more-btn gallery-lock-submit-inline"
+                  onClick={handleRequestAccessClick}
+                >
+                  <span
+                    className="gallery-lock-button-icon icon-mask gallery-lock-button-icon--small"
+                    aria-label="Request access"
+                    style={{
+                      WebkitMaskImage: `url(${iconMap["Send"]})`,
+                      maskImage: `url(${iconMap["Send"]})`,
+                    }}
+                  />
+                  Request Access
+                </button>
               </div>
-
-              <button
-                type="submit"
-                className="learn-more-btn gallery-lock-submit-inline"
-                disabled={requestLoading}
-              >
-                <img
-                  src={iconMap["Send"]}
-                  alt=""
-                  aria-hidden="true"
-                  className="gallery-lock-button-icon"
+              {unlockError && <p className="gallery-lock-error">{unlockError}</p>}
+            </form>
+          </>
+        ) : (
+          <div
+            className="gallery-access-request"
+            onFocusCapture={onFirstInteract}
+            onMouseEnter={onFirstInteract}
+          >
+            <p className="gallery-lock-hint">
+              {GALLERY_ACCESS_REQUEST_HINT}
+            </p>
+            <form onSubmit={handleRequestSubmit} noValidate>
+              <label htmlFor="access-name">
+                Name *
+                <input
+                  id="access-name"
+                  type="text"
+                  name="name"
+                  autoComplete="name"
+                  spellCheck={false}
+                  value={form.name}
+                  onChange={handleChange}
+                  className={errors.name ? "input-error" : ""}
                 />
-                {requestLoading ? "Sending..." : "Send Request"}
-              </button>
-            </div>
-          </form>
+                {errors.name && <span className="error">{errors.name}</span>}
+              </label>
 
-          {status && (
-            <div className={`form-feedback ${status}`}>{statusMessage}</div>
-          )}
-        </div>
+              <label htmlFor="access-email">
+                Email *
+                <input
+                  id="access-email"
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  spellCheck={false}
+                  value={form.email}
+                  onChange={handleChange}
+                  className={errors.email ? "input-error" : ""}
+                />
+                {errors.email && <span className="error">{errors.email}</span>}
+              </label>
+
+              <label htmlFor="access-message">
+                Message *
+                <textarea
+                  id="access-message"
+                  name="message"
+                  rows="4"
+                  autoComplete="off"
+                  spellCheck={false}
+                  value={form.message}
+                  onChange={handleChange}
+                  className={errors.message ? "input-error" : ""}
+                />
+                {errors.message && (
+                  <span className="error">{errors.message}</span>
+                )}
+              </label>
+
+              <div className="gallery-lock-submit-row">
+                <div className="recaptcha-wrapper">
+                  <div className="recaptcha" style={{ minHeight: 78 }}>
+                    {showCaptcha ? (
+                      <Suspense fallback={<div style={{ height: 78 }} />}>
+                        <LazyReCAPTCHA
+                          sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+                          onChange={(token) => setCaptchaToken(token)}
+                        />
+                      </Suspense>
+                    ) : (
+                      <div style={{ height: 78 }} />
+                    )}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="learn-more-btn gallery-lock-submit-inline"
+                  disabled={requestLoading}
+                >
+                  <img
+                    src={iconMap["Send"]}
+                    alt=""
+                    aria-hidden="true"
+                    className="gallery-lock-button-icon"
+                  />
+                  {requestLoading ? "Sending..." : "Send Request"}
+                </button>
+              </div>
+            </form>
+
+            {status && (
+              <div className={`form-feedback ${status}`}>{statusMessage}</div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
