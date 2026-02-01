@@ -187,7 +187,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
       <div
         className={`gallery-lock-modal${
           activeView === "unlock" ? " gallery-lock-modal--compact" : ""
-        }`}
+        }${activeView === "request" ? " gallery-lock-modal--request" : ""}`}
         ref={formRef}
       >
         <div className="gallery-lock-header">

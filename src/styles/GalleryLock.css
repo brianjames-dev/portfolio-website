@@ -238,6 +238,33 @@
     padding: 20px;
   }
 
+  .gallery-lock-modal--request {
+    padding: 16px;
+  }
+
+  .gallery-lock-modal--request .gallery-lock-header h3 {
+    font-size: 1.15rem;
+  }
+
+  .gallery-lock-modal--request .gallery-lock-hint {
+    margin: 8px 0 12px 0;
+    font-size: 0.9rem;
+  }
+
+  .gallery-lock-modal--request .gallery-access-request form {
+    gap: 10px;
+  }
+
+  .gallery-lock-modal--request .gallery-access-request label {
+    gap: 4px;
+    font-size: 0.85rem;
+  }
+
+  .gallery-lock-modal--request .gallery-access-request textarea {
+    height: 80px;
+    min-height: 80px;
+  }
+
   .gallery-lock-actions {
     flex-direction: column;
   }
@@ -249,6 +276,25 @@
 
   .gallery-lock-submit-row .recaptcha-wrapper {
     align-self: flex-start;
+  }
+
+  .gallery-lock-modal--request .gallery-lock-submit-row {
+    gap: 12px;
+  }
+
+  .gallery-lock-modal--request .gallery-lock-submit-row .recaptcha-wrapper {
+    width: 219px;
+    height: 56px;
+    overflow: hidden;
+  }
+
+  .gallery-lock-modal--request .gallery-lock-submit-row .recaptcha {
+    transform: scale(0.72);
+    transform-origin: top left;
+  }
+
+  .gallery-lock-modal--request .gallery-lock-submit-row button {
+    min-width: 0;
   }
 }
 .gallery-lock-submit-inline {

@@ -11,6 +11,11 @@ const entheos = {
     `,
   stack: ["Python", "Logic Pro X", "Showbuddy"],
   images: [],
+  demoVideo: {
+    provider: "youtube",
+    id: "9BW98ecDAU0",
+    title: "Entheos Stage Automation Demo",
+  },
 
   expanded: {
     title: `
@@ -29,11 +34,6 @@ const entheos = {
             •  Independently programmed a live sound & lighting system (70+ fixtures) in Python and Showbuddy, synchronizing lights with instruments and vocals for 60,000+ fans—reducing tour crew costs by $5,000+ while elevating show quality and merch sales.
             •  Coordinated nightly with venue lighting directors and stage hands to ensure smooth, flawless, time-critical execution.
         `,
-    video: {
-      provider: "youtube",
-      id: "9BW98ecDAU0",
-      title: "Entheos Stage Automation Demo",
-    },
   },
 };
 
