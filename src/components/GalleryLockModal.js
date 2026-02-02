@@ -22,6 +22,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
   const [unlockLoading, setUnlockLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeView, setActiveView] = useState("unlock");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState({});
@@ -44,6 +45,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
     setUnlockError("");
     setUnlockLoading(false);
     setActiveView("unlock");
+    setShowPassword(false);
     setForm({ name: "", email: "", message: "" });
     setErrors({});
     setCaptchaToken(null);
@@ -224,15 +226,26 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
               <label className="gallery-lock-label" htmlFor="gallery-password">
                 Password
               </label>
-              <input
-                id="gallery-password"
-                className="gallery-lock-input"
-                type="password"
-                autoComplete="current-password"
-                spellCheck={false}
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
+              <div className="gallery-lock-input-row">
+                <input
+                  id="gallery-password"
+                  className="gallery-lock-input"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  spellCheck={false}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                <button
+                  type="button"
+                  className="gallery-lock-toggle"
+                  aria-pressed={showPassword}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
               <div className="gallery-lock-actions-row">
                 <button
                   type="submit"
