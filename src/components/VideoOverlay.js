@@ -6,15 +6,30 @@ function VideoOverlay({ isOpen, video, onClose }) {
   const cardRef = useRef(null);
   const closeButtonRef = useRef(null);
   const previouslyFocusedRef = useRef(null);
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
 
     previouslyFocusedRef.current = document.activeElement;
     const y = window.scrollY;
+    const lockBodyScroll = () => {
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${y}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+      document.body.style.overflow = "hidden";
+    };
+
+    document.documentElement.classList.add("modal-scroll-lock");
     document.body.classList.add("no-scroll");
     document.body.classList.add("video-overlay-open");
-    document.body.style.top = `-${y}px`;
+    lockBodyScroll();
 
     const setViewportVars = () => {
       const viewport = window.visualViewport;
@@ -42,9 +57,15 @@ function VideoOverlay({ isOpen, video, onClose }) {
     };
 
     setViewportVars();
-    window.visualViewport?.addEventListener("resize", setViewportVars);
-    window.visualViewport?.addEventListener("scroll", setViewportVars);
-    window.addEventListener("resize", setViewportVars);
+    const refreshViewportLock = () => {
+      setViewportVars();
+      window.requestAnimationFrame(lockBodyScroll);
+    };
+
+    window.visualViewport?.addEventListener("resize", refreshViewportLock);
+    window.visualViewport?.addEventListener("scroll", refreshViewportLock);
+    window.addEventListener("resize", refreshViewportLock);
+    window.addEventListener("orientationchange", refreshViewportLock);
 
     const focusTimer = window.setTimeout(() => {
       closeButtonRef.current?.focus();
@@ -53,7 +74,7 @@ function VideoOverlay({ isOpen, video, onClose }) {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        onCloseRef.current();
         return;
       }
 
@@ -83,20 +104,27 @@ function VideoOverlay({ isOpen, video, onClose }) {
       window.clearTimeout(focusTimer);
       document.removeEventListener("keydown", handleKeyDown);
       const prevY = parseInt(document.body.style.top || "0", 10) * -1;
-      window.visualViewport?.removeEventListener("resize", setViewportVars);
-      window.visualViewport?.removeEventListener("scroll", setViewportVars);
-      window.removeEventListener("resize", setViewportVars);
+      window.visualViewport?.removeEventListener("resize", refreshViewportLock);
+      window.visualViewport?.removeEventListener("scroll", refreshViewportLock);
+      window.removeEventListener("resize", refreshViewportLock);
+      window.removeEventListener("orientationchange", refreshViewportLock);
       document.documentElement.style.removeProperty("--video-viewport-width");
       document.documentElement.style.removeProperty("--video-viewport-height");
       document.documentElement.style.removeProperty("--video-viewport-top");
       document.documentElement.style.removeProperty("--video-viewport-left");
+      document.documentElement.classList.remove("modal-scroll-lock");
       document.body.classList.remove("no-scroll");
       document.body.classList.remove("video-overlay-open");
+      document.body.style.position = "";
       document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      document.body.style.overflow = "";
       window.scrollTo(0, prevY);
       previouslyFocusedRef.current?.focus?.();
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen || !video) return null;
 
