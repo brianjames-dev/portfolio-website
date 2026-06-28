@@ -1,5 +1,5 @@
 // src/components/ExpandedCard.js
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import IconGlyph from "./IconGlyph";
 import "../styles/BookieBot.css";
@@ -115,16 +115,31 @@ function ExpandedCard({
 
   return (
     <div className="expanded-block" ref={blockRef}>
-      {showScrollTopButton && (
-        <button
-          type="button"
-          className="expanded-scroll-top-button"
-          aria-label="Scroll to top of card"
-          onClick={scrollToCardTop}
-        >
-          <IconGlyph name="chevronUp" className="expanded-scroll-top-icon" />
-        </button>
-      )}
+      <AnimatePresence>
+        {showScrollTopButton && (
+          <motion.button
+            type="button"
+            className="expanded-scroll-top-button"
+            aria-label="Scroll to top of card"
+            onClick={scrollToCardTop}
+            initial={
+              shouldReduceMotion ? false : { opacity: 0, y: -8, scale: 0.92 }
+            }
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={
+              shouldReduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: -8, scale: 0.92 }
+            }
+            transition={{
+              duration: shouldReduceMotion ? 0 : 0.24,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            <IconGlyph name="chevronUp" className="expanded-scroll-top-icon" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Expanded Title / Subtitle / Close */}
       <div className="expanded-header">

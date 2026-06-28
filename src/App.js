@@ -12,6 +12,107 @@ function App() {
   const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    let rafId = 0;
+    const saveScrollPosition = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        try {
+          sessionStorage.setItem(
+            "portfolio:lastScrollY",
+            String(window.scrollY || 0)
+          );
+        } catch (e) {
+          /* no-op */
+        }
+      });
+    };
+
+    window.addEventListener("scroll", saveScrollPosition, { passive: true });
+    window.addEventListener("pagehide", saveScrollPosition);
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", saveScrollPosition);
+      window.removeEventListener("pagehide", saveScrollPosition);
+    };
+  }, []);
+
+  useEffect(() => {
+    const initialNavigation = window.__PORTFOLIO_INITIAL_NAVIGATION__ || {};
+    if (initialNavigation.type === "back_forward") return undefined;
+
+    const sectionIds = ["home", "about", "experience", "projects", "contact"];
+    const getMaxScroll = () =>
+      Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+
+    const getTargetScrollY = () => {
+      if (initialNavigation.type === "reload") {
+        return Math.min(
+          Math.max(0, Number(initialNavigation.savedScrollY) || 0),
+          getMaxScroll()
+        );
+      }
+
+      if (window.location.hash) {
+        const target = document.getElementById(window.location.hash.slice(1));
+        if (target) {
+          const headerVar = getComputedStyle(document.documentElement)
+            .getPropertyValue("--header-height")
+            .trim();
+          const headerOffset = parseInt(headerVar || "60", 10) || 60;
+          return Math.min(
+            Math.max(
+              0,
+              target.getBoundingClientRect().top +
+                window.pageYOffset -
+                headerOffset
+            ),
+            getMaxScroll()
+          );
+        }
+      }
+
+      return 0;
+    };
+
+    let cancelled = false;
+    const restoreScroll = () => {
+      if (cancelled) return;
+      window.scrollTo(0, getTargetScrollY());
+    };
+
+    const restoreDelays = [0, 80, 180, 360, 720, 1200];
+    const timers = restoreDelays.map((delay) =>
+      window.setTimeout(restoreScroll, delay)
+    );
+
+    const observer = new MutationObserver(() => {
+      if (
+        sectionIds.every((id) => document.getElementById(id)) &&
+        !cancelled
+      ) {
+        restoreScroll();
+      }
+    });
+
+    observer.observe(document.querySelector("main") || document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      cancelled = true;
+      timers.forEach((timer) => window.clearTimeout(timer));
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
     const coarsePointerQuery = window.matchMedia(
       "(hover: none), (pointer: coarse)"
     );

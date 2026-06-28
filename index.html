@@ -81,6 +81,53 @@
           format("woff2");
       }
     </style>
+    <script>
+      (function () {
+        try {
+          var storedTheme = localStorage.getItem("theme");
+          var theme =
+            storedTheme === "light" || storedTheme === "dark"
+              ? storedTheme
+              : window.matchMedia &&
+                  window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+          document.documentElement.style.colorScheme = theme;
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "light");
+          document.documentElement.style.colorScheme = "light";
+        }
+
+        try {
+          if ("scrollRestoration" in history) {
+            history.scrollRestoration = "manual";
+          }
+
+          var navEntry =
+            performance.getEntriesByType &&
+            performance.getEntriesByType("navigation")[0];
+          window.__PORTFOLIO_INITIAL_NAVIGATION__ = {
+            type: navEntry ? navEntry.type : "navigate",
+            savedScrollY: Number(
+              sessionStorage.getItem("portfolio:lastScrollY") || 0
+            ),
+          };
+
+          window.addEventListener("pagehide", function () {
+            sessionStorage.setItem(
+              "portfolio:lastScrollY",
+              String(window.scrollY || 0)
+            );
+          });
+        } catch (e) {
+          window.__PORTFOLIO_INITIAL_NAVIGATION__ = {
+            type: "navigate",
+            savedScrollY: 0,
+          };
+        }
+      })();
+    </script>
 
     <!-- Preconnect to recaptcha -->
     <link rel="preconnect" href="https://www.google.com" crossorigin />

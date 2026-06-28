@@ -6,7 +6,8 @@
   justify-content: center;
   gap: var(--card-block-gap, 20px);
   min-height: 0;
-  padding: 60px var(--page-card-gutter, 20px) var(--card-block-gap, 20px);
+  padding: 60px var(--page-card-gutter, 20px)
+    max(var(--card-block-gap, 20px), env(safe-area-inset-bottom, 0px));
   scroll-margin-top: var(--header-height);
 }
 
@@ -331,6 +332,10 @@
 @media (max-width: 600px) {
   .contact-section {
     padding-top: var(--page-card-gutter, 16px);
+    padding-bottom: max(
+      var(--page-card-gutter, 16px),
+      env(safe-area-inset-bottom, 0px)
+    );
   }
 
   .contact-card {

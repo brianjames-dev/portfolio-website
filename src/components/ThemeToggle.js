@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import IconGlyph from "./IconGlyph";
 
 function getInitialTheme() {
+  const currentTheme = document.documentElement.getAttribute("data-theme");
+  if (currentTheme === "light" || currentTheme === "dark") return currentTheme;
+
   try {
     const stored = localStorage.getItem("theme");
     if (stored === "light" || stored === "dark") return stored;
