@@ -424,14 +424,26 @@ section.projects {
     bottom: 12px;
     z-index: 1200;
     display: block;
-    width: 8px;
-    border-radius: 999px 0 0 999px;
-    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    width: 10px;
+    border-radius: 0;
+    background: transparent;
     opacity: 0;
-    pointer-events: none;
+    pointer-events: auto;
+    touch-action: none;
     transition:
       opacity var(--motion-duration-normal, 260ms)
         var(--motion-ease-standard, ease);
+  }
+
+  .desktop-scrollbar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 2px;
+    bottom: 0;
+    width: 3px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
   }
 
   .desktop-scrollbar.is-visible {
@@ -439,15 +451,19 @@ section.projects {
   }
 
   .desktop-scrollbar-thumb {
-    width: 100%;
+    position: relative;
+    z-index: 1;
+    width: 3px;
+    margin-left: auto;
+    margin-right: 2px;
     min-height: 44px;
-    border-radius: inherit;
+    border-radius: 999px;
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--color-focus) 82%, var(--color-accent)),
       color-mix(in srgb, var(--color-accent) 86%, var(--color-warm))
     );
-    box-shadow: 0 6px 16px rgba(var(--color-accent-rgb), 0.24);
+    box-shadow: 0 4px 10px rgba(var(--color-accent-rgb), 0.16);
     transition:
       transform 120ms linear,
       height var(--motion-duration-fast, 200ms)

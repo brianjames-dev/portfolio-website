@@ -72,6 +72,7 @@ section#contact.contact-section {
   margin-top: 5px;
   border: 1px solid var(--border-soft);
   background-color: var(--surface-card-strong) !important;
+  box-shadow: none;
   color: var(--color-text);
   -webkit-text-fill-color: var(--color-text);
   caret-color: var(--color-text);
@@ -104,8 +105,7 @@ section#contact.contact-section {
 
 .contact-section input:-webkit-autofill,
 .contact-section input:-webkit-autofill:focus,
-.contact-section input:-webkit-autofill:valid,
-.contact-section input:valid {
+.contact-section input:-webkit-autofill:valid {
   background-color: var(--surface-card-strong) !important;
   -webkit-box-shadow: 0 0 0px 1000px var(--surface-card-strong) inset !important;
   -webkit-text-fill-color: var(--color-text) !important;
@@ -116,8 +116,7 @@ section#contact.contact-section {
 
 [data-theme="dark"] .contact-section input:-webkit-autofill,
 [data-theme="dark"] .contact-section input:-webkit-autofill:focus,
-[data-theme="dark"] .contact-section input:-webkit-autofill:valid,
-[data-theme="dark"] .contact-section input:valid {
+[data-theme="dark"] .contact-section input:-webkit-autofill:valid {
   background-color: var(--color-bg) !important;
   -webkit-box-shadow: 0 0 0px 1000px var(--color-bg) inset !important;
   -webkit-text-fill-color: var(--color-text) !important;

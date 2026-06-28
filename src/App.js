@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./App.css";
 import ParticlesBackground from "./ParticlesBackground";
 import About from "./pages/About";
@@ -10,6 +10,7 @@ import Projects from "./pages/Projects";
 
 function App() {
   const [activeSection, setActiveSection] = useState("home");
+  const scrollDragRef = useRef(null);
   const [scrollIndicator, setScrollIndicator] = useState({
     enabled: false,
     visible: false,
@@ -119,6 +120,7 @@ function App() {
 
   useEffect(() => {
     const desktopQuery = window.matchMedia("(min-width: 601px)");
+    let wheelRemainder = 0;
 
     const targetHasScrollableParent = (target, deltaY) => {
       let node = target instanceof Element ? target : target?.parentElement;
@@ -143,23 +145,45 @@ function App() {
       return false;
     };
 
+    const normalizeWheelDelta = (event) => {
+      const modeMultiplier =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 16
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? window.innerHeight
+            : 1;
+
+      return event.deltaY * modeMultiplier;
+    };
+
     const handleDesktopWheel = (event) => {
+      const deltaY = normalizeWheelDelta(event);
+
       if (
         !desktopQuery.matches ||
         event.defaultPrevented ||
         event.ctrlKey ||
-        Math.abs(event.deltaY) < 1 ||
+        Math.abs(deltaY) < 0.01 ||
         document.body.classList.contains("no-scroll") ||
         document.documentElement.classList.contains("modal-scroll-lock") ||
-        targetHasScrollableParent(event.target, event.deltaY)
+        targetHasScrollableParent(event.target, deltaY)
       ) {
         return;
       }
 
       const beforeY = window.scrollY;
       requestAnimationFrame(() => {
-        if (Math.abs(window.scrollY - beforeY) > 1) return;
-        window.scrollBy({ top: event.deltaY, left: 0, behavior: "auto" });
+        if (Math.abs(window.scrollY - beforeY) > 0.25) {
+          wheelRemainder = 0;
+          return;
+        }
+
+        wheelRemainder += deltaY;
+        const scrollDelta = Math.trunc(wheelRemainder);
+        if (scrollDelta === 0) return;
+
+        wheelRemainder -= scrollDelta;
+        window.scrollBy({ top: scrollDelta, left: 0, behavior: "auto" });
       });
     };
 
@@ -174,6 +198,69 @@ function App() {
       });
     };
   }, []);
+
+  const scrollToScrollbarPointer = (clientY) => {
+    const dragState = scrollDragRef.current;
+    if (!dragState) return;
+
+    const doc = document.documentElement;
+    const maxScroll = Math.max(0, doc.scrollHeight - window.innerHeight);
+    const maxThumbTop = Math.max(
+      0,
+      dragState.trackHeight - dragState.thumbHeight
+    );
+
+    if (maxScroll <= 0 || maxThumbTop <= 0) return;
+
+    const nextThumbTop = Math.max(
+      0,
+      Math.min(
+        maxThumbTop,
+        clientY - dragState.trackTop - dragState.pointerOffsetY
+      )
+    );
+    const progress = nextThumbTop / maxThumbTop;
+    window.scrollTo({ top: progress * maxScroll, left: 0, behavior: "auto" });
+  };
+
+  const handleScrollbarPointerDown = (event) => {
+    if (event.button !== 0) return;
+
+    event.preventDefault();
+    const trackRect = event.currentTarget.getBoundingClientRect();
+    const thumbElement = event.currentTarget.querySelector(
+      ".desktop-scrollbar-thumb"
+    );
+    const thumbRect = thumbElement?.getBoundingClientRect();
+    const pointerIsOnThumb =
+      thumbRect &&
+      event.clientY >= thumbRect.top &&
+      event.clientY <= thumbRect.bottom;
+
+    scrollDragRef.current = {
+      trackTop: trackRect.top,
+      trackHeight: trackRect.height,
+      thumbHeight: scrollIndicator.thumbHeight,
+      pointerOffsetY: pointerIsOnThumb
+        ? event.clientY - thumbRect.top
+        : scrollIndicator.thumbHeight / 2,
+    };
+
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    setScrollIndicator((prev) => ({ ...prev, visible: true }));
+    scrollToScrollbarPointer(event.clientY);
+  };
+
+  const handleScrollbarPointerMove = (event) => {
+    if (!scrollDragRef.current) return;
+    event.preventDefault();
+    scrollToScrollbarPointer(event.clientY);
+  };
+
+  const handleScrollbarPointerEnd = (event) => {
+    scrollDragRef.current = null;
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+  };
 
   useEffect(() => {
     const coarsePointerQuery = window.matchMedia(
@@ -390,6 +477,10 @@ function App() {
             scrollIndicator.visible ? "is-visible" : ""
           }`}
           aria-hidden="true"
+          onPointerDown={handleScrollbarPointerDown}
+          onPointerMove={handleScrollbarPointerMove}
+          onPointerUp={handleScrollbarPointerEnd}
+          onPointerCancel={handleScrollbarPointerEnd}
         >
           <div
             className="desktop-scrollbar-thumb"
