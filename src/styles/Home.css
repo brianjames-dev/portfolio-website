@@ -163,7 +163,12 @@
 .home-social-links a {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
   text-decoration: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Resume button image uses linear (no easing) */
@@ -227,6 +232,18 @@
 
   .home-social-links a:hover .icon-wrapper img.default {
     opacity: 0;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .home-social-links a.is-touch-active .icon-wrapper img.hover {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+
+  .home-social-links a.is-touch-active .icon-wrapper img.default {
+    opacity: 0;
+    transform: scale(0.96);
   }
 }
 

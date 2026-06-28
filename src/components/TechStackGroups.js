@@ -77,6 +77,8 @@ const CATEGORY_MAP = {
 
 const FEATURED_TAG_LIMIT = 5;
 const MIN_HIDDEN_TAGS = 2;
+const STACK_TOGGLE_DURATION = 0.5;
+const STACK_TOGGLE_EASE = [0.4, 0, 0.2, 1];
 
 const FEATURED_PRIORITY = [
   "LangGraph",
@@ -159,8 +161,8 @@ export default function TechStackGroups({ stack = [] }) {
   if (!stack.length) return null;
 
   const revealTransition = {
-    duration: shouldReduceMotion ? 0 : 0.28,
-    ease: [0.22, 1, 0.36, 1],
+    duration: shouldReduceMotion ? 0 : STACK_TOGGLE_DURATION,
+    ease: STACK_TOGGLE_EASE,
   };
 
   return (
@@ -170,6 +172,7 @@ export default function TechStackGroups({ stack = [] }) {
           <motion.div
             className="stack-featured-row"
             key="featured-stack"
+            layout
             initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
@@ -198,12 +201,15 @@ export default function TechStackGroups({ stack = [] }) {
           <motion.div
             className="stack-expanded-groups"
             key="expanded-stack"
+            layout
             initial={
               shouldReduceMotion ? false : { opacity: 0, y: 10, height: 0 }
             }
             animate={{ opacity: 1, y: 0, height: "auto" }}
             exit={
-              shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, height: 0 }
+              shouldReduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: -8, height: 0 }
             }
             transition={revealTransition}
           >
@@ -211,6 +217,7 @@ export default function TechStackGroups({ stack = [] }) {
               <motion.div
                 className="stack-group"
                 key={group.label}
+                layout
                 initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{

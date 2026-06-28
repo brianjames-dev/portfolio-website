@@ -12,6 +12,7 @@ function Header({ activeSection }) {
   const navRef = useRef(null);
   const bubbleRef = useRef(null);
   const lastMenuToggleRef = useRef(0);
+  const menuLockTimeoutRef = useRef(null);
 
   // Preload the lazy chunk for react-google-recaptcha
   const preloadRecaptcha = () => {
@@ -128,6 +129,14 @@ function Header({ activeSection }) {
   }, []);
 
   useEffect(() => {
+    return () => {
+      if (menuLockTimeoutRef.current) {
+        clearTimeout(menuLockTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     if (!menuOpen) return undefined;
 
     const handleKeyDown = (event) => {
@@ -224,6 +233,19 @@ function Header({ activeSection }) {
     };
   }, [activeSection, menuOpen]); // Add menuOpen as a dependency
 
+  const toggleMenuWithGate = () => {
+    const now = Date.now();
+    if (now - lastMenuToggleRef.current < 500) return;
+
+    lastMenuToggleRef.current = now;
+    setMenuOpen((current) => !current);
+
+    if (menuLockTimeoutRef.current) clearTimeout(menuLockTimeoutRef.current);
+    menuLockTimeoutRef.current = setTimeout(() => {
+      menuLockTimeoutRef.current = null;
+    }, 500);
+  };
+
   return (
     <header className="site-header">
       <div className="container">
@@ -236,11 +258,19 @@ function Header({ activeSection }) {
         <button
           type="button"
           className={`menu-button ${menuOpen ? "is-open" : ""}`}
-          onClick={() => {
-            const now = Date.now();
-            if (now - lastMenuToggleRef.current < 500) return;
-            lastMenuToggleRef.current = now;
-            setMenuOpen((current) => !current);
+          onPointerDown={(event) => {
+            if (event.button !== 0) return;
+            event.preventDefault();
+            event.stopPropagation();
+            toggleMenuWithGate();
+          }}
+          onClick={(event) => {
+            event.stopPropagation();
+            if (event.detail !== 0) {
+              event.preventDefault();
+              return;
+            }
+            toggleMenuWithGate();
           }}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}

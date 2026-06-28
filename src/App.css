@@ -54,8 +54,8 @@
   --card-block-gap: 20px;
   --collapsed-card-width: 800px;
   --expanded-card-width: 1000px;
-  --motion-duration-fast: 160ms;
-  --motion-duration-normal: 260ms;
+  --motion-duration-fast: 200ms;
+  --motion-duration-normal: 300ms;
   --motion-duration-slow: 420ms;
   --motion-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
   --motion-ease-press: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -198,6 +198,34 @@ button {
 
 button:not(.carousel-arrow):not(.theme-toggle):not(.fullscreen-image-button):active {
   transform: scale(0.98);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .home-action-link.is-touch-active,
+  .learn-more-btn.is-touch-active,
+  .expanded-top-button.is-touch-active,
+  .contact-submit-row button.is-touch-active,
+  .gallery-lock-submit-row button.is-touch-active,
+  .gallery-lock-toggle.is-touch-active {
+    background-color: var(--color-accent-hover);
+    box-shadow: var(--shadow-interactive);
+    transform: scale(0.97);
+  }
+
+  .stack-more-toggle.is-touch-active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--button-text);
+    transform: scale(0.97);
+  }
+
+  .theme-toggle.is-touch-active {
+    transform: translateY(-50%) scale(0.94);
+  }
+
+  .close-button-icon-button.is-touch-active .close-button-icon {
+    transform: scale(0.9);
+  }
 }
 
 .button-icon {

@@ -249,6 +249,16 @@
   gap: 10px; /* space between icons */
 }
 
+.contact-social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .contact-icon-wrapper {
   position: relative;
   display: inline-block;
@@ -276,6 +286,7 @@
       var(--motion-ease-press, ease); /* ease only for contact social icons */
   width: 100%;
   height: auto;
+  pointer-events: none;
 }
 
 .contact-icon-wrapper img.hover {
@@ -300,6 +311,18 @@
 
 .contact-social-links a:active .contact-icon-wrapper img.default {
   opacity: 0;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .contact-social-links a.is-touch-active .contact-icon-wrapper img.hover {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+
+  .contact-social-links a.is-touch-active .contact-icon-wrapper img.default {
+    opacity: 0;
+    transform: scale(0.96);
+  }
 }
 
 /* ========== Mobile Styles ========== */

@@ -12,6 +12,96 @@ function App() {
   const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
+    const coarsePointerQuery = window.matchMedia(
+      "(hover: none), (pointer: coarse)"
+    );
+    const touchFeedbackSelector = [
+      ".home-action-link",
+      ".home-social-links a",
+      ".contact-social-links a",
+      ".learn-more-btn",
+      ".expanded-top-button",
+      ".stack-more-toggle",
+      ".contact-submit-row button",
+      ".gallery-lock-submit-row button",
+      ".gallery-lock-toggle",
+      ".close-button-icon-button",
+      ".theme-toggle",
+    ].join(",");
+
+    let activeElement = null;
+    let activeStartedAt = 0;
+    let releaseTimer = 0;
+    const minimumPressMs = 180;
+
+    const releaseActiveElement = () => {
+      if (!activeElement) return;
+
+      const elementToRelease = activeElement;
+      activeElement = null;
+      const elapsed = performance.now() - activeStartedAt;
+      const remainingDelay = Math.max(0, minimumPressMs - elapsed);
+
+      if (releaseTimer) window.clearTimeout(releaseTimer);
+      releaseTimer = window.setTimeout(() => {
+        elementToRelease.classList.remove("is-touch-active");
+        releaseTimer = 0;
+      }, remainingDelay);
+    };
+
+    const handlePointerDown = (event) => {
+      if (!coarsePointerQuery.matches || event.pointerType === "mouse") return;
+
+      const target = event.target.closest(touchFeedbackSelector);
+      if (!target || target.disabled || target.getAttribute("aria-disabled")) {
+        return;
+      }
+
+      if (releaseTimer) {
+        window.clearTimeout(releaseTimer);
+        releaseTimer = 0;
+      }
+
+      if (activeElement && activeElement !== target) {
+        activeElement.classList.remove("is-touch-active");
+      }
+
+      activeElement = target;
+      activeStartedAt = performance.now();
+      activeElement.classList.add("is-touch-active");
+    };
+
+    window.addEventListener("pointerdown", handlePointerDown, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener("pointerup", releaseActiveElement, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener("pointercancel", releaseActiveElement, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener("scroll", releaseActiveElement, { passive: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown, {
+        capture: true,
+      });
+      window.removeEventListener("pointerup", releaseActiveElement, {
+        capture: true,
+      });
+      window.removeEventListener("pointercancel", releaseActiveElement, {
+        capture: true,
+      });
+      window.removeEventListener("scroll", releaseActiveElement);
+      if (releaseTimer) window.clearTimeout(releaseTimer);
+      if (activeElement) activeElement.classList.remove("is-touch-active");
+    };
+  }, []);
+
+  useEffect(() => {
     const sectionIds = ["home", "about", "experience", "projects", "contact"];
     const getSections = () =>
       Array.from(document.querySelectorAll("section[id]"));
