@@ -50,10 +50,6 @@ function App() {
     let hideTimer = 0;
 
     const readHeaderOffset = () => {
-      const isHeaderHidden =
-        document.documentElement.classList.contains("header-hidden");
-      if (isHeaderHidden) return 12;
-
       const headerVar = getComputedStyle(document.documentElement)
         .getPropertyValue("--header-height")
         .trim();
@@ -68,11 +64,15 @@ function App() {
       const trackHeight = Math.max(80, window.innerHeight - headerOffset - 12);
       const thumbHeight =
         maxScroll > 0
-          ? Math.max(44, Math.round((window.innerHeight / doc.scrollHeight) * trackHeight))
+          ? Math.max(
+              44,
+              Math.round((window.innerHeight / doc.scrollHeight) * trackHeight)
+            )
           : trackHeight;
       const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
       const thumbTop = Math.round(
-        Math.max(0, Math.min(1, progress)) * Math.max(0, trackHeight - thumbHeight)
+        Math.max(0, Math.min(1, progress)) *
+          Math.max(0, trackHeight - thumbHeight)
       );
       const enabled = desktopQuery.matches && maxScroll > 4;
 

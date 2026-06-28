@@ -1,10 +1,10 @@
 import {
   AnimatePresence,
   motion,
-  useReducedMotion,
   useSpring,
 } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import useDesktopMotionPreference from "../hooks/useDesktopMotionPreference";
 
 const FADE_DURATION = 0.5; // Content fade duration
 const MORPH_DURATION = 0.5; // Card container morph duration
@@ -21,7 +21,7 @@ export default function Card({
   const cardRef = useRef(null);
   const contentRef = useRef(null); // Ref for inner content
   const scrollTimeoutRef = useRef(null);
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useDesktopMotionPreference();
   const fadeDuration = shouldReduceMotion ? 0 : FADE_DURATION;
   const morphDuration = shouldReduceMotion ? 0 : MORPH_DURATION;
 

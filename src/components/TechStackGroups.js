@@ -1,5 +1,6 @@
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
+import useDesktopMotionPreference from "../hooks/useDesktopMotionPreference";
 import { renderTag } from "../utils/renderTag";
 
 const CATEGORY_ORDER = [
@@ -149,7 +150,7 @@ function getFeaturedStack(stack = []) {
 
 export default function TechStackGroups({ stack = [] }) {
   const [showAll, setShowAll] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useDesktopMotionPreference();
   const groups = useMemo(() => groupStack(stack), [stack]);
   const featuredStack = useMemo(() => getFeaturedStack(stack), [stack]);
   const visibleGroups = useMemo(

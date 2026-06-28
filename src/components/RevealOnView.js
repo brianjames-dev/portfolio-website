@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import useDesktopMotionPreference from "../hooks/useDesktopMotionPreference";
 
 export default function RevealOnView({
   as = "div",
@@ -9,7 +10,7 @@ export default function RevealOnView({
   viewport = { once: true, amount: 0.18 },
   ...props
 }) {
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useDesktopMotionPreference();
   const Component = motion[as] || motion.div;
 
   return (

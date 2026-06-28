@@ -1,9 +1,10 @@
 // src/components/ExpandedCard.js
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import IconGlyph from "./IconGlyph";
 import "../styles/BookieBot.css";
 import "../styles/CollapsedCard.css"; // for shared section styles
+import useDesktopMotionPreference from "../hooks/useDesktopMotionPreference";
 import { renderContentBlock } from "../utils/renderContentBlock.js";
 import { renderTechStackItem } from "../utils/renderTechStackItem.js";
 
@@ -51,7 +52,7 @@ function ExpandedCard({
   handleClose,
   handleCloseAndScroll,
 }) {
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useDesktopMotionPreference();
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
   const blockRef = useRef(null);
   const scrollButtonRef = useRef(null);

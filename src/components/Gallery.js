@@ -5,7 +5,7 @@ import IconGlyph from "./IconGlyph";
 import iconMap from "../data/iconMap.js";
 
 const PRELOAD_RADIUS = 2;
-const SWIPE_ANIMATION_MS = 320;
+const SWIPE_ANIMATION_MS = 420;
 const SUPERZOOM_INITIAL_SCALE = 2.3;
 const SUPERZOOM_MIN_SCALE = 1;
 const SUPERZOOM_MAX_SCALE = 12;

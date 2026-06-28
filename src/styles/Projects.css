@@ -61,7 +61,7 @@
 }
 
 .fullscreen-swipe-track.is-animating {
-  transition: transform 320ms var(--motion-ease-standard, ease);
+  transition: transform 420ms var(--motion-ease-standard, ease);
 }
 
 .fullscreen-slide {
