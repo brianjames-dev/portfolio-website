@@ -1,17 +1,8 @@
 // /data/experience/apotheca.js
 
-// Import all project images
-import skinpro12 from "./imgs/alerts_tab.jpeg";
-import skinpro4 from "./imgs/appt_tab.jpeg";
-import skinpro2 from "./imgs/client_tab.jpeg";
-import skinpro3 from "./imgs/info_tab.jpeg";
-import skinpro5 from "./imgs/photos_tab_blur.jpeg";
-import skinpro6 from "./imgs/QR_upload.jpeg";
-import skinpro10 from "./imgs/rx_generator.jpeg";
-import skinpro11 from "./imgs/rx_preview.jpeg";
-import skinpro9 from "./imgs/rx_tab.jpeg";
-import skinpro8 from "./imgs/Upload_Complete.jpeg";
-import skinpro7 from "./imgs/Upload_Photos.jpeg";
+import { apothecaGalleryImages } from "../../generated/optimizedImages.js";
+
+const gallery = apothecaGalleryImages;
 
 const apotheca = {
   id: "apotheca",
@@ -35,17 +26,17 @@ const apotheca = {
   ],
   github: "https://github.com/brianjames-dev/SkinPro",
   images: [
-    { src: skinpro2, caption: "👩 Clients Tab" },
-    { src: skinpro3, caption: "📝 Info Tab (Client Demographics & History)" },
-    { src: skinpro4, caption: "📅 Appointments Tab" },
-    { src: skinpro5, caption: "📷 Photos Tab (Before & After Comparison)" },
-    { src: skinpro6, caption: "📲 QR Upload Window" },
-    { src: skinpro7, caption: "📲 Upload In Progress" },
-    { src: skinpro8, caption: "📲 Upload Complete" },
-    { src: skinpro9, caption: "💊 Prescriptions Tab" },
-    { src: skinpro10, caption: "🧾 Prescription Generator (Dynamic Form)" },
-    { src: skinpro11, caption: "🖨️ Finished Prescription Preview (Printable)" },
-    { src: skinpro12, caption: "🔔 Alerts Tab (Follow-up Reminders)" },
+    { ...gallery.clientsTab, caption: "👩 Clients Tab" },
+    { ...gallery.infoTab, caption: "📝 Info Tab (Client Demographics & History)" },
+    { ...gallery.appointmentsTab, caption: "📅 Appointments Tab" },
+    { ...gallery.photosTab, caption: "📷 Photos Tab (Before & After Comparison)" },
+    { ...gallery.qrUpload, caption: "📲 QR Upload Window" },
+    { ...gallery.uploadPhotos, caption: "📲 Upload In Progress" },
+    { ...gallery.uploadComplete, caption: "📲 Upload Complete" },
+    { ...gallery.rxTab, caption: "💊 Prescriptions Tab" },
+    { ...gallery.rxGenerator, caption: "🧾 Prescription Generator (Dynamic Form)" },
+    { ...gallery.rxPreview, caption: "🖨️ Finished Prescription Preview (Printable)" },
+    { ...gallery.alertsTab, caption: "🔔 Alerts Tab (Follow-up Reminders)" },
   ],
 
   expanded: {

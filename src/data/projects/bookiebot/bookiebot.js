@@ -1,38 +1,12 @@
 // /data/projects/bookiebot.js
 
-// Import all project images
-import bookiebot1 from "./imgs/bookiebot-icon.png";
-import bookiebot5 from "./imgs/expense-breakdown.png";
-import bookiebot9 from "./imgs/expense-sheet-proof.png";
-import bookiebot4 from "./imgs/intent-desc+example.png";
-import bookiebot2 from "./imgs/intent-list-1.png";
-import bookiebot3 from "./imgs/intent-list-2.png";
-import bookiebot8 from "./imgs/logged-food-expense.png";
-import bookiebot7 from "./imgs/specific-day-expenses.png";
-import bookiebot6 from "./imgs/spending-calendar.png";
+import {
+  bookiebotGalleryImages,
+  bookiebotStoryboardImages,
+} from "../../generated/optimizedImages.js";
 
-// Import all storyboard images
-import steps5to1 from "./imgs/storyboard_imgs/5stepsTo1.png";
-import asyncArrows from "./imgs/storyboard_imgs/async_arrows.png";
-import autoLogging from "./imgs/storyboard_imgs/automatic_logging.png";
-import bookiebotFuture from "./imgs/storyboard_imgs/bookiebot_future.png";
-import bookiebotHero from "./imgs/storyboard_imgs/bookiebot_hero.png";
-import bookiebotInside from "./imgs/storyboard_imgs/bookiebot_inside.png";
-import brainCircuit from "./imgs/storyboard_imgs/brain_circuit.png";
-import easyBudgeting from "./imgs/storyboard_imgs/easy_budgeting.png";
-import GPTpowered from "./imgs/storyboard_imgs/GPT_powered_bookiebot.png";
-import GPTcloudToJson from "./imgs/storyboard_imgs/GPTcloudToJson.png";
-import increasedUsage from "./imgs/storyboard_imgs/increased_usage.png";
-import lightningBookiebot from "./imgs/storyboard_imgs/lightning_bookiebot.png";
-import llmOutperform from "./imgs/storyboard_imgs/llm_outperform.png";
-import memoryErrorHandling from "./imgs/storyboard_imgs/memory_error_handling.png";
-import multiUser from "./imgs/storyboard_imgs/multi_user.png";
-import naturalLanguageLogging from "./imgs/storyboard_imgs/natural_language_logging.png";
-import nrmlDialogueConf from "./imgs/storyboard_imgs/normal_dialogue_confirmation.png";
-import structurePromptsReliable from "./imgs/storyboard_imgs/structure_prompts_reliable.png";
-import techStack from "./imgs/storyboard_imgs/techstack.png";
-import understandingCmds from "./imgs/storyboard_imgs/understanding_cmds.png";
-import visualGPTsummaries from "./imgs/storyboard_imgs/visual_GPT_summaries.png";
+const gallery = bookiebotGalleryImages;
+const storyboard = bookiebotStoryboardImages;
 
 const bookiebot = {
   id: "bookiebot",
@@ -50,15 +24,18 @@ const bookiebot = {
   ],
   github: "https://github.com/brianjames-dev/bookiebot",
   images: [
-    { src: bookiebot2, caption: "Intent Recognition List – Page 1" },
-    { src: bookiebot3, caption: "Intent Recognition List – Page 2" },
-    { src: bookiebot4, caption: "Intent Description + Sample Query" },
-    { src: bookiebot5, caption: "Expense Breakdown (Matplotlib)" },
-    { src: bookiebot6, caption: "Spending Calendar View (Matplotlib)" },
-    { src: bookiebot7, caption: "Expenses on a Specific Day (Matplotlib)" },
-    { src: bookiebot8, caption: "Food Log Snapshot" },
-    { src: bookiebot9, caption: "Autonomous Logging" },
-    { src: bookiebot1, caption: "BookieBot Discord Profile Pic" },
+    { ...gallery.intentList1, caption: "Intent Recognition List – Page 1" },
+    { ...gallery.intentList2, caption: "Intent Recognition List – Page 2" },
+    { ...gallery.intentDescExample, caption: "Intent Description + Sample Query" },
+    { ...gallery.expenseBreakdown, caption: "Expense Breakdown (Matplotlib)" },
+    { ...gallery.spendingCalendar, caption: "Spending Calendar View (Matplotlib)" },
+    {
+      ...gallery.specificDayExpenses,
+      caption: "Expenses on a Specific Day (Matplotlib)",
+    },
+    { ...gallery.loggedFoodExpense, caption: "Food Log Snapshot" },
+    { ...gallery.expenseSheetProof, caption: "Autonomous Logging" },
+    { ...gallery.bookiebotIcon, caption: "BookieBot Discord Profile Pic" },
   ],
 
   expanded: {
@@ -86,7 +63,7 @@ const bookiebot = {
           {
             type: "image",
             className: "desc-bookiebot-hero-img",
-            src: bookiebotHero,
+            src: storyboard.bookiebotHero.src,
             alt: "BookieBot UI Hero",
           },
         ],
@@ -120,14 +97,14 @@ const bookiebot = {
           {
             type: "image",
             className: "goal-img understanding-cmds-img",
-            src: understandingCmds,
+            src: storyboard.understandingCmds.src,
             alt: "Understand natural language",
             caption: "Understand natural language commands",
           },
           {
             type: "image",
             className: "goal-img auto-logging-img",
-            src: autoLogging,
+            src: storyboard.autoLogging.src,
             alt: "Log expenses accurately",
             caption:
               "Log expenses automatically into Google Sheets with accurate information",
@@ -135,7 +112,7 @@ const bookiebot = {
           {
             type: "image",
             className: "goal-img bookiebot-inside-img",
-            src: bookiebotInside,
+            src: storyboard.bookiebotInside.src,
             alt: "Live inside Discord",
             caption: "Live inside a space we already used: Discord",
           },
@@ -156,7 +133,7 @@ const bookiebot = {
           {
             type: "image",
             className: "research-img-center gpt-powered-img",
-            src: GPTpowered,
+            src: storyboard.gptPowered.src,
             alt: "GPT-powered interface",
           },
         ],
@@ -173,7 +150,7 @@ const bookiebot = {
           {
             type: "image",
             className: "research-img-center natural-lang-img",
-            src: nrmlDialogueConf,
+            src: storyboard.normalDialogueConfirmation.src,
             alt: "Natural language logging",
           },
         ],
@@ -190,7 +167,7 @@ const bookiebot = {
           {
             type: "image",
             className: "research-img-center prompt-structure-img",
-            src: easyBudgeting,
+            src: storyboard.easyBudgeting.src,
             alt: "Structure prompts for reliability",
           },
         ],
@@ -205,7 +182,7 @@ const bookiebot = {
           {
             type: "image",
             className: "techstack-bookiebot-img",
-            src: techStack,
+            src: storyboard.techStack.src,
             alt: "BookieBot Tech Stack",
           },
         ],
@@ -220,7 +197,7 @@ const bookiebot = {
           {
             type: "image",
             className: "feature-img natural-lang2-img",
-            src: GPTcloudToJson,
+            src: storyboard.gptCloudToJson.src,
             alt: "Natural Language Logging",
             caption:
               '<strong>Natural Language Logging:</strong><br> Messages like "Target 18.43 groceries" are interpreted by GPT, categorized, and converted to JSON.',
@@ -228,7 +205,7 @@ const bookiebot = {
           {
             type: "image",
             className: "feature-img llm-translator-img",
-            src: brainCircuit,
+            src: storyboard.brainCircuit.src,
             alt: "LLM-as-a-Translator",
             caption:
               "<strong>LLM-as-a-Translator:</strong><br> Instead of hard-coded commands, GPT handles linguistic flexibility.",
@@ -236,7 +213,7 @@ const bookiebot = {
           {
             type: "image",
             className: "feature-img sheets-sync-img",
-            src: naturalLanguageLogging,
+            src: storyboard.naturalLanguageLogging.src,
             alt: "Google Sheets Sync",
             caption:
               "<strong>Google Sheets Sync:</strong><br> Each expense is logged into a clean, timestamped row in our shared Google Sheet — no human editing required.",
@@ -244,7 +221,7 @@ const bookiebot = {
           {
             type: "image",
             className: "feature-img fast-async-img",
-            src: lightningBookiebot,
+            src: storyboard.lightningBookiebot.src,
             alt: "Fast & Async",
             caption:
               "<strong>Fast & Async:</strong><br> Thanks to asyncio, responses are snappy and never block on API calls or logging.",
@@ -266,7 +243,7 @@ const bookiebot = {
           {
             type: "image",
             className: "impact-img one-step-img",
-            src: steps5to1,
+            src: storyboard.steps5to1.src,
             alt: "One-step expense logging",
             caption:
               "Reduced expense logging time from 5+ steps to 1, encouraging consistent budgeting",
@@ -274,7 +251,7 @@ const bookiebot = {
           {
             type: "image",
             className: "impact-img analytics-img",
-            src: increasedUsage,
+            src: storyboard.increasedUsage.src,
             alt: "Multi-user analytics",
             caption:
               "Enabled multi-user workflows and 30+ analytics intents, increasing savings month to month",
@@ -301,21 +278,21 @@ const bookiebot = {
           {
             type: "image",
             className: "reflection-img prompt-reliability-img",
-            src: structurePromptsReliable,
+            src: storyboard.structurePromptsReliable.src,
             alt: "Prompt structuring",
             caption: "How to structure prompts for reliability",
           },
           {
             type: "image",
             className: "reflection-img llm-vs-parser-img",
-            src: llmOutperform,
+            src: storyboard.llmOutperform.src,
             alt: "LLMs vs Traditional Parsers",
             caption: "Where LLMs outperform traditional parsers",
           },
           {
             type: "image",
             className: "reflection-img async-design-img",
-            src: asyncArrows,
+            src: storyboard.asyncArrows.src,
             alt: "Async design",
             caption: "How async design creates responsiveness",
           },
@@ -341,28 +318,28 @@ const bookiebot = {
           {
             type: "image",
             className: "future-img mobile-dashboard-img",
-            src: bookiebotFuture,
+            src: storyboard.bookiebotFuture.src,
             alt: "Mobile dashboard",
             caption: "Mobile dashboard with custom Google Sheet templates",
           },
           {
             type: "image",
             className: "future-img multi-user-img",
-            src: multiUser,
+            src: storyboard.multiUser.src,
             alt: "Multi-user mode",
             caption: "Authenticated multi-user mode",
           },
           {
             type: "image",
             className: "future-img visual-insights-img",
-            src: visualGPTsummaries,
+            src: storyboard.visualGptSummaries.src,
             alt: "Visual insights",
             caption: "Visual insights powered by GPT summaries",
           },
           {
             type: "image",
             className: "future-img error-handling-img",
-            src: memoryErrorHandling,
+            src: storyboard.memoryErrorHandling.src,
             alt: "Error handling & memory",
             caption: "Fine-tuned error handling and conversation memory",
           },

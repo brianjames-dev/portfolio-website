@@ -4,7 +4,7 @@ import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import IconGlyph from "./IconGlyph";
 import iconMap from "../data/iconMap.js";
 
-const PRELOAD_RADIUS = 2;
+const PRELOAD_RADIUS = 1;
 const SWIPE_ANIMATION_MS = 420;
 const SUPERZOOM_INITIAL_SCALE = 2.3;
 const SUPERZOOM_MIN_SCALE = 1;
@@ -20,6 +20,10 @@ const getDefaultZoomGesture = () => ({
   pinching: false,
   suppressTapExitUntil: 0,
 });
+
+const getDisplaySrc = (image) => image?.displaySrc || image?.src;
+const getZoomSrc = (image) => image?.zoomSrc || getDisplaySrc(image);
+const getThumbnailSrc = (image) => image?.thumbnailSrc || getDisplaySrc(image);
 
 const getContainedImageRect = (imageNode) => {
   const imageRect = imageNode.getBoundingClientRect();
@@ -315,7 +319,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     const wantedSources = new Set();
 
     for (let i = lowerBound; i <= upperBound; i += 1) {
-      const src = images[i]?.src;
+      const src = getDisplaySrc(images[i]);
       if (!src) continue;
       wantedSources.add(src);
 
@@ -1000,7 +1004,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
                   }}
                 >
                   <img
-                    src={image?.src}
+                    src={getZoomSrc(image)}
                     alt={image?.caption || "Fullscreen"}
                     className="fullscreen-image superzoomed"
                     style={{ touchAction: "none" }}
@@ -1023,7 +1027,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
                     className={`fullscreen-slide ${
                       slide.image ? "" : "is-empty"
                     }`}
-                    key={`${slide.offset}-${slide.image?.src || "empty"}`}
+                    key={`${slide.offset}-${getDisplaySrc(slide.image) || "empty"}`}
                     aria-hidden={slide.offset === 0 ? undefined : "true"}
                   >
                     {slide.image && (
@@ -1055,9 +1059,10 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
                         }}
                       >
                         <img
-                          src={slide.image.src}
+                          src={getDisplaySrc(slide.image)}
                           alt={slide.image.caption || "Fullscreen"}
                           className="fullscreen-image"
+                          decoding="async"
                         />
                       </button>
                     )}
@@ -1098,7 +1103,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
             }}
           >
             <img
-              src={img.thumbnailSrc || img.src}
+              src={getThumbnailSrc(img)}
               alt={img.caption || `Thumbnail ${i + 1}`}
               className="thumbnail-image"
               loading="lazy"
