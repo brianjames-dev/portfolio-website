@@ -69,7 +69,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
   }, [clearSwipeAnimationTimeout]);
 
   const completeSwipeToIndex = useCallback(
-    (targetIndex, terminalOffset) => {
+    (targetIndex, startingOffset) => {
       if (
         index === null ||
         targetIndex < 0 ||
@@ -87,21 +87,24 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
         return;
       }
 
-      setSwipeOffset(terminalOffset);
+      setIsSwipeTransitionSuppressed(true);
       setIsSwipeDragging(false);
       setIsSwipeAnimating(true);
+      setSwipeOffset(startingOffset);
+      setIndex(targetIndex);
       clearSwipeAnimationTimeout();
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsSwipeTransitionSuppressed(false);
+          setSwipeOffset(0);
+        });
+      });
+
       swipeAnimationTimeoutRef.current = setTimeout(() => {
-        setIsSwipeTransitionSuppressed(true);
-        setIndex(targetIndex);
-        setSwipeOffset(0);
         setIsSwipeAnimating(false);
         swipeStartRef.current = null;
         swipeWasDraggedRef.current = false;
-
-        requestAnimationFrame(() => {
-          setIsSwipeTransitionSuppressed(false);
-        });
       }, SWIPE_ANIMATION_MS);
     },
     [clearSwipeAnimationTimeout, images.length, index, setIndex]
@@ -120,7 +123,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
         return;
       }
 
-      const direction = targetIndex > index ? -1 : 1;
+      const direction = targetIndex > index ? 1 : -1;
       completeSwipeToIndex(targetIndex, direction * getSwipeWidth());
     },
     [
@@ -459,8 +462,9 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
           : index;
 
     if (targetIndex !== index && targetIndex >= 0 && targetIndex < images.length) {
-      const direction = targetIndex > index ? -1 : 1;
-      completeSwipeToIndex(targetIndex, direction * width);
+      const startingOffset =
+        targetIndex > index ? width + swipeOffset : swipeOffset - width;
+      completeSwipeToIndex(targetIndex, startingOffset);
       return;
     }
 
@@ -512,7 +516,19 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
       )}
 
       {/* Centered Image */}
-      <div className="fullscreen-center-area">
+      <div
+        ref={stageRef}
+        className="fullscreen-center-area"
+        onPointerDown={handleSwipeStart}
+        onPointerMove={handleSwipeMove}
+        onPointerUp={handleSwipeEnd}
+        onPointerCancel={resetSwipePosition}
+        onClick={(e) => {
+          if (swipeWasDraggedRef.current || isSwipeAnimating) {
+            e.stopPropagation();
+          }
+        }}
+      >
         <div
           className={`fullscreen-image-wrapper ${
             isSuperZoomed ? "superzoom-mode" : ""
@@ -566,12 +582,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
             </TransformWrapper>
           ) : (
             <div
-              ref={stageRef}
               className="fullscreen-swipe-stage"
-              onPointerDown={handleSwipeStart}
-              onPointerMove={handleSwipeMove}
-              onPointerUp={handleSwipeEnd}
-              onPointerCancel={resetSwipePosition}
             >
               <div
                 className={`fullscreen-swipe-track ${
