@@ -1,19 +1,32 @@
 // /components/ProjectGallery.js
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import IconGlyph from "./IconGlyph";
 import iconMap from "../data/iconMap.js";
+
+const PRELOAD_RADIUS = 2;
+const SWIPE_ANIMATION_MS = 320;
 
 function ProjectGallery({ images, index, setIndex, onClose }) {
   const [isSuperZoomed, setIsSuperZoomed] = useState(false);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [mouseDownTime, setMouseDownTime] = useState(null);
   const [mouseDownPos, setMouseDownPos] = useState({ x: 0, y: 0 });
+  const [swipeOffset, setSwipeOffset] = useState(0);
+  const [isSwipeDragging, setIsSwipeDragging] = useState(false);
+  const [isSwipeAnimating, setIsSwipeAnimating] = useState(false);
+  const [isSwipeTransitionSuppressed, setIsSwipeTransitionSuppressed] =
+    useState(false);
   const mouseWasDraggedRef = useRef(false);
+  const swipeWasDraggedRef = useRef(false);
+  const swipeStartRef = useRef(null);
+  const swipeAnimationTimeoutRef = useRef(null);
+  const stageRef = useRef(null);
   const thumbnailRefs = useRef([]);
   const overlayRef = useRef(null);
   const closeButtonRef = useRef(null);
   const previouslyFocusedRef = useRef(null);
+  const preloadedImagesRef = useRef(new Map());
   const currentStateRef = useRef({
     imageIndex: index,
     isSuperZoomed,
@@ -24,6 +37,101 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
 
   const stripRef = useRef(null);
   const isOpen = index !== null;
+
+  const clearSwipeAnimationTimeout = useCallback(() => {
+    if (swipeAnimationTimeoutRef.current) {
+      clearTimeout(swipeAnimationTimeoutRef.current);
+      swipeAnimationTimeoutRef.current = null;
+    }
+  }, []);
+
+  const getSwipeWidth = useCallback(() => {
+    return (
+      stageRef.current?.getBoundingClientRect().width ||
+      overlayRef.current?.getBoundingClientRect().width ||
+      window.innerWidth ||
+      1
+    );
+  }, []);
+
+  const resetSwipePosition = useCallback(() => {
+    clearSwipeAnimationTimeout();
+    setIsSwipeTransitionSuppressed(true);
+    setSwipeOffset(0);
+    setIsSwipeDragging(false);
+    setIsSwipeAnimating(false);
+    swipeWasDraggedRef.current = false;
+    swipeStartRef.current = null;
+
+    requestAnimationFrame(() => {
+      setIsSwipeTransitionSuppressed(false);
+    });
+  }, [clearSwipeAnimationTimeout]);
+
+  const completeSwipeToIndex = useCallback(
+    (targetIndex, terminalOffset) => {
+      if (
+        index === null ||
+        targetIndex < 0 ||
+        targetIndex >= images.length ||
+        targetIndex === index
+      ) {
+        setSwipeOffset(0);
+        setIsSwipeDragging(false);
+        setIsSwipeAnimating(true);
+        clearSwipeAnimationTimeout();
+        swipeAnimationTimeoutRef.current = setTimeout(() => {
+          setIsSwipeAnimating(false);
+          swipeWasDraggedRef.current = false;
+        }, SWIPE_ANIMATION_MS);
+        return;
+      }
+
+      setSwipeOffset(terminalOffset);
+      setIsSwipeDragging(false);
+      setIsSwipeAnimating(true);
+      clearSwipeAnimationTimeout();
+      swipeAnimationTimeoutRef.current = setTimeout(() => {
+        setIsSwipeTransitionSuppressed(true);
+        setIndex(targetIndex);
+        setSwipeOffset(0);
+        setIsSwipeAnimating(false);
+        swipeStartRef.current = null;
+        swipeWasDraggedRef.current = false;
+
+        requestAnimationFrame(() => {
+          setIsSwipeTransitionSuppressed(false);
+        });
+      }, SWIPE_ANIMATION_MS);
+    },
+    [clearSwipeAnimationTimeout, images.length, index, setIndex]
+  );
+
+  const animateToIndex = useCallback(
+    (targetIndex) => {
+      if (
+        index === null ||
+        targetIndex < 0 ||
+        targetIndex >= images.length ||
+        targetIndex === index ||
+        isSuperZoomed ||
+        isSwipeAnimating
+      ) {
+        return;
+      }
+
+      const direction = targetIndex > index ? -1 : 1;
+      completeSwipeToIndex(targetIndex, direction * getSwipeWidth());
+    },
+    [
+      completeSwipeToIndex,
+      getSwipeWidth,
+      images.length,
+      index,
+      isSuperZoomed,
+      isSwipeAnimating,
+    ]
+  );
 
   useEffect(() => {
     currentStateRef.current = {
@@ -110,18 +218,34 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     };
   }, []);
 
-  // Preload adjacent images
+  // Keep a small decoded image window around the current image.
   useEffect(() => {
-    if (index !== null) {
-      const preload = (i) => {
-        if (images[i]) {
-          const img = new Image();
-          img.src = images[i].src;
-        }
-      };
-      preload(index + 1);
-      preload(index - 1);
+    if (index === null) return;
+
+    const lowerBound = Math.max(0, index - PRELOAD_RADIUS);
+    const upperBound = Math.min(images.length - 1, index + PRELOAD_RADIUS);
+    const wantedSources = new Set();
+
+    for (let i = lowerBound; i <= upperBound; i += 1) {
+      const src = images[i]?.src;
+      if (!src) continue;
+      wantedSources.add(src);
+
+      if (!preloadedImagesRef.current.has(src)) {
+        const img = new Image();
+        img.decoding = "async";
+        img.src = src;
+        preloadedImagesRef.current.set(src, img);
+        img.decode?.().catch(() => {});
+      }
     }
+
+    preloadedImagesRef.current.forEach((img, src) => {
+      if (wantedSources.has(src)) return;
+      img.onload = null;
+      img.onerror = null;
+      preloadedImagesRef.current.delete(src);
+    });
   }, [index, images]);
 
   // Prevent background touchmove scroll
@@ -190,6 +314,15 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     };
   }, [index, images]);
 
+  useEffect(() => {
+    const preloadedImages = preloadedImagesRef.current;
+
+    return () => {
+      clearSwipeAnimationTimeout();
+      preloadedImages.clear();
+    };
+  }, [clearSwipeAnimationTimeout]);
+
   // Keyboard controls and modal focus
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -218,13 +351,13 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
 
       if (!zoomed && event.key === "ArrowLeft" && imageIndex > 0) {
         event.preventDefault();
-        setIndex(imageIndex - 1);
+        animateToIndex(imageIndex - 1);
         return;
       }
 
       if (!zoomed && event.key === "ArrowRight" && imageIndex < imagesLength - 1) {
         event.preventDefault();
-        setIndex(imageIndex + 1);
+        animateToIndex(imageIndex + 1);
         return;
       }
 
@@ -254,50 +387,104 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
       window.removeEventListener("keydown", handleKeyDown);
       previouslyFocusedRef.current?.focus?.();
     };
-  }, [isOpen, onClose, setIndex]);
+  }, [animateToIndex, isOpen, onClose]);
 
-  // Mobile swipe
-  useEffect(() => {
-    const overlay = document.querySelector(".fullscreen-overlay");
-    if (!overlay) return;
+  const handleSwipeStart = (event) => {
+    if (
+      isSuperZoomed ||
+      isSwipeAnimating ||
+      (event.pointerType === "mouse" && event.button !== 0)
+    ) {
+      return;
+    }
 
-    let lastTouchX = null;
-    const handleTouchStart = (e) => {
-      if (e.touches.length !== 1) return;
-      if (e.target.closest(".thumbnail-strip")) return;
-      lastTouchX = e.touches[0].clientX;
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    clearSwipeAnimationTimeout();
+    setShowSwipeHint(false);
+    setIsSwipeTransitionSuppressed(false);
+    setIsSwipeDragging(true);
+    setSwipeOffset(0);
+    swipeWasDraggedRef.current = false;
+    swipeStartRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      axis: null,
     };
+  };
 
-    const handleTouchMove = (e) => {
-      if (lastTouchX === null) return;
-      const deltaX = e.touches[0].clientX - lastTouchX;
-      if (deltaX > 80 && index > 0) {
-        setIndex(index - 1);
-        lastTouchX = null;
-      } else if (deltaX < -80 && index < images.length - 1) {
-        setIndex(index + 1);
-        lastTouchX = null;
-      }
-    };
+  const handleSwipeMove = (event) => {
+    const swipeStart = swipeStartRef.current;
+    if (!swipeStart || isSuperZoomed) return;
 
-    const resetTouch = () => (lastTouchX = null);
+    const deltaX = event.clientX - swipeStart.x;
+    const deltaY = event.clientY - swipeStart.y;
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
 
-    overlay.addEventListener("touchstart", handleTouchStart, {
-      passive: false,
-    });
-    overlay.addEventListener("touchmove", handleTouchMove, { passive: false });
-    overlay.addEventListener("touchend", resetTouch);
+    if (!swipeStart.axis && (absX > 8 || absY > 8)) {
+      swipeStart.axis = absX > absY ? "x" : "y";
+    }
 
-    return () => {
-      overlay.removeEventListener("touchstart", handleTouchStart);
-      overlay.removeEventListener("touchmove", handleTouchMove);
-      overlay.removeEventListener("touchend", resetTouch);
-    };
-  }, [index, images.length, setIndex]);
+    if (swipeStart.axis !== "x") return;
+
+    event.preventDefault();
+    swipeWasDraggedRef.current = absX > 10;
+
+    const atFirstImage = index <= 0;
+    const atLastImage = index >= images.length - 1;
+    const isPullingPastFirst = deltaX > 0 && atFirstImage;
+    const isPullingPastLast = deltaX < 0 && atLastImage;
+    const nextOffset =
+      isPullingPastFirst || isPullingPastLast ? deltaX * 0.28 : deltaX;
+
+    setSwipeOffset(nextOffset);
+  };
+
+  const handleSwipeEnd = (event) => {
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+    const swipeStart = swipeStartRef.current;
+    if (!swipeStart || isSuperZoomed) {
+      swipeStartRef.current = null;
+      setIsSwipeDragging(false);
+      return;
+    }
+
+    const width = getSwipeWidth();
+    const threshold = Math.min(110, width * 0.22);
+    const targetIndex =
+      swipeOffset < -threshold
+        ? index + 1
+        : swipeOffset > threshold
+          ? index - 1
+          : index;
+
+    if (targetIndex !== index && targetIndex >= 0 && targetIndex < images.length) {
+      const direction = targetIndex > index ? -1 : 1;
+      completeSwipeToIndex(targetIndex, direction * width);
+      return;
+    }
+
+    setSwipeOffset(0);
+    setIsSwipeDragging(false);
+    setIsSwipeAnimating(true);
+    clearSwipeAnimationTimeout();
+    swipeAnimationTimeoutRef.current = setTimeout(() => {
+      setIsSwipeAnimating(false);
+      swipeWasDraggedRef.current = false;
+      swipeStartRef.current = null;
+    }, SWIPE_ANIMATION_MS);
+  };
 
   if (index === null || !images.length) return null;
 
   const image = images[index];
+  const visibleSlides = [-1, 0, 1].map((offset) => ({
+    offset,
+    image: images[index + offset],
+    imageIndex: index + offset,
+  }));
+  const shouldAnimateSwipeTrack =
+    isSwipeAnimating && !isSwipeDragging && !isSwipeTransitionSuppressed;
 
   return (
     <div
@@ -378,22 +565,58 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
               </TransformComponent>
             </TransformWrapper>
           ) : (
-            <button
-              type="button"
-              className="fullscreen-image-button"
-              aria-label="Zoom image"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsSuperZoomed(true);
-              }}
+            <div
+              ref={stageRef}
+              className="fullscreen-swipe-stage"
+              onPointerDown={handleSwipeStart}
+              onPointerMove={handleSwipeMove}
+              onPointerUp={handleSwipeEnd}
+              onPointerCancel={resetSwipePosition}
             >
-              <img
-                src={image?.src}
-                alt={image?.caption || "Fullscreen"}
-                className="fullscreen-image"
-                style={{ transform: "scale(1)" }}
-              />
-            </button>
+              <div
+                className={`fullscreen-swipe-track ${
+                  isSwipeDragging ? "is-dragging" : ""
+                } ${shouldAnimateSwipeTrack ? "is-animating" : ""}`}
+                style={{ "--swipe-offset": `${swipeOffset}px` }}
+              >
+                {visibleSlides.map((slide) => (
+                  <div
+                    className={`fullscreen-slide ${
+                      slide.image ? "" : "is-empty"
+                    }`}
+                    key={`${slide.offset}-${slide.image?.src || "empty"}`}
+                    aria-hidden={slide.offset === 0 ? undefined : "true"}
+                  >
+                    {slide.image && (
+                      <button
+                        type="button"
+                        className="fullscreen-image-button"
+                        aria-label={
+                          slide.offset === 0
+                            ? "Zoom image"
+                            : `Preview image ${slide.imageIndex + 1}`
+                        }
+                        tabIndex={slide.offset === 0 ? undefined : -1}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (slide.offset !== 0 || swipeWasDraggedRef.current) {
+                            swipeWasDraggedRef.current = false;
+                            return;
+                          }
+                          setIsSuperZoomed(true);
+                        }}
+                      >
+                        <img
+                          src={slide.image.src}
+                          alt={slide.image.caption || "Fullscreen"}
+                          className="fullscreen-image"
+                        />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
 
@@ -419,6 +642,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
             tabIndex={isSuperZoomed ? -1 : undefined}
             onClick={(e) => {
               e.stopPropagation();
+              resetSwipePosition();
               setIndex(i);
               setIsSuperZoomed(false);
             }}
@@ -460,7 +684,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
         disabled={index <= 0 || isSuperZoomed}
         onClick={(e) => {
           e.stopPropagation();
-          setIndex(index - 1);
+          animateToIndex(index - 1);
         }}
       >
         <span className="arrow-inner">‹</span>
@@ -477,7 +701,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
         disabled={index >= images.length - 1 || isSuperZoomed}
         onClick={(e) => {
           e.stopPropagation();
-          setIndex(index + 1);
+          animateToIndex(index + 1);
         }}
       >
         <span className="arrow-inner">›</span>
