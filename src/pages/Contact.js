@@ -237,7 +237,7 @@ function Contact() {
           <p>
             <strong>Address</strong>
             <br />
-            SF Bay Area
+            Somewhere in the SF Bay Area
           </p>
 
           <div className="contact-links-row">

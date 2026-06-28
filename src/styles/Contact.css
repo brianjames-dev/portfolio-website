@@ -2,7 +2,7 @@
 .contact-section {
   display: flex;
   justify-content: center;
-  padding: 60px 0px 0px 0px;
+  padding: 60px 12px 0px;
 }
 
 .contact-card {
@@ -56,8 +56,8 @@
   appearance: none;
   display: block;
   width: 100%;
-  height: 40px;
-  padding: 10px;
+  min-height: 44px;
+  padding: 10px 12px;
   margin-top: 5px;
   border: 1px solid var(--border-soft);
   background-color: var(--surface-card-strong) !important;
@@ -68,12 +68,13 @@
   font: inherit;
   font-size: 1rem;
   line-height: 1.25;
-  resize: none;
 }
 
 .contact-section textarea {
+  display: block;
   height: 120px;
   min-height: 120px;
+  resize: none;
   overflow: auto;
 }
 
