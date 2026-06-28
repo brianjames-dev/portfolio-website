@@ -729,7 +729,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
               initialScale={SUPERZOOM_INITIAL_SCALE}
               minScale={SUPERZOOM_MIN_SCALE}
               maxScale={SUPERZOOM_MAX_SCALE}
-              limitToBounds={false}
+              limitToBounds
               centerZoomedOut
               centerOnInit
               onPanning={markZoomPanGesture}
