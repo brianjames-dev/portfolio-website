@@ -24,6 +24,22 @@ const isElementInViewport = (element, viewportHeight) => {
   return rect.bottom > 0 && rect.top < viewportHeight;
 };
 
+const getActivationPoint = (event) => {
+  const touch = event?.touches?.[0] || event?.changedTouches?.[0];
+  if (touch) {
+    return { x: touch.clientX, y: touch.clientY };
+  }
+
+  if (
+    typeof event?.clientX === "number" &&
+    typeof event?.clientY === "number"
+  ) {
+    return { x: event.clientX, y: event.clientY };
+  }
+
+  return null;
+};
+
 function ExpandedCard({
   project,
   onGalleryClick,
@@ -103,14 +119,18 @@ function ExpandedCard({
         now - lastScrollTopActivationRef.current <
         (event?.type === "click" ? 350 : 120)
       ) {
-        event?.preventDefault?.();
+        if (event?.cancelable !== false) event?.preventDefault?.();
         event?.stopPropagation?.();
+        event?.stopImmediatePropagation?.();
+        event?.nativeEvent?.stopImmediatePropagation?.();
         return;
       }
 
       lastScrollTopActivationRef.current = now;
-      event?.preventDefault?.();
+      if (event?.cancelable !== false) event?.preventDefault?.();
       event?.stopPropagation?.();
+      event?.stopImmediatePropagation?.();
+      event?.nativeEvent?.stopImmediatePropagation?.();
       const block = blockRef.current;
       if (!block || typeof window === "undefined") return;
 
@@ -121,31 +141,78 @@ function ExpandedCard({
 
       const currentTop = window.pageYOffset;
       window.scrollTo({ top: currentTop, behavior: "auto" });
-      window.setTimeout(() => {
+
+      const runScroll = () => {
         window.scrollTo({
           top: Math.max(0, targetTop),
           behavior: shouldReduceMotion ? "auto" : "smooth",
         });
-      }, 40);
+      };
+
+      window.requestAnimationFrame(() => {
+        window.scrollTo({ top: currentTop, behavior: "auto" });
+        window.requestAnimationFrame(runScroll);
+      });
     },
     [shouldReduceMotion]
   );
 
-  useEffect(() => {
+  const eventHitsScrollTopButton = useCallback((event) => {
     const button = scrollButtonRef.current;
-    if (!button || !showScrollTopButton) return undefined;
+    if (!button) return false;
 
-    button.addEventListener("touchstart", scrollToCardTop, {
+    const path =
+      typeof event?.composedPath === "function" ? event.composedPath() : [];
+    if (path.includes(button)) return true;
+
+    const point = getActivationPoint(event);
+    if (!point) return false;
+
+    const rect = button.getBoundingClientRect();
+    const hitSlop = 14;
+
+    return (
+      point.x >= rect.left - hitSlop &&
+      point.x <= rect.right + hitSlop &&
+      point.y >= rect.top - hitSlop &&
+      point.y <= rect.bottom + hitSlop
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!showScrollTopButton || typeof document === "undefined") {
+      return undefined;
+    }
+
+    const handleDocumentActivation = (event) => {
+      if (!eventHitsScrollTopButton(event)) return;
+      scrollToCardTop(event);
+    };
+
+    document.addEventListener("touchstart", handleDocumentActivation, {
       capture: true,
       passive: false,
     });
+    document.addEventListener("pointerdown", handleDocumentActivation, {
+      capture: true,
+      passive: false,
+    });
+    document.addEventListener("mousedown", handleDocumentActivation, true);
 
     return () => {
-      button.removeEventListener("touchstart", scrollToCardTop, {
-        capture: true,
-      });
+      document.removeEventListener(
+        "touchstart",
+        handleDocumentActivation,
+        true
+      );
+      document.removeEventListener(
+        "pointerdown",
+        handleDocumentActivation,
+        true
+      );
+      document.removeEventListener("mousedown", handleDocumentActivation, true);
     };
-  }, [scrollToCardTop, showScrollTopButton]);
+  }, [eventHitsScrollTopButton, scrollToCardTop, showScrollTopButton]);
 
   return (
     <div className="expanded-block" ref={blockRef}>
@@ -158,6 +225,7 @@ function ExpandedCard({
             aria-label="Scroll to top of card"
             onClick={scrollToCardTop}
             onPointerDownCapture={scrollToCardTop}
+            onTouchStartCapture={scrollToCardTop}
             initial={
               shouldReduceMotion ? false : { opacity: 0, y: -8, scale: 0.92 }
             }
