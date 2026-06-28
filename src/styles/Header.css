@@ -254,7 +254,8 @@
   .site-header nav {
     display: flex;
     flex-direction: column;
-    background: var(--color-header);
+    background: color-mix(in srgb, var(--color-header) 94%, transparent);
+    backdrop-filter: blur(14px);
     position: fixed;
     top: var(--header-height);
     right: 0;        /* anchor to the right */

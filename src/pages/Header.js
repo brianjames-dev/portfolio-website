@@ -3,6 +3,7 @@ import ThemeToggle from "../components/ThemeToggle";
 import "../styles/Header.css";
 
 let hasAnimatedIn = false;
+const MENU_TAP_GATE_MS = 100;
 
 function Header({ activeSection }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -235,7 +236,7 @@ function Header({ activeSection }) {
 
   const toggleMenuWithGate = () => {
     const now = Date.now();
-    if (now - lastMenuToggleRef.current < 500) return;
+    if (now - lastMenuToggleRef.current < MENU_TAP_GATE_MS) return;
 
     lastMenuToggleRef.current = now;
     setMenuOpen((current) => !current);
@@ -243,7 +244,7 @@ function Header({ activeSection }) {
     if (menuLockTimeoutRef.current) clearTimeout(menuLockTimeoutRef.current);
     menuLockTimeoutRef.current = setTimeout(() => {
       menuLockTimeoutRef.current = null;
-    }, 500);
+    }, MENU_TAP_GATE_MS);
   };
 
   return (

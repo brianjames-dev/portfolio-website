@@ -19,6 +19,18 @@
   min-height: 0; /* Prevent min-height constraints */
 }
 
+.project-card.is-collapsed-clickable {
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-card.is-collapsed-clickable:hover {
+    box-shadow:
+      var(--shadow-soft),
+      0 8px 22px rgba(var(--color-accent-rgb), 0.14);
+  }
+}
+
 /* Expanded card styles */
 .project-card.expanded-card {
   max-width: 1000px; /* Expanded width */
@@ -30,6 +42,10 @@
   width: 100%;
   max-width: 100%; /* Allow full width of parent */
   margin-bottom: 0; /* Ensure no extra margin */
+}
+
+.expanded-scroll-top-button {
+  display: none;
 }
 
 /* Ensure project-actions and project-section don’t add unexpected margins */
@@ -64,6 +80,34 @@
   .project-actions > .learn-more-btn:nth-child(3) {
     grid-column: 1 / -1;
     justify-self: center;
+  }
+
+  .expanded-scroll-top-button {
+    position: fixed;
+    top: calc(var(--header-height, 60px) + 8px);
+    left: 50%;
+    z-index: 1101;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 42%, transparent);
+    border-radius: var(--radius-md);
+    background: var(--color-accent);
+    color: var(--button-text);
+    box-shadow: var(--shadow-soft);
+    transform: translateX(-50%);
+  }
+
+  :root.header-hidden .expanded-scroll-top-button {
+    top: calc(env(safe-area-inset-top, 0px) + 10px);
+  }
+
+  .expanded-scroll-top-icon {
+    width: 30px;
+    height: 30px;
   }
 }
 

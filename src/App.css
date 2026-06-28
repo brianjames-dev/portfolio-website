@@ -130,7 +130,7 @@
 }
 
 main {
-  height: 100dvh;
+  min-height: 100dvh;
   position: relative;
   z-index: 1;
 }

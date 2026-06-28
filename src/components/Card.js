@@ -170,12 +170,29 @@ export default function Card({
     };
   }, []);
 
+  const handleCardClick = useCallback(
+    (event) => {
+      if (isExpanded || !canExpand || event.defaultPrevented) return;
+
+      const interactiveElement = event.target.closest(
+        'a, button, input, textarea, select, [role="button"], [data-no-card-expand]'
+      );
+      if (interactiveElement) return;
+
+      handleToggle();
+    },
+    [canExpand, handleToggle, isExpanded]
+  );
+
   return (
     <motion.div
       layout
       layoutId={`card-${id}`}
-      className={`project-card ${isExpanded ? "expanded-card" : ""}`}
+      className={`project-card ${isExpanded ? "expanded-card" : ""} ${
+        !isExpanded && canExpand ? "is-collapsed-clickable" : ""
+      }`}
       ref={cardRef}
+      onClick={handleCardClick}
       initial={shouldReduceMotion ? false : { opacity: 0, y: 28 }}
       whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.18 }}

@@ -5,7 +5,9 @@
   align-items: center;
   justify-content: center;
   gap: var(--card-block-gap, 20px);
+  min-height: 0;
   padding: 60px var(--page-card-gutter, 20px) var(--card-block-gap, 20px);
+  scroll-margin-top: var(--header-height);
 }
 
 .contact-card {

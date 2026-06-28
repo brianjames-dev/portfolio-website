@@ -768,6 +768,9 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
         onClick={(e) => {
           if (swipeWasDraggedRef.current || isSwipeAnimating) {
             e.stopPropagation();
+            if (!isSwipeAnimating) {
+              swipeWasDraggedRef.current = false;
+            }
           }
         }}
       >
@@ -814,7 +817,10 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
               return;
             }
 
-            if (isTouch || mouseWasDraggedRef.current) e.stopPropagation();
+            if (mouseWasDraggedRef.current) {
+              e.stopPropagation();
+              mouseWasDraggedRef.current = false;
+            }
           }}
         >
           {isSuperZoomed ? (
@@ -972,7 +978,9 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
       {/* Close Button */}
       <button
         ref={closeButtonRef}
-        className="fullscreen-close-btn"
+        className={`fullscreen-close-btn ${
+          isSuperZoomed ? "is-superzoomed" : ""
+        }`}
         type="button"
         aria-label="Close gallery"
         onClick={(e) => {

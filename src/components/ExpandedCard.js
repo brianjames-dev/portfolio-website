@@ -1,6 +1,6 @@
 // src/components/ExpandedCard.js
 import { motion, useReducedMotion } from "framer-motion";
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import IconGlyph from "./IconGlyph";
 import "../styles/BookieBot.css";
 import "../styles/CollapsedCard.css"; // for shared section styles
@@ -8,6 +8,21 @@ import { renderContentBlock } from "../utils/renderContentBlock.js";
 import { renderTechStackItem } from "../utils/renderTechStackItem.js";
 
 const CONTENT_FADE_DURATION = 0.5;
+const MOBILE_SCROLL_BUTTON_MAX_WIDTH = 600;
+
+const getHeaderOffset = () => {
+  if (typeof window === "undefined") return 60;
+  const headerVar = getComputedStyle(document.documentElement)
+    .getPropertyValue("--header-height")
+    .trim();
+  return parseInt(headerVar || "60", 10) || 60;
+};
+
+const isElementInViewport = (element, viewportHeight) => {
+  if (!element) return false;
+  const rect = element.getBoundingClientRect();
+  return rect.bottom > 0 && rect.top < viewportHeight;
+};
 
 function ExpandedCard({
   project,
@@ -21,6 +36,8 @@ function ExpandedCard({
   handleCloseAndScroll,
 }) {
   const shouldReduceMotion = useReducedMotion();
+  const [showScrollTopButton, setShowScrollTopButton] = useState(false);
+  const blockRef = useRef(null);
   const hasGallery =
     (project.images?.length || 0) > 0 || Boolean(showGalleryButton);
   const hasDemo = Boolean(showDemoButton);
@@ -34,8 +51,81 @@ function ExpandedCard({
     videoEmbed?.provider === "youtube" && Boolean(videoEmbedId);
   const logo = project.logo;
 
+  const updateScrollTopButton = useCallback(() => {
+    if (typeof window === "undefined") return;
+
+    const block = blockRef.current;
+    const viewportHeight = window.innerHeight || 1;
+    const isMobile = window.innerWidth <= MOBILE_SCROLL_BUTTON_MAX_WIDTH;
+    if (!block || !isMobile) {
+      setShowScrollTopButton(false);
+      return;
+    }
+
+    const rect = block.getBoundingClientRect();
+    const encompassesViewport = rect.top < 0 && rect.bottom > viewportHeight;
+    const visibleActionButton = Array.from(
+      block.querySelectorAll(".expanded-buttons-row button, .project-actions button")
+    ).some((button) => isElementInViewport(button, viewportHeight));
+
+    setShowScrollTopButton(encompassesViewport && !visibleActionButton);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    let rafId = 0;
+    const scheduleUpdate = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        updateScrollTopButton();
+      });
+    };
+
+    scheduleUpdate();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, [updateScrollTopButton]);
+
+  const scrollToCardTop = useCallback(
+    (event) => {
+      event.stopPropagation();
+      const block = blockRef.current;
+      if (!block || typeof window === "undefined") return;
+
+      const card = block.closest(".project-card") || block;
+      const rect = card.getBoundingClientRect();
+      const targetTop =
+        rect.top + window.pageYOffset - getHeaderOffset() - 8;
+
+      window.scrollTo({
+        top: Math.max(0, targetTop),
+        behavior: shouldReduceMotion ? "auto" : "smooth",
+      });
+    },
+    [shouldReduceMotion]
+  );
+
   return (
-    <div className="expanded-block">
+    <div className="expanded-block" ref={blockRef}>
+      {showScrollTopButton && (
+        <button
+          type="button"
+          className="expanded-scroll-top-button"
+          aria-label="Scroll to top of card"
+          onClick={scrollToCardTop}
+        >
+          <IconGlyph name="chevronUp" className="expanded-scroll-top-icon" />
+        </button>
+      )}
+
       {/* Expanded Title / Subtitle / Close */}
       <div className="expanded-header">
         <div className="expanded-title-row">

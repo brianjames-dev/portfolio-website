@@ -137,7 +137,7 @@
 }
 
 .fullscreen-close-btn {
-  position: absolute;
+  position: fixed;
   right: 15dvw; /* 5% from right edge of viewport */
   top: 10dvh;
   background: var(--overlay-control-bg);
@@ -145,7 +145,7 @@
   border: none;
   padding: 10px 10px 7px 10px;
   cursor: pointer;
-  z-index: 10000;
+  z-index: 10060;
 }
 
 .fullscreen-close-icon {
