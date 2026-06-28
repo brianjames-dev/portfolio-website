@@ -38,10 +38,12 @@ function ParticlesBackground() {
 
   useEffect(() => {
     const media = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-    if (media?.matches) {
-      setPrefersReducedMotion(true);
-      return undefined;
-    }
+
+    const updateMotionPreference = () => {
+      setPrefersReducedMotion(Boolean(media?.matches));
+    };
+    updateMotionPreference();
+    media?.addEventListener?.("change", updateMotionPreference);
 
     const idleId = window.requestIdleCallback
       ? window.requestIdleCallback(() => {
@@ -54,6 +56,7 @@ function ParticlesBackground() {
     const raf = requestAnimationFrame(() => setMounted(true));
     return () => {
       cancelAnimationFrame(raf);
+      media?.removeEventListener?.("change", updateMotionPreference);
       if (window.cancelIdleCallback && typeof idleId === "number") {
         window.cancelIdleCallback(idleId);
       } else {
@@ -104,27 +107,30 @@ function ParticlesBackground() {
   const options = useMemo(() => {
     const particleColor = isDarkMode ? "#8FC89D" : "#1F5137";
 
-    const dpr =
-      typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
     const small =
       typeof window !== "undefined" &&
       window.matchMedia?.("(max-width: 600px)")?.matches;
+    const reduced = prefersReducedMotion;
 
-    const count = Math.round((small ? 22 : 56) * (dpr > 1.5 ? 0.75 : 1));
-    const fps = small ? 24 : 45;
+    const count = small ? 18 : reduced ? 34 : 46;
+    const fps = small ? 24 : 60;
     const linkDist = small ? 0 : 170;
-    const repulseDist = small ? 0 : 90;
+    const repulseDist = small || reduced ? 0 : 90;
     const repulseDuration = 0.2;
 
     return {
       fullScreen: { enable: true, zIndex: 0 },
       background: { color: backgroundColor },
-      detectRetina: !small,
+      detectRetina: false,
       fpsLimit: fps,
       pauseOnBlur: true,
       pauseOnOutsideViewport: true,
       particles: {
-        number: { value: count, density: { enable: true, area: 800 } },
+        number: {
+          value: count,
+          limit: { value: count, mode: "delete" },
+          density: { enable: false },
+        },
         color: { value: particleColor },
         shape: { type: "circle" },
         opacity: { value: isDarkMode ? 0.28 : 0.22 },
@@ -145,7 +151,7 @@ function ParticlesBackground() {
       interactivity: {
         detectsOn: "window",
         events: {
-          onHover: { enable: !small, mode: "repulse" },
+          onHover: { enable: !small && !reduced, mode: "repulse" },
           onClick: { enable: false },
           resize: false,
         },
@@ -154,9 +160,9 @@ function ParticlesBackground() {
         },
       },
     };
-  }, [backgroundColor, isDarkMode]);
+  }, [backgroundColor, isDarkMode, prefersReducedMotion]);
 
-  if (prefersReducedMotion || !engineReady || !mounted) return null;
+  if (!engineReady || !mounted) return null;
 
   const layer = (
     <div
