@@ -6,6 +6,11 @@ import iconMap from "../data/iconMap.js";
 
 const PRELOAD_RADIUS = 2;
 const SWIPE_ANIMATION_MS = 320;
+const SUPERZOOM_INITIAL_SCALE = 2.3;
+const SUPERZOOM_MIN_SCALE = 1;
+const SUPERZOOM_MAX_SCALE = 12;
+const TAP_EXIT_MAX_MS = 260;
+const TAP_EXIT_MAX_MOVEMENT = 8;
 
 function ProjectGallery({ images, index, setIndex, onClose }) {
   const [isSuperZoomed, setIsSuperZoomed] = useState(false);
@@ -22,6 +27,8 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
   const swipeStartRef = useRef(null);
   const swipeAnimationTimeoutRef = useRef(null);
   const stageRef = useRef(null);
+  const zoomTapStartRef = useRef(null);
+  const zoomGestureRef = useRef({ moved: false, pinching: false });
   const thumbnailRefs = useRef([]);
   const overlayRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -479,6 +486,60 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     }, SWIPE_ANIMATION_MS);
   };
 
+  const resetZoomTapTracking = () => {
+    zoomTapStartRef.current = null;
+    zoomGestureRef.current = { moved: false, pinching: false };
+  };
+
+  const handleZoomTouchStart = (event) => {
+    if (event.touches.length > 1) {
+      zoomGestureRef.current.pinching = true;
+      zoomTapStartRef.current = null;
+      return;
+    }
+
+    const touch = event.touches[0];
+    zoomTapStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+    };
+    zoomGestureRef.current = { moved: false, pinching: false };
+  };
+
+  const handleZoomTouchMove = (event) => {
+    if (event.touches.length > 1) {
+      zoomGestureRef.current.pinching = true;
+      return;
+    }
+
+    const touch = event.touches[0];
+    const start = zoomTapStartRef.current;
+    if (!touch || !start) return;
+
+    const movement = Math.hypot(touch.clientX - start.x, touch.clientY - start.y);
+    if (movement > TAP_EXIT_MAX_MOVEMENT) {
+      zoomGestureRef.current.moved = true;
+    }
+  };
+
+  const handleZoomTouchEnd = (event) => {
+    if (event.touches.length > 0) return;
+
+    const start = zoomTapStartRef.current;
+    const { moved, pinching } = zoomGestureRef.current;
+    if (!start || moved || pinching) {
+      resetZoomTapTracking();
+      return;
+    }
+
+    if (Date.now() - start.time <= TAP_EXIT_MAX_MS) {
+      event.stopPropagation();
+      setIsSuperZoomed(false);
+    }
+    resetZoomTapTracking();
+  };
+
   if (index === null || !images.length) return null;
 
   const image = images[index];
@@ -542,17 +603,23 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
           {isSuperZoomed ? (
             <TransformWrapper
               doubleClick={{ disabled: true }}
-              pinch={{ disabled: false }}
+              pinch={{ disabled: false, step: 8 }}
               panning={{ velocityDisabled: false }}
               wheel={{ disabled: true }}
-              initialScale={2.3}
-              minScale={2.3}
-              maxScale={2.3}
+              initialScale={SUPERZOOM_INITIAL_SCALE}
+              minScale={SUPERZOOM_MIN_SCALE}
+              maxScale={SUPERZOOM_MAX_SCALE}
+              limitToBounds={false}
+              centerZoomedOut
               centerOnInit
             >
               <TransformComponent>
                 <div
                   className="superzoomed"
+                  onTouchStart={handleZoomTouchStart}
+                  onTouchMove={handleZoomTouchMove}
+                  onTouchEnd={handleZoomTouchEnd}
+                  onTouchCancel={resetZoomTapTracking}
                   onMouseDown={(e) => {
                     setMouseDownTime(Date.now());
                     setMouseDownPos({ x: e.clientX, y: e.clientY });
@@ -568,6 +635,12 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
                       setIsSuperZoomed(false);
                     } else {
                       mouseWasDraggedRef.current = true;
+                    }
+                  }}
+                  onClick={(e) => {
+                    if (mouseWasDraggedRef.current) {
+                      e.stopPropagation();
+                      mouseWasDraggedRef.current = false;
                     }
                   }}
                 >
