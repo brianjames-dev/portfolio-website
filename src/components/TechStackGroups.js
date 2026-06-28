@@ -74,8 +74,32 @@ const CATEGORY_MAP = {
   "XML": "Data",
 };
 
-const COLLAPSED_TAG_LIMIT = 10;
-const COLLAPSED_GROUP_LIMIT = 4;
+const FEATURED_TAG_LIMIT = 5;
+const MIN_HIDDEN_TAGS = 2;
+
+const FEATURED_PRIORITY = [
+  "LangGraph",
+  "Azure OpenAI",
+  "OpenAI API",
+  "RAG",
+  "FastAPI",
+  "Python",
+  ".NET",
+  "C#",
+  "TypeScript",
+  "React",
+  "NextJS",
+  "Swift",
+  "SQL",
+  "PostgreSQL",
+  "SQLite",
+  "Google Sheets API",
+  "Discord.py",
+  "AWS",
+  "GCP",
+  "Docker",
+  "Git",
+];
 
 function groupStack(stack = []) {
   const grouped = CATEGORY_ORDER.map((label) => ({
@@ -93,43 +117,65 @@ function groupStack(stack = []) {
 }
 
 function getVisibleGroups(groups, showAll) {
-  if (showAll) return groups;
+  return showAll ? groups : [];
+}
 
-  let remaining = COLLAPSED_TAG_LIMIT;
-  return groups
-    .map((group) => {
-      if (remaining <= 0) return null;
-      const groupLimit = Math.min(COLLAPSED_GROUP_LIMIT, remaining);
-      const items = group.items.slice(0, groupLimit);
-      remaining -= items.length;
-      return { ...group, items };
+function getFeaturedLimit(stack) {
+  if (stack.length <= FEATURED_TAG_LIMIT) return stack.length;
+  return Math.max(
+    1,
+    Math.min(FEATURED_TAG_LIMIT, stack.length - MIN_HIDDEN_TAGS)
+  );
+}
+
+function getFeaturedStack(stack = []) {
+  const priorityByTech = new Map(
+    FEATURED_PRIORITY.map((tech, priority) => [tech, priority])
+  );
+  const featuredLimit = getFeaturedLimit(stack);
+
+  return [...stack]
+    .sort((a, b) => {
+      const priorityA = priorityByTech.get(a) ?? Number.MAX_SAFE_INTEGER;
+      const priorityB = priorityByTech.get(b) ?? Number.MAX_SAFE_INTEGER;
+      if (priorityA !== priorityB) return priorityA - priorityB;
+      return stack.indexOf(a) - stack.indexOf(b);
     })
-    .filter(Boolean);
+    .slice(0, featuredLimit);
 }
 
 export default function TechStackGroups({ stack = [] }) {
   const [showAll, setShowAll] = useState(false);
   const groups = useMemo(() => groupStack(stack), [stack]);
+  const featuredStack = useMemo(() => getFeaturedStack(stack), [stack]);
   const visibleGroups = useMemo(
     () => getVisibleGroups(groups, showAll),
     [groups, showAll]
   );
-  const hiddenCount = Math.max(0, stack.length - COLLAPSED_TAG_LIMIT);
+  const hiddenCount = Math.max(0, stack.length - featuredStack.length);
 
   if (!stack.length) return null;
 
   return (
     <div className="project-stack" aria-label="Technology stack">
-      {visibleGroups.map((group) => (
-        <div className="stack-group" key={group.label}>
-          <span className="stack-group-label">{group.label}</span>
-          <div className="stack-tag-row">
-            {group.items.map((tech, i) =>
-              renderTag(tech, `${group.label}-${tech}-${i}`)
-            )}
-          </div>
+      {!showAll && (
+        <div className="stack-featured-row">
+          {featuredStack.map((tech, i) =>
+            renderTag(tech, `featured-${tech}-${i}`)
+          )}
         </div>
-      ))}
+      )}
+      {showAll &&
+        visibleGroups.map((group) => (
+          <div className="stack-group" key={group.label}>
+            <span className="stack-group-label">{group.label}</span>
+            <div className="stack-tag-row">
+              {group.items.map((tech, i) =>
+                renderTag(tech, `${group.label}-${tech}-${i}`)
+              )}
+            </div>
+          </div>
+        ))}
       {hiddenCount > 0 && (
         <button
           className="stack-more-toggle"

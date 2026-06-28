@@ -386,6 +386,13 @@
 }
 
 /* ========== Tag List ========== */
+.stack-featured-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
 .stack-group {
   display: grid;
   grid-template-columns: 80px minmax(0, 1fr);
