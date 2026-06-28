@@ -189,6 +189,12 @@ html.modal-scroll-lock {
   touch-action: none;
 }
 
+body.gallery-overlay-open .site-header,
+body.gallery-lock-open .site-header {
+  pointer-events: none;
+  transform: translateY(-100%);
+}
+
 button {
   font-weight: 700;
   border-radius: var(--radius-md);

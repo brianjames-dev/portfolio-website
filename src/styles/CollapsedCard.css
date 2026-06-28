@@ -19,18 +19,6 @@
   min-height: 0; /* Prevent min-height constraints */
 }
 
-.project-card.is-collapsed-clickable {
-  cursor: pointer;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .project-card.is-collapsed-clickable:hover {
-    box-shadow:
-      var(--shadow-soft),
-      0 8px 22px rgba(var(--color-accent-rgb), 0.14);
-  }
-}
-
 /* Expanded card styles */
 .project-card.expanded-card {
   max-width: 1000px; /* Expanded width */

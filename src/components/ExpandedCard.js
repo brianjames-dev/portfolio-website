@@ -38,6 +38,7 @@ function ExpandedCard({
   const shouldReduceMotion = useReducedMotion();
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
   const blockRef = useRef(null);
+  const scrollButtonRef = useRef(null);
   const lastScrollTopActivationRef = useRef(0);
   const hasGallery =
     (project.images?.length || 0) > 0 || Boolean(showGalleryButton);
@@ -99,11 +100,11 @@ function ExpandedCard({
     (event) => {
       const now = Date.now();
       if (
-        event?.type === "click" &&
-        now - lastScrollTopActivationRef.current < 350
+        now - lastScrollTopActivationRef.current <
+        (event?.type === "click" ? 350 : 120)
       ) {
-        event.preventDefault();
-        event.stopPropagation();
+        event?.preventDefault?.();
+        event?.stopPropagation?.();
         return;
       }
 
@@ -118,25 +119,45 @@ function ExpandedCard({
       const targetTop =
         rect.top + window.pageYOffset - getHeaderOffset() - 8;
 
-      window.scrollTo({
-        top: Math.max(0, targetTop),
-        behavior: shouldReduceMotion ? "auto" : "smooth",
-      });
+      const currentTop = window.pageYOffset;
+      window.scrollTo({ top: currentTop, behavior: "auto" });
+      window.setTimeout(() => {
+        window.scrollTo({
+          top: Math.max(0, targetTop),
+          behavior: shouldReduceMotion ? "auto" : "smooth",
+        });
+      }, 40);
     },
     [shouldReduceMotion]
   );
+
+  useEffect(() => {
+    const button = scrollButtonRef.current;
+    if (!button || !showScrollTopButton) return undefined;
+
+    button.addEventListener("touchstart", scrollToCardTop, {
+      capture: true,
+      passive: false,
+    });
+
+    return () => {
+      button.removeEventListener("touchstart", scrollToCardTop, {
+        capture: true,
+      });
+    };
+  }, [scrollToCardTop, showScrollTopButton]);
 
   return (
     <div className="expanded-block" ref={blockRef}>
       <AnimatePresence>
         {showScrollTopButton && (
           <motion.button
+            ref={scrollButtonRef}
             type="button"
             className="expanded-scroll-top-button"
             aria-label="Scroll to top of card"
             onClick={scrollToCardTop}
             onPointerDownCapture={scrollToCardTop}
-            onTouchStartCapture={scrollToCardTop}
             initial={
               shouldReduceMotion ? false : { opacity: 0, y: -8, scale: 0.92 }
             }

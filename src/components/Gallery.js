@@ -333,18 +333,16 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     if (entering) {
       const y = window.scrollY;
       document.body.classList.add("no-scroll");
-      document.body.style.position = "fixed";
+      document.body.classList.add("gallery-overlay-open");
       document.body.style.top = `-${y}px`;
-      document.body.style.width = "100%";
     }
 
     return () => {
       if (entering) {
         const y = parseInt(document.body.style.top || "0") * -1;
         document.body.classList.remove("no-scroll");
-        document.body.style.position = "";
+        document.body.classList.remove("gallery-overlay-open");
         document.body.style.top = "";
-        document.body.style.width = "";
         window.requestAnimationFrame(() => {
           window.scrollTo(0, y);
         });

@@ -61,16 +61,12 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
 
     document.addEventListener("keydown", handleKeyDown);
     document.body.classList.add("no-scroll");
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${y}px`;
-    document.body.style.width = "100%";
+    document.body.classList.add("gallery-lock-open");
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.classList.remove("no-scroll");
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
+      document.body.classList.remove("gallery-lock-open");
       window.requestAnimationFrame(() => {
         window.scrollTo(0, y);
       });
