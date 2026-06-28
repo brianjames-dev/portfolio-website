@@ -5,7 +5,7 @@ import "../styles/Header.css";
 let hasAnimatedIn = false;
 const MENU_TAP_GATE_MS = 100;
 
-function Header({ activeSection }) {
+function Header({ activeSection, isHidden = false }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth <= 600 : false
@@ -20,85 +20,11 @@ function Header({ activeSection }) {
     import("react-google-recaptcha");
   };
 
-  // Handle header hide/show on scroll
   useEffect(() => {
-    const header = document.querySelector(".site-header");
-    if (!header) return;
-    const root = document.documentElement;
-
-    let lastScrollY = window.scrollY;
-    let scrollDistance = 0;
-    let scrollDirection = 0;
-    let isHidden = header.classList.contains("hidden");
-    const topThreshold = 12;
-    const hideThreshold = 48;
-    const showThreshold = 24;
-
-    const showHeader = () => {
-      header.classList.remove("hidden");
-      root.classList.remove("header-hidden");
-      isHidden = false;
-    };
-
-    const hideHeader = () => {
-      header.classList.add("hidden");
-      root.classList.add("header-hidden");
-      isHidden = true;
+    if (isHidden) {
       setMenuOpen(false);
-    };
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollDelta = currentScrollY - lastScrollY;
-
-      if (
-        root.classList.contains("modal-scroll-lock") ||
-        document.body.classList.contains("video-overlay-open")
-      ) {
-        lastScrollY = currentScrollY;
-        scrollDistance = 0;
-        return;
-      }
-
-      // Always show header when near the very top (mobile bounce, refreshed page, etc.)
-      if (currentScrollY <= topThreshold) {
-        showHeader();
-        lastScrollY = currentScrollY;
-        scrollDistance = 0;
-        return;
-      }
-
-      if (Math.abs(scrollDelta) < 2) return;
-
-      const nextDirection = scrollDelta > 0 ? 1 : -1;
-      if (nextDirection !== scrollDirection) {
-        scrollDirection = nextDirection;
-        scrollDistance = 0;
-      }
-
-      scrollDistance += Math.abs(scrollDelta);
-
-      if (!isHidden && scrollDirection > 0 && scrollDistance >= hideThreshold) {
-        hideHeader();
-        scrollDistance = 0;
-      } else if (
-        isHidden &&
-        scrollDirection < 0 &&
-        scrollDistance >= showThreshold
-      ) {
-        showHeader();
-        scrollDistance = 0;
-      }
-
-      lastScrollY = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      root.classList.remove("header-hidden");
-    };
-  }, []);
+    }
+  }, [isHidden]);
 
   // Handle mobile menu animation
   useEffect(() => {
@@ -222,15 +148,11 @@ function Header({ activeSection }) {
 
     scheduleBubblePosition();
 
-    // Update on resize, scroll, or menu toggle
+    // Update on resize or menu/active-section changes.
     window.addEventListener("resize", scheduleBubblePosition);
-    window.addEventListener("scroll", scheduleBubblePosition, {
-      passive: true,
-    });
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("resize", scheduleBubblePosition);
-      window.removeEventListener("scroll", scheduleBubblePosition);
     };
   }, [activeSection, menuOpen]); // Add menuOpen as a dependency
 
@@ -248,7 +170,7 @@ function Header({ activeSection }) {
   };
 
   return (
-    <header className="site-header">
+    <header className={`site-header ${isHidden ? "hidden" : ""}`}>
       <div className="container">
         <h1 className="logo">
           <a href="#home" onClick={() => setMenuOpen(false)}>

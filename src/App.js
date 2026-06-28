@@ -10,6 +10,7 @@ import Projects from "./pages/Projects";
 
 function App() {
   const [activeSection, setActiveSection] = useState("home");
+  const [headerHidden, setHeaderHidden] = useState(false);
   const scrollDragRef = useRef(null);
   const [scrollIndicator, setScrollIndicator] = useState({
     enabled: false,
@@ -46,19 +47,41 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle("header-hidden", headerHidden);
+
+    return () => {
+      root.classList.remove("header-hidden");
+    };
+  }, [headerHidden]);
+
+  useEffect(() => {
+    const sectionIds = ["home", "about", "experience", "projects", "contact"];
     const desktopQuery = window.matchMedia("(min-width: 601px)");
+    const getSections = () =>
+      Array.from(document.querySelectorAll("section[id]"));
+
+    let sections = getSections();
     let rafId = 0;
     let hideTimer = 0;
+    let headerHeight = 60;
+    let lastScrollY = window.scrollY;
+    let scrollDistance = 0;
+    let scrollDirection = 0;
+    let isHeaderHidden = false;
+    let pendingShowScrollbar = false;
+    const topThreshold = 12;
+    const hideThreshold = 48;
+    const showThreshold = 24;
 
     const getScrollElement = () =>
       document.scrollingElement || document.documentElement;
 
-    const readHeaderOffset = () => {
+    const readHeaderHeight = () => {
       const headerVar = getComputedStyle(document.documentElement)
         .getPropertyValue("--header-height")
         .trim();
-      const headerHeight = parseInt(headerVar || "60", 10) || 60;
-      return headerHeight + 12;
+      headerHeight = parseInt(headerVar || "60", 10) || 60;
     };
 
     const updateScrollIndicator = (show) => {
@@ -67,7 +90,7 @@ function App() {
         0,
         scrollElement.scrollHeight - window.innerHeight
       );
-      const headerOffset = readHeaderOffset();
+      const headerOffset = headerHeight + 12;
       const trackHeight = Math.max(80, window.innerHeight - headerOffset - 12);
       const thumbHeight =
         maxScroll > 0
@@ -93,11 +116,120 @@ function App() {
       }));
     };
 
+    const updateActiveSectionFromViewport = () => {
+      if (!sections.length) return;
+
+      const viewportHeight = window.innerHeight || 1;
+      const viewportCenter = viewportHeight / 2;
+      const bandOffset = viewportHeight * 0.1;
+      const originalBandTop = viewportCenter - bandOffset;
+      const bandTop = Math.min(originalBandTop, headerHeight);
+      const bandBottom = viewportCenter + bandOffset;
+
+      const measurements = sections
+        .map((section) => {
+          const rect = section.getBoundingClientRect();
+          const intersects = rect.bottom > 0 && rect.top < viewportHeight;
+          if (!intersects) return null;
+
+          const center = rect.top + rect.height / 2;
+          const distance = Math.abs(center - viewportCenter);
+          const inBand = center >= bandTop && center <= bandBottom;
+
+          return {
+            id: section.id,
+            distance,
+            inBand,
+          };
+        })
+        .filter(Boolean);
+
+      if (!measurements.length) return;
+
+      const bandCandidates = measurements.filter((m) => m.inBand);
+      const candidates = bandCandidates.length ? bandCandidates : measurements;
+      const best = candidates.reduce((closest, current) => {
+        if (!closest || current.distance < closest.distance) {
+          return current;
+        }
+        return closest;
+      }, null);
+
+      if (best) {
+        setActiveSection((prev) => (prev === best.id ? prev : best.id));
+      }
+    };
+
+    const updateHeaderVisibility = () => {
+      const root = document.documentElement;
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastScrollY;
+
+      if (
+        root.classList.contains("modal-scroll-lock") ||
+        document.body.classList.contains("video-overlay-open")
+      ) {
+        lastScrollY = currentScrollY;
+        scrollDistance = 0;
+        return;
+      }
+
+      if (currentScrollY <= topThreshold) {
+        if (isHeaderHidden) {
+          isHeaderHidden = false;
+          setHeaderHidden(false);
+        }
+        lastScrollY = currentScrollY;
+        scrollDistance = 0;
+        return;
+      }
+
+      if (Math.abs(scrollDelta) < 2) return;
+
+      const nextDirection = scrollDelta > 0 ? 1 : -1;
+      if (nextDirection !== scrollDirection) {
+        scrollDirection = nextDirection;
+        scrollDistance = 0;
+      }
+
+      scrollDistance += Math.abs(scrollDelta);
+
+      if (
+        !isHeaderHidden &&
+        scrollDirection > 0 &&
+        scrollDistance >= hideThreshold
+      ) {
+        isHeaderHidden = true;
+        setHeaderHidden(true);
+        scrollDistance = 0;
+      } else if (
+        isHeaderHidden &&
+        scrollDirection < 0 &&
+        scrollDistance >= showThreshold
+      ) {
+        isHeaderHidden = false;
+        setHeaderHidden(false);
+        scrollDistance = 0;
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    const updateFromViewport = (showScrollbar) => {
+      updateHeaderVisibility();
+      updateActiveSectionFromViewport();
+      updateScrollIndicator(showScrollbar);
+    };
+
     const scheduleUpdate = (show = false) => {
-      if (rafId) cancelAnimationFrame(rafId);
+      pendingShowScrollbar = pendingShowScrollbar || show;
+      if (rafId) return;
+
       rafId = requestAnimationFrame(() => {
         rafId = 0;
-        updateScrollIndicator(show);
+        const shouldShowScrollbar = pendingShowScrollbar;
+        pendingShowScrollbar = false;
+        updateFromViewport(shouldShowScrollbar);
       });
 
       if (show) {
@@ -110,137 +242,44 @@ function App() {
     };
 
     const handleScroll = () => scheduleUpdate(true);
-    const handleResize = () => scheduleUpdate(false);
+    const refreshSections = () => {
+      sections = getSections();
+      scheduleUpdate(false);
+      return sectionIds.every((id) => document.getElementById(id));
+    };
+
+    const mutationObserver = new MutationObserver(() => {
+      if (refreshSections()) {
+        mutationObserver.disconnect();
+      }
+    });
+
+    const main = document.querySelector("main") || document.body;
+    mutationObserver.observe(main, {
+      childList: true,
+      subtree: true,
+    });
+
+    const handleResize = () => {
+      readHeaderHeight();
+      refreshSections();
+      scheduleUpdate(false);
+    };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleResize);
     desktopQuery.addEventListener?.("change", handleResize);
+    readHeaderHeight();
+    refreshSections();
     scheduleUpdate(false);
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       if (hideTimer) window.clearTimeout(hideTimer);
+      mutationObserver.disconnect();
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
       desktopQuery.removeEventListener?.("change", handleResize);
-    };
-  }, []);
-
-  useEffect(() => {
-    const desktopQuery = window.matchMedia("(min-width: 601px)");
-    let rafId = 0;
-    let pendingDeltaY = 0;
-    let wheelIdleTimer = 0;
-
-    const getScrollElement = () =>
-      document.scrollingElement || document.documentElement;
-
-    const keepManualScrollModeActive = () => {
-      document.documentElement.classList.add("manual-wheel-scroll");
-
-      if (wheelIdleTimer) {
-        window.clearTimeout(wheelIdleTimer);
-      }
-
-      wheelIdleTimer = window.setTimeout(() => {
-        document.documentElement.classList.remove("manual-wheel-scroll");
-        wheelIdleTimer = 0;
-      }, 120);
-    };
-
-    const targetHasScrollableParent = (target, deltaY) => {
-      let node = target instanceof Element ? target : target?.parentElement;
-      while (node && node !== document.body && node !== document.documentElement) {
-        const styles = getComputedStyle(node);
-        const canScrollY =
-          /(auto|scroll)/.test(styles.overflowY) &&
-          node.scrollHeight > node.clientHeight;
-
-        if (canScrollY) {
-          const atTop = node.scrollTop <= 0;
-          const atBottom =
-            Math.ceil(node.scrollTop + node.clientHeight) >= node.scrollHeight;
-          if ((deltaY < 0 && !atTop) || (deltaY > 0 && !atBottom)) {
-            return true;
-          }
-        }
-
-        node = node.parentElement;
-      }
-
-      return false;
-    };
-
-    const normalizeWheelDelta = (event) => {
-      const modeMultiplier =
-        event.deltaMode === WheelEvent.DOM_DELTA_LINE
-          ? 16
-          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
-            ? window.innerHeight
-            : 1;
-
-      return event.deltaY * modeMultiplier;
-    };
-
-    const flushWheelScroll = () => {
-      rafId = 0;
-
-      const scrollElement = getScrollElement();
-      const maxScroll = Math.max(
-        0,
-        scrollElement.scrollHeight - window.innerHeight
-      );
-      if (maxScroll <= 0 || pendingDeltaY === 0) {
-        pendingDeltaY = 0;
-        return;
-      }
-
-      const nextTop = Math.max(
-        0,
-        Math.min(maxScroll, scrollElement.scrollTop + pendingDeltaY)
-      );
-      pendingDeltaY = 0;
-      scrollElement.scrollTop = nextTop;
-    };
-
-    const handleDesktopWheel = (event) => {
-      const deltaY = normalizeWheelDelta(event);
-
-      if (
-        !desktopQuery.matches ||
-        event.ctrlKey ||
-        Math.abs(deltaY) < 0.01 ||
-        document.body.classList.contains("no-scroll") ||
-        document.documentElement.classList.contains("modal-scroll-lock") ||
-        targetHasScrollableParent(event.target, deltaY)
-      ) {
-        return;
-      }
-
-      if (event.cancelable) {
-        event.preventDefault();
-      }
-
-      keepManualScrollModeActive();
-      pendingDeltaY += deltaY;
-
-      if (!rafId) {
-        rafId = requestAnimationFrame(flushWheelScroll);
-      }
-    };
-
-    window.addEventListener("wheel", handleDesktopWheel, {
-      capture: true,
-      passive: false,
-    });
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      if (wheelIdleTimer) window.clearTimeout(wheelIdleTimer);
-      document.documentElement.classList.remove("manual-wheel-scroll");
-      window.removeEventListener("wheel", handleDesktopWheel, {
-        capture: true,
-      });
     };
   }, []);
 
@@ -401,117 +440,9 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    const sectionIds = ["home", "about", "experience", "projects", "contact"];
-    const getSections = () =>
-      Array.from(document.querySelectorAll("section[id]"));
-
-    let sections = getSections();
-    let rafId = 0;
-    let headerHeight = 60;
-
-    const readHeaderHeight = () => {
-      const headerVar = getComputedStyle(document.documentElement)
-        .getPropertyValue("--header-height")
-        .trim();
-      headerHeight = parseInt(headerVar || "60", 10) || 60;
-    };
-
-    const updateActiveSectionFromViewport = () => {
-      if (!sections.length) return;
-
-      const viewportHeight = window.innerHeight || 1;
-      const viewportCenter = viewportHeight / 2;
-      const bandOffset = viewportHeight * 0.1; // 20% band around center
-      const originalBandTop = viewportCenter - bandOffset;
-      const bandTop = Math.min(originalBandTop, headerHeight);
-      const bandBottom = viewportCenter + bandOffset;
-
-      const measurements = sections
-        .map((section) => {
-          const rect = section.getBoundingClientRect();
-          const intersects = rect.bottom > 0 && rect.top < viewportHeight;
-          if (!intersects) return null;
-
-          const center = rect.top + rect.height / 2;
-          const distance = Math.abs(center - viewportCenter);
-          const inBand = center >= bandTop && center <= bandBottom;
-
-          return {
-            id: section.id,
-            distance,
-            inBand,
-          };
-        })
-        .filter(Boolean);
-
-      if (!measurements.length) return;
-
-      const bandCandidates = measurements.filter((m) => m.inBand);
-      const candidates = bandCandidates.length ? bandCandidates : measurements;
-
-      const best = candidates.reduce((closest, current) => {
-        if (!closest || current.distance < closest.distance) {
-          return current;
-        }
-        return closest;
-      }, null);
-
-      if (best) {
-        setActiveSection((prev) => (prev === best.id ? prev : best.id));
-      }
-    };
-
-    const scheduleUpdate = () => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => {
-        rafId = 0;
-        updateActiveSectionFromViewport();
-      });
-    };
-
-    const refreshSections = () => {
-      sections = getSections();
-      scheduleUpdate();
-      return sectionIds.every((id) => document.getElementById(id));
-    };
-
-    const mutationObserver = new MutationObserver(() => {
-      if (refreshSections()) {
-        mutationObserver.disconnect();
-      }
-    });
-
-    const main = document.querySelector("main") || document.body;
-    mutationObserver.observe(main, {
-      childList: true,
-      subtree: true,
-    });
-
-    const handleResize = () => {
-      readHeaderHeight();
-      scheduleUpdate();
-    };
-
-    window.addEventListener("scroll", scheduleUpdate, {
-      passive: true,
-    });
-    window.addEventListener("resize", handleResize);
-
-    readHeaderHeight();
-    refreshSections();
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      mutationObserver.disconnect();
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   return (
     <div className="App">
-      <Header activeSection={activeSection} />
+      <Header activeSection={activeSection} isHidden={headerHidden} />
       <ParticlesBackground />
       <main>
         <Home />

@@ -154,11 +154,6 @@ body {
   scroll-behavior: smooth;
 }
 
-html.manual-wheel-scroll,
-html.manual-wheel-scroll body {
-  scroll-behavior: auto !important;
-}
-
 body {
   background-color: var(--color-bg);
   min-height: 100dvh;
