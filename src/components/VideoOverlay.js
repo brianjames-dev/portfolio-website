@@ -13,6 +13,7 @@ function VideoOverlay({ isOpen, video, onClose }) {
     previouslyFocusedRef.current = document.activeElement;
     const y = window.scrollY;
     document.body.classList.add("no-scroll");
+    document.body.classList.add("video-overlay-open");
     document.body.style.top = `-${y}px`;
 
     const focusTimer = window.setTimeout(() => {
@@ -53,6 +54,7 @@ function VideoOverlay({ isOpen, video, onClose }) {
       document.removeEventListener("keydown", handleKeyDown);
       const prevY = parseInt(document.body.style.top || "0", 10) * -1;
       document.body.classList.remove("no-scroll");
+      document.body.classList.remove("video-overlay-open");
       document.body.style.top = "";
       window.scrollTo(0, prevY);
       previouslyFocusedRef.current?.focus?.();

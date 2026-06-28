@@ -220,6 +220,7 @@
     align-items: center;
     min-height: 100lvh;
     margin-top: 0;
+    padding: 12px 10px 0;
     scroll-margin-top: 0px;
     background:
       linear-gradient(var(--surface-card), var(--surface-card)) padding-box,
@@ -379,4 +380,73 @@
   box-shadow: var(--shadow-soft);
   border: 1px solid transparent;
   margin: 0 auto 20px auto;
+}
+
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 950px) {
+  .home-card,
+  [data-theme="dark"] .home-card,
+  [data-theme="light"] .home-card {
+    max-width: calc(100vw - 24px);
+    padding: 10px 12px 8px;
+    margin: 0 auto 12px;
+  }
+
+  .home-content {
+    align-items: center;
+  }
+
+  .home-left {
+    flex: 0 0 150px;
+  }
+
+  .home-left .avatar {
+    width: 132px;
+  }
+
+  .home-right {
+    padding-left: 12px;
+    padding-bottom: 10px;
+  }
+
+  .home-right .greeting,
+  .home-right .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .home-right .name {
+    font-size: 1.65rem;
+  }
+
+  .home-right .description {
+    min-width: 0;
+    padding-top: 12px;
+    font-size: 0.86rem;
+    line-height: 1.35;
+  }
+
+  .home-under-line {
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .home-action-link {
+    min-height: 34px;
+    padding: 6px 10px;
+    font-size: 0.88rem;
+  }
+
+  .home-action-link img,
+  .home-action-link .button-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .home-social-links {
+    gap: 10px;
+  }
+
+  .icon-wrapper {
+    width: 32px;
+    height: 32px;
+  }
 }

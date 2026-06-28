@@ -8,7 +8,12 @@
   --video-overlay-gap: clamp(24px, 8vh, 160px);
   padding: var(--video-overlay-gap);
   transition: padding 0.25s ease;
-  z-index: 9999;
+  z-index: 12000;
+}
+
+body.video-overlay-open .site-header {
+  pointer-events: none;
+  transform: translateY(-100%);
 }
 
 .video-overlay-card {
@@ -87,5 +92,40 @@
   .video-overlay-close-icon {
     width: 22px;
     height: 22px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .video-overlay {
+    --video-overlay-gap: 8px;
+    padding: 8px;
+    align-items: stretch;
+  }
+
+  .video-overlay-card {
+    width: min(100%, calc((100vh - 16px) * 16 / 9));
+    max-height: calc(100vh - 16px);
+    align-self: center;
+    margin: auto;
+    padding: 8px;
+    border-radius: var(--radius-sm);
+  }
+
+  .video-embed {
+    max-height: calc(100vh - 32px);
+    border-radius: var(--radius-sm);
+  }
+
+  .video-overlay-close {
+    top: 8px;
+    right: 8px;
+    padding: 6px;
+    z-index: 1;
+    background: rgba(9, 15, 19, 0.82);
+  }
+
+  .video-overlay-close-icon {
+    width: 20px;
+    height: 20px;
   }
 }

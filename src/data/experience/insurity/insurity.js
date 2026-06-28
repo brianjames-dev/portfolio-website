@@ -7,6 +7,7 @@ const insurity = {
   logo: {
     src: "/img/logos/insurity.jpg",
     alt: "Insurity logo",
+    className: "experience-logo-frame--insurity",
   },
   description:
     "Built AI tools that made database monitoring easier by helping teams spot slow queries, review performance issues, and identify better indexing opportunities faster. Also built an end-to-end appraisal system with a third-party-agnostic AWS middleware layer, making it easier for brokers and MGAs to send out appraisals without managing the process manually.",

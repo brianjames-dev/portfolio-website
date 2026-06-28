@@ -40,7 +40,17 @@ function ExpandedCard({
         <div className="expanded-title-row">
           <div className={`expanded-title-block ${logo ? "has-logo" : ""}`}>
             {logo && (
-              <img className="experience-logo" src={logo.src} alt={logo.alt} />
+              <span
+                className={["experience-logo-frame", logo.className]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                <img
+                  className="experience-logo"
+                  src={logo.src}
+                  alt={logo.alt}
+                />
+              </span>
             )}
             <div className="expanded-title-copy">
               <h3>{project.expanded?.title}</h3>

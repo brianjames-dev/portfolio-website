@@ -8,9 +8,9 @@ import snoozeai from "./snoozeAI/snoozeAI.js";
 import taskChecklist from "./taskChecklist/taskChecklist.js";
 
 const projects = [
-  snoozeai,
-  marketscope,
   bookiebot,
+  marketscope,
+  snoozeai,
   serverlessPortfolio,
   nesEmulator,
   taskChecklist,

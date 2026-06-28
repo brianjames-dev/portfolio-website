@@ -24,7 +24,13 @@ function CollapsedCard({
       <div className="project-header">
         <div className={`project-title-block ${logo ? "has-logo" : ""}`}>
           {logo && (
-            <img className="experience-logo" src={logo.src} alt={logo.alt} />
+            <span
+              className={["experience-logo-frame", logo.className]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              <img className="experience-logo" src={logo.src} alt={logo.alt} />
+            </span>
           )}
           <div className="project-title-copy">
             <h3 className="title">{project.title}</h3>

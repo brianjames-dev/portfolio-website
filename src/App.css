@@ -357,6 +357,26 @@ section.projects {
   }
 }
 
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 950px) {
+  :root {
+    --header-height: 52px;
+  }
+
+  section {
+    min-height: auto;
+    align-items: flex-start;
+  }
+
+  section.home {
+    min-height: auto;
+    align-items: flex-start;
+  }
+
+  .container {
+    padding: 12px;
+  }
+}
+
 /* Smooth theme transitions for common surfaces */
 body,
 section,
