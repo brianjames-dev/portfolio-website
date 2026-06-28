@@ -183,10 +183,12 @@ export default function Card({
         },
       }}
       style={{
-        width: isExpanded ? "1000px" : "800px", // Explicit width animation
+        width: isExpanded
+          ? "var(--expanded-card-width, 1000px)"
+          : "var(--collapsed-card-width, 800px)",
         maxWidth: "100%", // Ensure responsiveness
         height: shouldReduceMotion ? "auto" : springHeight,
-        margin: "20px auto",
+        margin: "var(--card-block-gap, 20px) auto",
       }}
     >
       <div ref={contentRef}>

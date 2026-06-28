@@ -2,7 +2,7 @@
 .contact-section {
   display: flex;
   justify-content: center;
-  padding: 60px 12px 0px;
+  padding: 60px var(--page-card-gutter, 20px) var(--card-block-gap, 20px);
 }
 
 .contact-card {
@@ -306,11 +306,12 @@
 @media (orientation: landscape) and (max-height: 500px) and (max-width: 950px) {
   .contact-section {
     align-items: flex-start;
-    padding: calc(var(--header-height) + 12px) 10px 0;
+    padding: calc(var(--header-height) + var(--card-block-gap, 16px))
+      var(--page-card-gutter, 16px) var(--card-block-gap, 16px);
   }
 
   .contact-card {
-    max-width: calc(100vw - 24px);
+    max-width: calc(100vw - (var(--page-card-gutter, 16px) * 2));
     padding: 16px 12px 18px;
   }
 }

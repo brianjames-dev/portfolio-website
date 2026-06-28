@@ -50,6 +50,10 @@
   --radius-lg: 10px;
   --on-surface: var(--color-text);
   --button-text: #ffffff;
+  --page-card-gutter: 20px;
+  --card-block-gap: 20px;
+  --collapsed-card-width: 800px;
+  --expanded-card-width: 1000px;
 }
 
 [data-theme="dark"] {
@@ -259,7 +263,7 @@ h3 {
 .container {
   max-width: 800px;
   margin: auto;
-  padding: 20px;
+  padding: var(--page-card-gutter);
 }
 
 .projects .container {
@@ -345,12 +349,18 @@ section.projects {
 
 /* ========== Mobile Styles ========== */
 @media (max-width: 600px) {
+  :root {
+    --page-card-gutter: 16px;
+    --card-block-gap: 16px;
+  }
+
   section {
     min-height: 100lvh;
   }
 
   section.home {
     min-height: 100lvh;
+    padding-top: calc(var(--header-height) + var(--page-card-gutter));
     align-items: flex-start;
   }
 
@@ -367,6 +377,11 @@ section.projects {
 @media (orientation: landscape) and (max-height: 700px) and (max-width: 1100px) {
   :root {
     --header-height: 52px;
+    --page-card-gutter: 16px;
+    --card-block-gap: 16px;
+    --collapsed-card-width: calc(
+      100vw - (var(--page-card-gutter, 16px) * 2)
+    );
     --landscape-title-text: 1.12rem;
     --landscape-subtitle-text: 0.78rem;
     --landscape-body-text: 0.78rem;
@@ -383,10 +398,11 @@ section.projects {
   section.home {
     min-height: auto;
     align-items: flex-start;
+    padding-top: calc(var(--header-height) + var(--page-card-gutter));
   }
 
   .container {
-    padding: 12px;
+    padding: var(--page-card-gutter);
   }
 
   .project-header-card {

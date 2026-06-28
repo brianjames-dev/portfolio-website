@@ -25,31 +25,67 @@ function Header({ activeSection }) {
     const root = document.documentElement;
 
     let lastScrollY = window.scrollY;
-    const threshold = 10;
+    let scrollDistance = 0;
+    let scrollDirection = 0;
+    let isHidden = header.classList.contains("hidden");
+    const topThreshold = 12;
+    const hideThreshold = 48;
+    const showThreshold = 24;
+
+    const showHeader = () => {
+      header.classList.remove("hidden");
+      root.classList.remove("header-hidden");
+      isHidden = false;
+    };
+
+    const hideHeader = () => {
+      header.classList.add("hidden");
+      root.classList.add("header-hidden");
+      isHidden = true;
+      setMenuOpen(false);
+    };
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const scrollDelta = currentScrollY - lastScrollY;
 
-      // Always show header when near the very top (mobile bounce, refreshed page, etc.)
-      if (currentScrollY <= threshold) {
-        header.classList.remove("hidden");
-        root.classList.remove("header-hidden");
+      if (
+        root.classList.contains("modal-scroll-lock") ||
+        document.body.classList.contains("video-overlay-open")
+      ) {
         lastScrollY = currentScrollY;
+        scrollDistance = 0;
         return;
       }
 
-      if (Math.abs(scrollDelta) < threshold) return;
+      // Always show header when near the very top (mobile bounce, refreshed page, etc.)
+      if (currentScrollY <= topThreshold) {
+        showHeader();
+        lastScrollY = currentScrollY;
+        scrollDistance = 0;
+        return;
+      }
 
-      if (scrollDelta > 0) {
-        // Scrolling down
-        header.classList.add("hidden");
-        root.classList.add("header-hidden");
-        setMenuOpen(false);
-      } else {
-        // Scrolling up
-        header.classList.remove("hidden");
-        root.classList.remove("header-hidden");
+      if (Math.abs(scrollDelta) < 2) return;
+
+      const nextDirection = scrollDelta > 0 ? 1 : -1;
+      if (nextDirection !== scrollDirection) {
+        scrollDirection = nextDirection;
+        scrollDistance = 0;
+      }
+
+      scrollDistance += Math.abs(scrollDelta);
+
+      if (!isHidden && scrollDirection > 0 && scrollDistance >= hideThreshold) {
+        hideHeader();
+        scrollDistance = 0;
+      } else if (
+        isHidden &&
+        scrollDirection < 0 &&
+        scrollDistance >= showThreshold
+      ) {
+        showHeader();
+        scrollDistance = 0;
       }
 
       lastScrollY = currentScrollY;
