@@ -222,7 +222,7 @@ function ExpandedCard({
                 onFocus={() => import("../components/Gallery")}
                 onClick={(e) => {
                   e.stopPropagation();
-                  onGalleryClick(project.images);
+                  onGalleryClick(project.images, e.currentTarget);
                 }}
               >
                 <IconGlyph name="gallery" className="button-icon" />
@@ -270,16 +270,18 @@ function ExpandedCard({
               </button>
             )}
             {hasGithub && (
-              <button
+              <a
                 className="expanded-top-button"
+                href={project.expanded.github}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={(e) => {
                   e.stopPropagation();
-                  window.open(project.expanded.github, "_blank");
                 }}
               >
                 <IconGlyph name="github" className="button-icon" />
                 GitHub
-              </button>
+              </a>
             )}
           </div>
         )}
@@ -396,7 +398,7 @@ function ExpandedCard({
             onFocus={() => import("../components/Gallery")}
             onClick={(e) => {
               e.stopPropagation();
-              onGalleryClick(project.images);
+              onGalleryClick(project.images, e.currentTarget);
             }}
           >
             <IconGlyph name="gallery" className="button-icon" />

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useCallback, useRef, useState } from "react";
 import Card from "../components/Card";
 import CollapsedCard from "../components/CollapsedCard";
 import ExpandedCard from "../components/ExpandedCard";
@@ -17,12 +17,37 @@ function Experience() {
   const [pendingImages, setPendingImages] = useState(null);
   const [isGateOpen, setIsGateOpen] = useState(false);
   const [activeDemo, setActiveDemo] = useState(null);
+  const galleryReturnTargetRef = useRef(null);
+  const pendingSourceRef = useRef(null);
 
   const { isExpanded, toggle } = useCardExpansion();
   const { isUnlocked, unlock } = useGalleryLock();
 
-  const openGallery = (images) => {
+  const scrollGalleryTargetIntoView = useCallback(() => {
+    const target = galleryReturnTargetRef.current;
+    galleryReturnTargetRef.current = null;
+    if (!target || !document.body.contains(target)) return;
+
+    const headerVar = getComputedStyle(document.documentElement)
+      .getPropertyValue("--header-height")
+      .trim();
+    const headerOffset = parseInt(headerVar || "60", 10) || 60;
+    const targetTop =
+      target.getBoundingClientRect().top + window.pageYOffset - headerOffset - 8;
+
+    window.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: "smooth",
+    });
+  }, []);
+
+  const openGallery = (images, sourceElement) => {
     import("../components/Gallery");
+    galleryReturnTargetRef.current =
+      sourceElement?.closest?.(".project-card") ||
+      pendingSourceRef.current ||
+      null;
+    pendingSourceRef.current = null;
     setFullscreenImages(images);
     setFullscreenIndex(0);
   };
@@ -32,24 +57,27 @@ function Experience() {
     setActiveDemo(video);
   };
 
-  const onLockedAction = (action, isLocked, payload) => {
+  const onLockedAction = (action, isLocked, payload, sourceElement) => {
     if (!isLocked) {
-      action(payload);
+      action(payload, sourceElement);
       return;
     }
 
     if (isUnlocked) {
-      action(payload);
+      action(payload, sourceElement);
       return;
     }
 
     setPendingImages(payload);
+    pendingSourceRef.current =
+      sourceElement?.closest?.(".project-card") || null;
     setIsGateOpen(true);
   };
 
   const handleGateClose = () => {
     setIsGateOpen(false);
     setPendingImages(null);
+    pendingSourceRef.current = null;
   };
 
   const handleUnlock = async (password) => {
@@ -87,8 +115,13 @@ function Experience() {
               <CollapsedCard
                 project={exp}
                 onExpand={onExpand}
-                onGalleryClick={() =>
-                  onLockedAction(openGallery, exp.galleryLocked, exp.images)
+                onGalleryClick={(images, sourceElement) =>
+                  onLockedAction(
+                    openGallery,
+                    exp.galleryLocked,
+                    images,
+                    sourceElement
+                  )
                 }
                 isGalleryLocked={exp.galleryLocked && !isUnlocked}
                 isLockable={exp.galleryLocked}
@@ -102,8 +135,13 @@ function Experience() {
             renderExpanded={({ onClose, onCloseAndScroll }) => (
               <ExpandedCard
                 project={exp}
-                onGalleryClick={() =>
-                  onLockedAction(openGallery, exp.galleryLocked, exp.images)
+                onGalleryClick={(images, sourceElement) =>
+                  onLockedAction(
+                    openGallery,
+                    exp.galleryLocked,
+                    images,
+                    sourceElement
+                  )
                 }
                 isGalleryLocked={exp.galleryLocked && !isUnlocked}
                 isLockable={exp.galleryLocked}
@@ -141,6 +179,7 @@ function Experience() {
           onClose={() => {
             setFullscreenImages([]);
             setFullscreenIndex(null);
+            window.setTimeout(scrollGalleryTargetIntoView, 80);
           }}
         />
       </Suspense>

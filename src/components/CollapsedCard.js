@@ -83,7 +83,7 @@ function CollapsedCard({
               onFocus={() => import("../components/Gallery")}
               onClick={(e) => {
                 e.stopPropagation();
-                onGalleryClick(project.images);
+                onGalleryClick(project.images, e.currentTarget);
               }}
             >
               <IconGlyph name="gallery" className="button-icon" />

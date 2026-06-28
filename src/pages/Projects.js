@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useCallback, useRef, useState } from "react";
 import Card from "../components/Card";
 import CollapsedCard from "../components/CollapsedCard";
 import ExpandedCard from "../components/ExpandedCard";
@@ -11,16 +11,37 @@ const Gallery = lazy(() => import("../components/Gallery"));
 function Projects() {
   const [fullscreenIndex, setFullscreenIndex] = useState(null);
   const [fullscreenImages, setFullscreenImages] = useState([]);
+  const galleryReturnTargetRef = useRef(null);
   const { isExpanded, toggle } = useCardExpansion();
 
-  const openGallery = (images) => {
+  const scrollGalleryTargetIntoView = useCallback(() => {
+    const target = galleryReturnTargetRef.current;
+    galleryReturnTargetRef.current = null;
+    if (!target || !document.body.contains(target)) return;
+
+    const headerVar = getComputedStyle(document.documentElement)
+      .getPropertyValue("--header-height")
+      .trim();
+    const headerOffset = parseInt(headerVar || "60", 10) || 60;
+    const targetTop =
+      target.getBoundingClientRect().top + window.pageYOffset - headerOffset - 8;
+
+    window.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: "smooth",
+    });
+  }, []);
+
+  const openGallery = (images, sourceElement) => {
     import("../components/Gallery");
+    galleryReturnTargetRef.current =
+      sourceElement?.closest?.(".project-card") || null;
     setFullscreenImages(images);
     setFullscreenIndex(0);
   };
 
-  const onGalleryClick = (images) => {
-    openGallery(images);
+  const onGalleryClick = (images, sourceElement) => {
+    openGallery(images, sourceElement);
   };
 
   return (
@@ -43,14 +64,18 @@ function Projects() {
               <CollapsedCard
                 project={proj}
                 onExpand={onExpand}
-                onGalleryClick={() => onGalleryClick(proj.images)}
+                onGalleryClick={(images, sourceElement) =>
+                  onGalleryClick(images, sourceElement)
+                }
                 isGalleryLocked={false}
               />
             )}
             renderExpanded={({ onClose, onCloseAndScroll }) => (
               <ExpandedCard
                 project={proj}
-                onGalleryClick={() => onGalleryClick(proj.images)}
+                onGalleryClick={(images, sourceElement) =>
+                  onGalleryClick(images, sourceElement)
+                }
                 isGalleryLocked={false}
                 handleClose={onClose}
                 handleCloseAndScroll={onCloseAndScroll}
@@ -69,6 +94,7 @@ function Projects() {
           onClose={() => {
             setFullscreenImages([]);
             setFullscreenIndex(null);
+            window.setTimeout(scrollGalleryTargetIntoView, 80);
           }}
         />
       </Suspense>

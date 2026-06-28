@@ -349,8 +349,8 @@
   }
 
   .home-divider {
-    transform: scale(80%);
-    transform-origin: top center;
+    width: calc(100% - 10px);
+    margin-inline: auto;
   }
 
   .home-under-line {
