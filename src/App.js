@@ -130,9 +130,23 @@ function App() {
     const desktopQuery = window.matchMedia("(min-width: 601px)");
     let rafId = 0;
     let pendingDeltaY = 0;
+    let wheelIdleTimer = 0;
 
     const getScrollElement = () =>
       document.scrollingElement || document.documentElement;
+
+    const keepManualScrollModeActive = () => {
+      document.documentElement.classList.add("manual-wheel-scroll");
+
+      if (wheelIdleTimer) {
+        window.clearTimeout(wheelIdleTimer);
+      }
+
+      wheelIdleTimer = window.setTimeout(() => {
+        document.documentElement.classList.remove("manual-wheel-scroll");
+        wheelIdleTimer = 0;
+      }, 120);
+    };
 
     const targetHasScrollableParent = (target, deltaY) => {
       let node = target instanceof Element ? target : target?.parentElement;
@@ -203,7 +217,11 @@ function App() {
         return;
       }
 
-      event.preventDefault();
+      if (event.cancelable) {
+        event.preventDefault();
+      }
+
+      keepManualScrollModeActive();
       pendingDeltaY += deltaY;
 
       if (!rafId) {
@@ -218,6 +236,8 @@ function App() {
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
+      if (wheelIdleTimer) window.clearTimeout(wheelIdleTimer);
+      document.documentElement.classList.remove("manual-wheel-scroll");
       window.removeEventListener("wheel", handleDesktopWheel, {
         capture: true,
       });
