@@ -99,7 +99,7 @@
     color: var(--button-text);
     box-shadow: var(--shadow-soft);
     pointer-events: auto;
-    touch-action: manipulation;
+    touch-action: none;
     -webkit-tap-highlight-color: transparent;
     transform: translateZ(0);
     transition:

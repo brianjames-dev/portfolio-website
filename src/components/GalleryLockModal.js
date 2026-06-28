@@ -38,6 +38,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
 
   useEffect(() => {
     if (!isOpen) return;
+    const y = window.scrollY;
     setPassword("");
     setUnlockError("");
     setUnlockLoading(false);
@@ -60,10 +61,19 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
 
     document.addEventListener("keydown", handleKeyDown);
     document.body.classList.add("no-scroll");
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${y}px`;
+    document.body.style.width = "100%";
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.classList.remove("no-scroll");
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      window.requestAnimationFrame(() => {
+        window.scrollTo(0, y);
+      });
     };
   }, [isOpen, onClose]);
 

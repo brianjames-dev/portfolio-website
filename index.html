@@ -36,6 +36,21 @@
     />
 
     <style>
+      html {
+        background: #f5f8f4;
+        color: #17211b;
+        color-scheme: light;
+      }
+      html[data-theme="dark"] {
+        background: #0f1711;
+        color: #eff7f0;
+        color-scheme: dark;
+      }
+      html[data-theme="dark"] body,
+      html[data-theme="dark"] #root {
+        background: #0f1711;
+        color: #eff7f0;
+      }
       @font-face {
         font-family: "Mulish";
         font-style: normal;
@@ -100,33 +115,16 @@
           document.documentElement.style.colorScheme = "light";
         }
 
-        try {
-          if ("scrollRestoration" in history) {
-            history.scrollRestoration = "manual";
-          }
-
-          var navEntry =
-            performance.getEntriesByType &&
-            performance.getEntriesByType("navigation")[0];
-          window.__PORTFOLIO_INITIAL_NAVIGATION__ = {
-            type: navEntry ? navEntry.type : "navigate",
-            savedScrollY: Number(
-              sessionStorage.getItem("portfolio:lastScrollY") || 0
-            ),
-          };
-
-          window.addEventListener("pagehide", function () {
-            sessionStorage.setItem(
-              "portfolio:lastScrollY",
-              String(window.scrollY || 0)
-            );
-          });
-        } catch (e) {
-          window.__PORTFOLIO_INITIAL_NAVIGATION__ = {
-            type: "navigate",
-            savedScrollY: 0,
-          };
+        if ("scrollRestoration" in history) {
+          history.scrollRestoration = "manual";
         }
+
+        var navEntry =
+          performance.getEntriesByType &&
+          performance.getEntriesByType("navigation")[0];
+        window.__PORTFOLIO_INITIAL_NAVIGATION__ = {
+          type: navEntry ? navEntry.type : "navigate",
+        };
       })();
     </script>
 

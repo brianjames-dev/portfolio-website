@@ -265,7 +265,7 @@
   .home-card {
     justify-content: center;
     align-items: center;
-    min-height: 100lvh;
+    min-height: 100svh;
     margin-top: 0;
     padding: 12px 10px 0;
     scroll-margin-top: 0px;

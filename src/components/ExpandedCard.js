@@ -38,6 +38,7 @@ function ExpandedCard({
   const shouldReduceMotion = useReducedMotion();
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
   const blockRef = useRef(null);
+  const lastScrollTopActivationRef = useRef(0);
   const hasGallery =
     (project.images?.length || 0) > 0 || Boolean(showGalleryButton);
   const hasDemo = Boolean(showDemoButton);
@@ -96,6 +97,17 @@ function ExpandedCard({
 
   const scrollToCardTop = useCallback(
     (event) => {
+      const now = Date.now();
+      if (
+        event?.type === "click" &&
+        now - lastScrollTopActivationRef.current < 350
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+
+      lastScrollTopActivationRef.current = now;
       event?.preventDefault?.();
       event?.stopPropagation?.();
       const block = blockRef.current;
@@ -123,8 +135,8 @@ function ExpandedCard({
             className="expanded-scroll-top-button"
             aria-label="Scroll to top of card"
             onClick={scrollToCardTop}
-            onPointerDown={scrollToCardTop}
-            onTouchStart={scrollToCardTop}
+            onPointerDownCapture={scrollToCardTop}
+            onTouchStartCapture={scrollToCardTop}
             initial={
               shouldReduceMotion ? false : { opacity: 0, y: -8, scale: 0.92 }
             }

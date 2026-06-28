@@ -12,7 +12,11 @@
 }
 
 section#contact.contact-section {
-  min-height: auto;
+  min-height: auto !important;
+  height: auto !important;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: visible;
 }
 
 .contact-card {
@@ -336,15 +340,17 @@ section#contact.contact-section {
 @media (max-width: 600px) {
   section#contact.contact-section {
     min-height: auto !important;
+    height: auto !important;
     justify-content: flex-start;
-  }
-
-  .contact-section {
     padding-top: var(--page-card-gutter, 16px);
     padding-bottom: max(
       var(--page-card-gutter, 16px),
       env(safe-area-inset-bottom, 0px)
     );
+  }
+
+  .contact-section {
+    min-height: auto !important;
   }
 
   .contact-card {

@@ -39,10 +39,10 @@ function Projects() {
             isExpanded={isExpanded(proj.id)}
             onToggle={() => toggle(proj.id)}
             canExpand={!!proj.expanded} // Pass expandability based on expanded content
-            renderCollapsed={() => (
+            renderCollapsed={({ onExpand }) => (
               <CollapsedCard
                 project={proj}
-                onExpand={() => toggle(proj.id)}
+                onExpand={onExpand}
                 onGalleryClick={() => onGalleryClick(proj.images)}
                 isGalleryLocked={false}
               />

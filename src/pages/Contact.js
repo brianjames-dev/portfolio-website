@@ -131,7 +131,7 @@ function Contact() {
         </div>
       </RevealOnView>
 
-      <RevealOnView className="contact-card" delay={0.05}>
+      <RevealOnView className="contact-card" delay={0.05} distance={0}>
         <div className="contact-left">
           <p>
             Feel free to fill out the form below to send me a message, or

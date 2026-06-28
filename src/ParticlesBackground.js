@@ -23,12 +23,17 @@ const LazyParticles = lazy(() =>
 );
 
 function ParticlesBackground() {
+  const initialDarkMode =
+    typeof document !== "undefined" &&
+    document.documentElement.getAttribute("data-theme") === "dark";
   const [engineReady, setEngineReady] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [backgroundColor, setBackgroundColor] = useState("#f5f8f4");
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [backgroundColor, setBackgroundColor] = useState(
+    initialDarkMode ? "#0f1711" : "#f5f8f4"
+  );
+  const [isDarkMode, setIsDarkMode] = useState(initialDarkMode);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {

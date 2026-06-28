@@ -83,10 +83,10 @@ function Experience() {
             isExpanded={isExpanded(exp.id)}
             onToggle={() => toggle(exp.id)}
             canExpand={!!exp.expanded} // Pass expandability based on expanded content
-            renderCollapsed={() => (
+            renderCollapsed={({ onExpand }) => (
               <CollapsedCard
                 project={exp}
-                onExpand={() => toggle(exp.id)}
+                onExpand={onExpand}
                 onGalleryClick={() =>
                   onLockedAction(openGallery, exp.galleryLocked, exp.images)
                 }

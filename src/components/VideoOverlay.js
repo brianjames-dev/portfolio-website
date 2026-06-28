@@ -34,6 +34,9 @@ function VideoOverlay({ isOpen, video, onClose }) {
     document.documentElement.classList.add("modal-scroll-lock");
     document.body.classList.add("no-scroll");
     document.body.classList.add("video-overlay-open");
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${y}px`;
+    document.body.style.width = "100%";
 
     const setViewportVars = () => {
       const viewport = window.visualViewport;
@@ -76,7 +79,11 @@ function VideoOverlay({ isOpen, video, onClose }) {
     });
 
     const focusTimer = window.setTimeout(() => {
-      closeButtonRef.current?.focus();
+      try {
+        closeButtonRef.current?.focus({ preventScroll: true });
+      } catch (error) {
+        closeButtonRef.current?.focus();
+      }
     }, 0);
 
     const handleKeyDown = (event) => {
@@ -125,8 +132,17 @@ function VideoOverlay({ isOpen, video, onClose }) {
       document.documentElement.classList.remove("modal-scroll-lock");
       document.body.classList.remove("no-scroll");
       document.body.classList.remove("video-overlay-open");
-      window.scrollTo(0, prevY || y);
-      previouslyFocusedRef.current?.focus?.();
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      window.requestAnimationFrame(() => {
+        window.scrollTo(0, prevY || y);
+        try {
+          previouslyFocusedRef.current?.focus?.({ preventScroll: true });
+        } catch (error) {
+          previouslyFocusedRef.current?.focus?.();
+        }
+      });
     };
   }, [isOpen]);
 

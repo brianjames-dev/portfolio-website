@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import "./App.css";
 import ParticlesBackground from "./ParticlesBackground";
 import About from "./pages/About";
@@ -11,191 +11,31 @@ import Projects from "./pages/Projects";
 function App() {
   const [activeSection, setActiveSection] = useState("home");
 
-  useEffect(() => {
-    const root = document.documentElement;
-    const readyTimer = requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        root.classList.add("theme-ready");
-      });
-    });
+  useLayoutEffect(() => {
+    const initialNavigation = window.__PORTFOLIO_INITIAL_NAVIGATION__ || {};
+    const headerVar = getComputedStyle(document.documentElement)
+      .getPropertyValue("--header-height")
+      .trim();
+    const headerOffset = parseInt(headerVar || "60", 10) || 60;
 
-    return () => cancelAnimationFrame(readyTimer);
+    if (window.location.hash) {
+      const target = document.getElementById(window.location.hash.slice(1));
+      if (target) {
+        const top = target.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo(0, Math.max(0, top - headerOffset));
+      }
+      return;
+    }
+
+    if (initialNavigation.type === "reload") {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
-
-    let rafId = 0;
-    const saveScrollPositionNow = () => {
-      try {
-        sessionStorage.setItem(
-          "portfolio:lastScrollY",
-          String(window.scrollY || 0)
-        );
-      } catch (e) {
-        /* no-op */
-      }
-    };
-
-    const saveScrollPosition = () => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => {
-        rafId = 0;
-        saveScrollPositionNow();
-      });
-    };
-
-    window.addEventListener("scroll", saveScrollPosition, { passive: true });
-    window.addEventListener("pagehide", saveScrollPositionNow);
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      window.removeEventListener("scroll", saveScrollPosition);
-      window.removeEventListener("pagehide", saveScrollPositionNow);
-    };
-  }, []);
-
-  useEffect(() => {
-    const initialNavigation = window.__PORTFOLIO_INITIAL_NAVIGATION__ || {};
-    if (initialNavigation.type === "back_forward") return undefined;
-
-    const shouldTrackLazySections =
-      initialNavigation.type === "reload" || Boolean(window.location.hash);
-    const getMaxScroll = () =>
-      Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-
-    const getTargetScrollY = () => {
-      if (initialNavigation.type === "reload") {
-        return Math.min(
-          Math.max(0, Number(initialNavigation.savedScrollY) || 0),
-          getMaxScroll()
-        );
-      }
-
-      if (window.location.hash) {
-        const target = document.getElementById(window.location.hash.slice(1));
-        if (target) {
-          const headerVar = getComputedStyle(document.documentElement)
-            .getPropertyValue("--header-height")
-            .trim();
-          const headerOffset = parseInt(headerVar || "60", 10) || 60;
-          return Math.min(
-            Math.max(
-              0,
-              target.getBoundingClientRect().top +
-                window.pageYOffset -
-                headerOffset
-            ),
-            getMaxScroll()
-          );
-        }
-      }
-
-      return 0;
-    };
-
-    let cancelled = false;
-    let userInteracted = false;
-    const cancelStartupRestore = () => {
-      userInteracted = true;
-      timers.forEach((timer) => window.clearTimeout(timer));
-    };
-
-    const restoreScroll = () => {
-      if (cancelled || userInteracted) return;
-      window.scrollTo(0, getTargetScrollY());
-    };
-
-    const restoreDelays = shouldTrackLazySections
-      ? [0, 80, 180, 360]
-      : [0];
-    const timers = restoreDelays.map((delay) =>
-      window.setTimeout(restoreScroll, delay)
-    );
-
-    window.addEventListener("wheel", cancelStartupRestore, { passive: true });
-    window.addEventListener("touchstart", cancelStartupRestore, {
-      passive: true,
-    });
-    window.addEventListener("pointerdown", cancelStartupRestore, {
-      passive: true,
-    });
-    window.addEventListener("keydown", cancelStartupRestore);
-
-    return () => {
-      cancelled = true;
-      timers.forEach((timer) => window.clearTimeout(timer));
-      window.removeEventListener("wheel", cancelStartupRestore);
-      window.removeEventListener("touchstart", cancelStartupRestore);
-      window.removeEventListener("pointerdown", cancelStartupRestore);
-      window.removeEventListener("keydown", cancelStartupRestore);
-    };
-  }, []);
-
-  useEffect(() => {
-    const coarsePointerQuery = window.matchMedia(
-      "(hover: none), (pointer: coarse)"
-    );
-    let startY = 0;
-
-    const hasScrollableAncestor = (target, deltaY) => {
-      let node = target;
-      while (node && node !== document.body && node !== document.documentElement) {
-        const style = window.getComputedStyle(node);
-        const canScroll = /(auto|scroll)/.test(style.overflowY);
-        if (canScroll && node.scrollHeight > node.clientHeight) {
-          const atTop = node.scrollTop <= 0;
-          const atBottom =
-            node.scrollTop + node.clientHeight >= node.scrollHeight - 1;
-          if ((deltaY > 0 && !atTop) || (deltaY < 0 && !atBottom)) {
-            return true;
-          }
-        }
-        node = node.parentElement;
-      }
-      return false;
-    };
-
-    const handleTouchStart = (event) => {
-      if (!coarsePointerQuery.matches || event.touches.length !== 1) return;
-      startY = event.touches[0].clientY;
-    };
-
-    const handleTouchMove = (event) => {
-      if (!coarsePointerQuery.matches || event.touches.length !== 1) return;
-      if (
-        document.documentElement.classList.contains("modal-scroll-lock") ||
-        document.body.classList.contains("no-scroll")
-      ) {
-        return;
-      }
-
-      const deltaY = event.touches[0].clientY - startY;
-      if (Math.abs(deltaY) < 2) return;
-      if (hasScrollableAncestor(event.target, deltaY)) return;
-
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const maxScroll = Math.max(
-        0,
-        document.documentElement.scrollHeight - viewportHeight
-      );
-      const atTop = window.scrollY <= 0;
-      const atBottom = window.scrollY >= maxScroll - 1;
-
-      if ((atTop && deltaY > 0) || (atBottom && deltaY < 0)) {
-        event.preventDefault();
-      }
-    };
-
-    window.addEventListener("touchstart", handleTouchStart, { passive: true });
-    window.addEventListener("touchmove", handleTouchMove, { passive: false });
-
-    return () => {
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove", handleTouchMove);
-    };
   }, []);
 
   useEffect(() => {
