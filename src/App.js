@@ -12,33 +12,48 @@ function App() {
   const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
+    const root = document.documentElement;
+    const readyTimer = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        root.classList.add("theme-ready");
+      });
+    });
+
+    return () => cancelAnimationFrame(readyTimer);
+  }, []);
+
+  useEffect(() => {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
 
     let rafId = 0;
+    const saveScrollPositionNow = () => {
+      try {
+        sessionStorage.setItem(
+          "portfolio:lastScrollY",
+          String(window.scrollY || 0)
+        );
+      } catch (e) {
+        /* no-op */
+      }
+    };
+
     const saveScrollPosition = () => {
       if (rafId) return;
       rafId = requestAnimationFrame(() => {
         rafId = 0;
-        try {
-          sessionStorage.setItem(
-            "portfolio:lastScrollY",
-            String(window.scrollY || 0)
-          );
-        } catch (e) {
-          /* no-op */
-        }
+        saveScrollPositionNow();
       });
     };
 
     window.addEventListener("scroll", saveScrollPosition, { passive: true });
-    window.addEventListener("pagehide", saveScrollPosition);
+    window.addEventListener("pagehide", saveScrollPositionNow);
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", saveScrollPosition);
-      window.removeEventListener("pagehide", saveScrollPosition);
+      window.removeEventListener("pagehide", saveScrollPositionNow);
     };
   }, []);
 
@@ -47,6 +62,8 @@ function App() {
     if (initialNavigation.type === "back_forward") return undefined;
 
     const sectionIds = ["home", "about", "experience", "projects", "contact"];
+    const shouldTrackLazySections =
+      initialNavigation.type === "reload" || Boolean(window.location.hash);
     const getMaxScroll = () =>
       Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
 
@@ -86,29 +103,100 @@ function App() {
       window.scrollTo(0, getTargetScrollY());
     };
 
-    const restoreDelays = [0, 80, 180, 360, 720, 1200];
+    const restoreDelays = shouldTrackLazySections
+      ? [0, 80, 180, 360, 720, 1200]
+      : [0];
     const timers = restoreDelays.map((delay) =>
       window.setTimeout(restoreScroll, delay)
     );
 
-    const observer = new MutationObserver(() => {
-      if (
-        sectionIds.every((id) => document.getElementById(id)) &&
-        !cancelled
-      ) {
-        restoreScroll();
-      }
-    });
+    let observer = null;
+    if (shouldTrackLazySections) {
+      observer = new MutationObserver(() => {
+        if (
+          sectionIds.every((id) => document.getElementById(id)) &&
+          !cancelled
+        ) {
+          restoreScroll();
+          observer?.disconnect();
+          observer = null;
+        }
+      });
 
-    observer.observe(document.querySelector("main") || document.body, {
-      childList: true,
-      subtree: true,
-    });
+      observer.observe(document.querySelector("main") || document.body, {
+        childList: true,
+        subtree: true,
+      });
+    }
 
     return () => {
       cancelled = true;
       timers.forEach((timer) => window.clearTimeout(timer));
-      observer.disconnect();
+      observer?.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const coarsePointerQuery = window.matchMedia(
+      "(hover: none), (pointer: coarse)"
+    );
+    let startY = 0;
+
+    const hasScrollableAncestor = (target, deltaY) => {
+      let node = target;
+      while (node && node !== document.body && node !== document.documentElement) {
+        const style = window.getComputedStyle(node);
+        const canScroll = /(auto|scroll)/.test(style.overflowY);
+        if (canScroll && node.scrollHeight > node.clientHeight) {
+          const atTop = node.scrollTop <= 0;
+          const atBottom =
+            node.scrollTop + node.clientHeight >= node.scrollHeight - 1;
+          if ((deltaY > 0 && !atTop) || (deltaY < 0 && !atBottom)) {
+            return true;
+          }
+        }
+        node = node.parentElement;
+      }
+      return false;
+    };
+
+    const handleTouchStart = (event) => {
+      if (!coarsePointerQuery.matches || event.touches.length !== 1) return;
+      startY = event.touches[0].clientY;
+    };
+
+    const handleTouchMove = (event) => {
+      if (!coarsePointerQuery.matches || event.touches.length !== 1) return;
+      if (
+        document.documentElement.classList.contains("modal-scroll-lock") ||
+        document.body.classList.contains("no-scroll")
+      ) {
+        return;
+      }
+
+      const deltaY = event.touches[0].clientY - startY;
+      if (Math.abs(deltaY) < 2) return;
+      if (hasScrollableAncestor(event.target, deltaY)) return;
+
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const maxScroll = Math.max(
+        0,
+        document.documentElement.scrollHeight - viewportHeight
+      );
+      const atTop = window.scrollY <= 0;
+      const atBottom = window.scrollY >= maxScroll - 1;
+
+      if ((atTop && deltaY > 0) || (atBottom && deltaY < 0)) {
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+
+    return () => {
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
     };
   }, []);
 

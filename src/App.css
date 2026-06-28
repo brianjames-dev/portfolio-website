@@ -475,13 +475,13 @@ section.projects {
 }
 
 /* Smooth theme transitions for common surfaces */
-body,
-section,
-.project-header-card,
-.project-card,
-.about-card,
-.contact-card,
-.home-card {
+html.theme-ready body,
+html.theme-ready section,
+html.theme-ready .project-header-card,
+html.theme-ready .project-card,
+html.theme-ready .about-card,
+html.theme-ready .contact-card,
+html.theme-ready .home-card {
   transition:
     background-color 0.3s ease,
     color 0.3s ease,

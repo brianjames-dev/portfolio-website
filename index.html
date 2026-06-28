@@ -84,6 +84,7 @@
     <script>
       (function () {
         try {
+          document.documentElement.classList.remove("theme-ready");
           var storedTheme = localStorage.getItem("theme");
           var theme =
             storedTheme === "light" || storedTheme === "dark"
