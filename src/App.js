@@ -287,7 +287,6 @@ function App() {
     const desktopQuery = window.matchMedia("(min-width: 601px)");
     let rafId = 0;
     let pendingDeltaY = 0;
-    let pendingSmoothWheel = false;
     let wheelIdleTimer = 0;
 
     const getScrollElement = () =>
@@ -361,21 +360,12 @@ function App() {
         0,
         Math.min(maxScroll, scrollElement.scrollTop + pendingDeltaY)
       );
-      const shouldSmooth = pendingSmoothWheel;
       pendingDeltaY = 0;
-      pendingSmoothWheel = false;
-
-      if (shouldSmooth) {
-        scrollElement.scrollTo({ top: nextTop, behavior: "smooth" });
-      } else {
-        scrollElement.scrollTop = nextTop;
-      }
+      scrollElement.scrollTop = nextTop;
     };
 
     const handleDesktopWheel = (event) => {
       const deltaY = normalizeWheelDelta(event);
-      const isDiscreteWheel =
-        event.deltaMode === WheelEvent.DOM_DELTA_LINE || Math.abs(deltaY) >= 80;
 
       if (
         !desktopQuery.matches ||
@@ -394,7 +384,6 @@ function App() {
 
       keepManualScrollModeActive();
       pendingDeltaY += deltaY;
-      pendingSmoothWheel = pendingSmoothWheel || isDiscreteWheel;
 
       if (!rafId) {
         rafId = requestAnimationFrame(flushWheelScroll);
