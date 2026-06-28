@@ -31,13 +31,22 @@ function ExpandedCard({
     typeof rawVideoId === "string" ? rawVideoId.trim() : "";
   const hasVideoEmbed =
     videoEmbed?.provider === "youtube" && Boolean(videoEmbedId);
+  const logo = project.logo;
 
   return (
     <div className="expanded-block">
       {/* Expanded Title / Subtitle / Close */}
       <div className="expanded-header">
         <div className="expanded-title-row">
-          <h3>{project.expanded?.title}</h3>
+          <div className={`expanded-title-block ${logo ? "has-logo" : ""}`}>
+            {logo && (
+              <img className="experience-logo" src={logo.src} alt={logo.alt} />
+            )}
+            <div className="expanded-title-copy">
+              <h3>{project.expanded?.title}</h3>
+              <p className="expanded-subtitle">{project.expanded?.subtitle}</p>
+            </div>
+          </div>
           <button
             type="button"
             className="close-button-icon-button"
@@ -50,7 +59,6 @@ function ExpandedCard({
             <IconGlyph name="close" className="close-button-icon" />
           </button>
         </div>
-        <p className="expanded-subtitle">{project.expanded?.subtitle}</p>
 
         {hasTopButtons && (
           <div className="expanded-buttons-row">

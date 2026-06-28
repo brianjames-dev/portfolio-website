@@ -16,12 +16,21 @@ function CollapsedCard({
   const canExpand = !!project.expanded; // Check if project has expanded content
   const hasGallery = (project.images?.length || 0) > 0 || showGalleryButton;
   const hasDemo = Boolean(showDemoButton);
+  const logo = project.logo;
 
   return (
     <>
       {/* Header */}
       <div className="project-header">
-        <h3 className="title">{project.title}</h3>
+        <div className={`project-title-block ${logo ? "has-logo" : ""}`}>
+          {logo && (
+            <img className="experience-logo" src={logo.src} alt={logo.alt} />
+          )}
+          <div className="project-title-copy">
+            <h3 className="title">{project.title}</h3>
+            <p className="project-subtitle">{project.team}</p>
+          </div>
+        </div>
         {project.github && (
           <a
             className="githubIcon"
@@ -47,11 +56,6 @@ function CollapsedCard({
             </span>
           </a>
         )}
-      </div>
-
-      {/* Subheader */}
-      <div className="project-subheader">
-        <p>{project.team}</p>
       </div>
 
       {/* Stack tags */}

@@ -69,8 +69,23 @@
 .project-header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  min-height: 48px;
+  margin-bottom: 20px;
+}
+
+.project-title-block,
+.expanded-title-block {
+  display: flex;
   align-items: center;
-  min-height: 30px;
+  gap: 12px;
+  min-width: 0;
+}
+
+.project-title-copy,
+.expanded-title-copy {
+  min-width: 0;
 }
 
 .project-header .title {
@@ -79,10 +94,36 @@
   line-height: 1;
 }
 
-.project-subheader p {
-  margin: 0 0 20px 0;
+.project-subtitle,
+.expanded-subtitle {
+  margin: 4px 0 0 0;
   font-size: 1rem;
   font-style: italic;
+  line-height: 1.2;
+}
+
+.experience-logo {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  object-fit: contain;
+  padding: 5px;
+  background: #ffffff;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 8px rgba(6, 16, 10, 0.12);
+}
+
+@media (max-width: 600px) {
+  .experience-logo {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+  .project-title-block,
+  .expanded-title-block {
+    gap: 10px;
+  }
 }
 
 /* ========== GitHub Icon ========== */
@@ -135,22 +176,17 @@
 
 .expanded-title-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 16px;
   position: relative;
-  min-height: 20px;
+  min-height: 48px;
   z-index: 1;
 }
 
 .expanded-title-row h3 {
   margin: 0;
   font-size: 1.4rem;
-}
-
-.expanded-subtitle {
-  margin: 0 0 20px 0;
-  font-size: 1rem;
-  font-style: italic;
 }
 
 /* ========== Expanded View Buttons ========== */

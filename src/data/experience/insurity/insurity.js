@@ -4,6 +4,10 @@ const insurity = {
   id: "insurity",
   title: "AI Associate Developer",
   team: "Insurity | Remote | Part-time",
+  logo: {
+    src: "/img/logos/insurity.jpg",
+    alt: "Insurity logo",
+  },
   description:
     "Built an AI-powered database performance agent with FastAPI and LangGraph that orchestrated schema analysis, index discovery, simulation, deployment, and monitoring across multiple systems to streamline DBA workflows. Developed a FastAPI + SQLAlchemy REST backend to support schema and index processes, and created Python/SQL Server indexing toolkits to surface production-ready indexes and improve performance on high-traffic queries. Led a legacy .NET cookie migration to speed up page loads, reduce request overhead, and address session security issues.",
   stack: [
