@@ -283,6 +283,128 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const desktopQuery = window.matchMedia("(min-width: 601px)");
+    let rafId = 0;
+    let pendingDeltaY = 0;
+    let wheelIdleTimer = 0;
+
+    const getScrollElement = () =>
+      document.scrollingElement || document.documentElement;
+
+    const keepManualScrollModeActive = () => {
+      document.documentElement.classList.add("manual-wheel-scroll");
+
+      if (wheelIdleTimer) {
+        window.clearTimeout(wheelIdleTimer);
+      }
+
+      wheelIdleTimer = window.setTimeout(() => {
+        document.documentElement.classList.remove("manual-wheel-scroll");
+        wheelIdleTimer = 0;
+      }, 120);
+    };
+
+    const targetHasScrollableParent = (target, deltaY) => {
+      let node = target instanceof Element ? target : target?.parentElement;
+      while (
+        node &&
+        node !== document.body &&
+        node !== document.documentElement
+      ) {
+        const styles = getComputedStyle(node);
+        const canScrollY =
+          /(auto|scroll)/.test(styles.overflowY) &&
+          node.scrollHeight > node.clientHeight;
+
+        if (canScrollY) {
+          const atTop = node.scrollTop <= 0;
+          const atBottom =
+            Math.ceil(node.scrollTop + node.clientHeight) >= node.scrollHeight;
+          if ((deltaY < 0 && !atTop) || (deltaY > 0 && !atBottom)) {
+            return true;
+          }
+        }
+
+        node = node.parentElement;
+      }
+
+      return false;
+    };
+
+    const normalizeWheelDelta = (event) => {
+      const modeMultiplier =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 16
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? window.innerHeight
+            : 1;
+
+      return event.deltaY * modeMultiplier;
+    };
+
+    const flushWheelScroll = () => {
+      rafId = 0;
+
+      const scrollElement = getScrollElement();
+      const maxScroll = Math.max(
+        0,
+        scrollElement.scrollHeight - window.innerHeight
+      );
+      if (maxScroll <= 0 || pendingDeltaY === 0) {
+        pendingDeltaY = 0;
+        return;
+      }
+
+      const nextTop = Math.max(
+        0,
+        Math.min(maxScroll, scrollElement.scrollTop + pendingDeltaY)
+      );
+      pendingDeltaY = 0;
+      scrollElement.scrollTop = nextTop;
+    };
+
+    const handleDesktopWheel = (event) => {
+      const deltaY = normalizeWheelDelta(event);
+
+      if (
+        !desktopQuery.matches ||
+        event.ctrlKey ||
+        Math.abs(deltaY) < 0.01 ||
+        document.body.classList.contains("no-scroll") ||
+        document.documentElement.classList.contains("modal-scroll-lock") ||
+        targetHasScrollableParent(event.target, deltaY)
+      ) {
+        return;
+      }
+
+      if (event.cancelable) {
+        event.preventDefault();
+      }
+
+      keepManualScrollModeActive();
+      pendingDeltaY += deltaY;
+
+      if (!rafId) {
+        rafId = requestAnimationFrame(flushWheelScroll);
+      }
+    };
+
+    window.addEventListener("wheel", handleDesktopWheel, {
+      capture: true,
+      passive: false,
+    });
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      if (wheelIdleTimer) window.clearTimeout(wheelIdleTimer);
+      document.documentElement.classList.remove("manual-wheel-scroll");
+      window.removeEventListener("wheel", handleDesktopWheel, {
+        capture: true,
+      });
+    };
+  }, []);
+
   const scrollToScrollbarPointer = (clientY) => {
     const dragState = scrollDragRef.current;
     if (!dragState) return;
