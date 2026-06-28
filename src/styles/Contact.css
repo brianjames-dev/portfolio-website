@@ -278,6 +278,10 @@
 
 /* ========== Mobile Styles ========== */
 @media (max-width: 600px) {
+  .contact-section {
+    padding-top: var(--page-card-gutter, 16px);
+  }
+
   .contact-card {
     flex-direction: column; /* stack vertically on mobile */
     padding: 16px 12px 20px;

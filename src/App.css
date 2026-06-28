@@ -260,6 +260,10 @@ h3 {
   padding: 10px 18px;
 }
 
+.project-header-card h2 {
+  margin: 0;
+}
+
 .container {
   max-width: 800px;
   margin: auto;
