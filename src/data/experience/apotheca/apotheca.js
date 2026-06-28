@@ -18,7 +18,7 @@ const apotheca = {
   title: "Full-stack Developer",
   team: "Apotheca | Contract",
   description:
-    "Built SkinPro, a custom client and appointment system that cut manual admin work, streamlined photo uploads, and automated prescriptions.",
+    "Developed SkinPro, a custom client and appointment database app for a skincare business. It streamlined client records, appointments, photo uploads, and prescription generation so the owner could spend less time on admin work and more time with clients.",
   stack: [
     "TypeScript",
     "JavaScript",
