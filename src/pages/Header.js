@@ -327,6 +327,18 @@ function Header({ activeSection }) {
                       const top = targetTop - offset;
                       window.scrollTo({ top, behavior: "smooth" });
                     }
+                  } else if (section === "contact") {
+                    e.preventDefault();
+                    const el = document.getElementById(section);
+                    if (el) {
+                      const top =
+                        el.getBoundingClientRect().top + window.pageYOffset;
+                      window.history.pushState(null, "", "#contact");
+                      window.scrollTo({ top, behavior: "smooth" });
+                      window.setTimeout(() => {
+                        window.scrollTo({ top, behavior: "auto" });
+                      }, 650);
+                    }
                   }
                 }}
                 onMouseEnter={

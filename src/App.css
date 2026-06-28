@@ -145,17 +145,6 @@ html {
 
 html,
 body {
-  scrollbar-width: none;
-}
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
-html,
-body {
   font-weight: 400;
   min-height: 100%;
   width: 100%;
@@ -414,6 +403,17 @@ section.projects {
 
 /* ========== Mobile Styles ========== */
 @media (max-width: 600px) {
+  html,
+  body {
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
   :root {
     --page-card-gutter: 16px;
     --card-block-gap: 16px;

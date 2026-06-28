@@ -324,6 +324,17 @@ section#contact.contact-section {
   opacity: 0;
 }
 
+@media (min-width: 601px) {
+  .contact-section,
+  section#contact.contact-section {
+    min-height: calc(100dvh + 120px) !important;
+    height: auto !important;
+    justify-content: center;
+    padding: var(--header-height) var(--page-card-gutter, 20px) 120px;
+    scroll-margin-top: 0;
+  }
+}
+
 @media (hover: none), (pointer: coarse) {
   .contact-social-links a.is-touch-active .contact-icon-wrapper img.hover {
     opacity: 1;
