@@ -21,6 +21,45 @@ const getDefaultZoomGesture = () => ({
   suppressTapExitUntil: 0,
 });
 
+const getContainedImageRect = (imageNode) => {
+  const imageRect = imageNode.getBoundingClientRect();
+  const naturalWidth = imageNode.naturalWidth || imageNode.videoWidth;
+  const naturalHeight = imageNode.naturalHeight || imageNode.videoHeight;
+
+  if (!imageRect.width || !imageRect.height || !naturalWidth || !naturalHeight) {
+    return imageRect;
+  }
+
+  const naturalRatio = naturalWidth / naturalHeight;
+  const boxRatio = imageRect.width / imageRect.height;
+
+  if (naturalRatio > boxRatio) {
+    const renderedHeight = imageRect.width / naturalRatio;
+    const verticalInset = (imageRect.height - renderedHeight) / 2;
+
+    return {
+      left: imageRect.left,
+      right: imageRect.right,
+      top: imageRect.top + verticalInset,
+      bottom: imageRect.bottom - verticalInset,
+      width: imageRect.width,
+      height: renderedHeight,
+    };
+  }
+
+  const renderedWidth = imageRect.height * naturalRatio;
+  const horizontalInset = (imageRect.width - renderedWidth) / 2;
+
+  return {
+    left: imageRect.left + horizontalInset,
+    right: imageRect.right - horizontalInset,
+    top: imageRect.top,
+    bottom: imageRect.bottom,
+    width: renderedWidth,
+    height: imageRect.height,
+  };
+};
+
 function ProjectGallery({ images, index, setIndex, onClose }) {
   const [isSuperZoomed, setIsSuperZoomed] = useState(false);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
@@ -642,7 +681,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     );
     if (!imageNode || !viewportNode) return;
 
-    const imageRect = imageNode.getBoundingClientRect();
+    const imageRect = getContainedImageRect(imageNode);
     const viewportRect = viewportNode.getBoundingClientRect();
     if (!imageRect.width || !imageRect.height || !viewportRect.width) return;
 
