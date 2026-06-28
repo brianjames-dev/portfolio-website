@@ -11,6 +11,14 @@ const SUPERZOOM_MIN_SCALE = 1;
 const SUPERZOOM_MAX_SCALE = 12;
 const TAP_EXIT_MAX_MS = 260;
 const TAP_EXIT_MAX_MOVEMENT = 8;
+const PAN_EXIT_SUPPRESSION_MS = 220;
+
+const getDefaultZoomGesture = () => ({
+  moved: false,
+  panning: false,
+  pinching: false,
+  suppressTapExitUntil: 0,
+});
 
 function ProjectGallery({ images, index, setIndex, onClose }) {
   const [isSuperZoomed, setIsSuperZoomed] = useState(false);
@@ -28,7 +36,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
   const swipeAnimationTimeoutRef = useRef(null);
   const stageRef = useRef(null);
   const zoomTapStartRef = useRef(null);
-  const zoomGestureRef = useRef({ moved: false, pinching: false });
+  const zoomGestureRef = useRef(getDefaultZoomGesture());
   const thumbnailRefs = useRef([]);
   const overlayRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -488,7 +496,30 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
 
   const resetZoomTapTracking = () => {
     zoomTapStartRef.current = null;
-    zoomGestureRef.current = { moved: false, pinching: false };
+    zoomGestureRef.current = getDefaultZoomGesture();
+  };
+
+  const markZoomPanGesture = () => {
+    zoomTapStartRef.current = null;
+    zoomGestureRef.current = {
+      ...zoomGestureRef.current,
+      moved: true,
+      panning: true,
+      suppressTapExitUntil: Date.now() + PAN_EXIT_SUPPRESSION_MS,
+    };
+    mouseWasDraggedRef.current = true;
+  };
+
+  const stopZoomPanGesture = () => {
+    if (!zoomGestureRef.current.moved) return;
+
+    zoomGestureRef.current = {
+      ...zoomGestureRef.current,
+      moved: true,
+      panning: false,
+      suppressTapExitUntil: Date.now() + PAN_EXIT_SUPPRESSION_MS,
+    };
+    mouseWasDraggedRef.current = true;
   };
 
   const handleZoomTouchStart = (event) => {
@@ -504,7 +535,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
       y: touch.clientY,
       time: Date.now(),
     };
-    zoomGestureRef.current = { moved: false, pinching: false };
+    zoomGestureRef.current = getDefaultZoomGesture();
   };
 
   const handleZoomTouchMove = (event) => {
@@ -527,8 +558,15 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     if (event.touches.length > 0) return;
 
     const start = zoomTapStartRef.current;
-    const { moved, pinching } = zoomGestureRef.current;
-    if (!start || moved || pinching) {
+    const { moved, panning, pinching, suppressTapExitUntil } =
+      zoomGestureRef.current;
+    if (
+      !start ||
+      moved ||
+      panning ||
+      pinching ||
+      Date.now() < suppressTapExitUntil
+    ) {
       resetZoomTapTracking();
       return;
     }
@@ -537,6 +575,52 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
       event.stopPropagation();
       setIsSuperZoomed(false);
     }
+    resetZoomTapTracking();
+  };
+
+  const handleZoomMouseStart = (event) => {
+    if (event.button !== 0) return;
+
+    zoomTapStartRef.current = {
+      x: event.clientX,
+      y: event.clientY,
+      time: Date.now(),
+    };
+    zoomGestureRef.current = getDefaultZoomGesture();
+    mouseWasDraggedRef.current = false;
+  };
+
+  const handleZoomMouseMove = (event) => {
+    const start = zoomTapStartRef.current;
+    if (!start) return;
+
+    const movement = Math.hypot(event.clientX - start.x, event.clientY - start.y);
+    if (movement > TAP_EXIT_MAX_MOVEMENT) {
+      zoomGestureRef.current = {
+        ...zoomGestureRef.current,
+        moved: true,
+      };
+      mouseWasDraggedRef.current = true;
+    }
+  };
+
+  const handleZoomMouseEnd = (event) => {
+    const start = zoomTapStartRef.current;
+    const { moved, panning, pinching, suppressTapExitUntil } =
+      zoomGestureRef.current;
+
+    if (
+      start &&
+      !moved &&
+      !panning &&
+      !pinching &&
+      Date.now() >= suppressTapExitUntil &&
+      Date.now() - start.time <= TAP_EXIT_MAX_MS
+    ) {
+      event.stopPropagation();
+      setIsSuperZoomed(false);
+    }
+
     resetZoomTapTracking();
   };
 
@@ -594,9 +678,45 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
           className={`fullscreen-image-wrapper ${
             isSuperZoomed ? "superzoom-mode" : ""
           }`}
+          onTouchStartCapture={(e) => {
+            if (isSuperZoomed) handleZoomTouchStart(e);
+          }}
+          onTouchMoveCapture={(e) => {
+            if (isSuperZoomed) handleZoomTouchMove(e);
+          }}
+          onTouchEndCapture={(e) => {
+            if (isSuperZoomed) handleZoomTouchEnd(e);
+          }}
+          onTouchCancelCapture={() => {
+            if (isSuperZoomed) resetZoomTapTracking();
+          }}
+          onMouseDownCapture={(e) => {
+            if (isSuperZoomed) handleZoomMouseStart(e);
+          }}
+          onMouseMoveCapture={(e) => {
+            if (isSuperZoomed) handleZoomMouseMove(e);
+          }}
+          onMouseUpCapture={(e) => {
+            if (isSuperZoomed) handleZoomMouseEnd(e);
+          }}
           onClick={(e) => {
             const isTouch =
               "ontouchstart" in window || navigator.maxTouchPoints > 0;
+            const recentlyPanned =
+              Date.now() < zoomGestureRef.current.suppressTapExitUntil;
+
+            if (isSuperZoomed) {
+              e.stopPropagation();
+
+              if (isTouch || recentlyPanned) {
+                return;
+              }
+
+              mouseWasDraggedRef.current = false;
+              setIsSuperZoomed(false);
+              return;
+            }
+
             if (isTouch || mouseWasDraggedRef.current) e.stopPropagation();
           }}
         >
@@ -612,25 +732,30 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
               limitToBounds={false}
               centerZoomedOut
               centerOnInit
+              onPanning={markZoomPanGesture}
+              onPanningStop={stopZoomPanGesture}
             >
               <TransformComponent>
                 <div
                   className="superzoomed"
-                  onTouchStart={handleZoomTouchStart}
-                  onTouchMove={handleZoomTouchMove}
-                  onTouchEnd={handleZoomTouchEnd}
-                  onTouchCancel={resetZoomTapTracking}
                   onMouseDown={(e) => {
                     setMouseDownTime(Date.now());
                     setMouseDownPos({ x: e.clientX, y: e.clientY });
                     mouseWasDraggedRef.current = false;
                   }}
                   onMouseUp={(e) => {
+                    const { panning, suppressTapExitUntil } =
+                      zoomGestureRef.current;
                     const duration = Date.now() - mouseDownTime;
                     const distX = Math.abs(e.clientX - mouseDownPos.x);
                     const distY = Math.abs(e.clientY - mouseDownPos.y);
                     const movement = Math.sqrt(distX ** 2 + distY ** 2);
-                    if (duration < 200 && movement < 5) {
+                    if (
+                      duration < 200 &&
+                      movement < 5 &&
+                      !panning &&
+                      Date.now() >= suppressTapExitUntil
+                    ) {
                       e.stopPropagation();
                       setIsSuperZoomed(false);
                     } else {
