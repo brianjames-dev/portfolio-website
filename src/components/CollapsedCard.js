@@ -1,7 +1,7 @@
 import IconGlyph from "./IconGlyph";
+import TechStackGroups from "./TechStackGroups";
 import iconMap from "../data/iconMap.js";
 import "../styles/CollapsedCard.css";
-import { renderTag } from "../utils/renderTag.js";
 
 function CollapsedCard({
   project,
@@ -65,9 +65,7 @@ function CollapsedCard({
       </div>
 
       {/* Stack tags */}
-      <div className="project-stack">
-        {project.stack.map((tech, i) => renderTag(tech, i))}
-      </div>
+      <TechStackGroups stack={project.stack} />
 
       <hr className="project-divider" />
 

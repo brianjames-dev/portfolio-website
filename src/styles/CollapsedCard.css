@@ -287,7 +287,10 @@
 
 /* ========== Stack / Timeline ========== */
 .project-stack {
-  margin: 10px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0 18px 0;
 }
 
 .tech-timeline {
@@ -383,15 +386,41 @@
 }
 
 /* ========== Tag List ========== */
+.stack-group {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px 12px;
+}
+
+.stack-group-label {
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1;
+  padding-top: 8px;
+  text-transform: uppercase;
+}
+
+.stack-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
 .tag {
   display: inline-flex;
   align-items: center;
-  background: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 86%, var(--surface-card));
   color: var(--button-text);
-  margin: 3px 6px 3px 0;
-  padding: 4px 10px;
+  margin: 0;
+  padding: 4px 9px;
   border-radius: var(--radius-sm);
-  font-size: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 64%, transparent);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+  font-size: 0.82rem;
   font-weight: 700;
   min-height: 24px;
   padding-left: 28px;
@@ -415,6 +444,49 @@
 
 .tag.no-icon {
   padding-left: 12px;
+}
+
+.stack-more-toggle {
+  align-self: flex-start;
+  appearance: none;
+  background: color-mix(in srgb, var(--surface-elevated) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 52%, transparent);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-left: 92px;
+  padding: 7px 10px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.stack-more-toggle:hover,
+.stack-more-toggle:focus-visible {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--button-text);
+}
+
+@media (max-width: 600px) {
+  .stack-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .stack-group-label {
+    padding-top: 0;
+  }
+
+  .stack-more-toggle {
+    margin-left: 0;
+  }
 }
 
 /* ========== Project Description + Sections ========== */
@@ -528,14 +600,36 @@
   }
 
   .project-stack {
+    gap: 7px;
     margin: 8px 0 12px;
+  }
+
+  .stack-group {
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 6px 8px;
+  }
+
+  .stack-group-label {
+    font-size: 0.58rem;
+    padding-top: 7px;
+  }
+
+  .stack-tag-row {
+    gap: 4px;
   }
 
   .tag {
     min-height: 22px;
     padding-top: 3px;
     padding-bottom: 3px;
+    padding-right: 7px;
     font-size: var(--landscape-chip-text, 0.68rem);
+  }
+
+  .stack-more-toggle {
+    font-size: var(--landscape-chip-text, 0.68rem);
+    margin-left: 66px;
+    padding: 6px 8px;
   }
 
   .project-section p,
