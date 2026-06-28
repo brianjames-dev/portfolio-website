@@ -16,9 +16,9 @@ import skinpro7 from "./imgs/Upload_Photos.jpeg";
 const apotheca = {
   id: "apotheca",
   title: "Full-stack Developer",
-  team: "Apotheca | Remote | Contractual",
+  team: "Apotheca | Contract",
   description:
-    "Built SkinPro with the business owner to manage 300+ clients and 2,000+ appointments, saving 1,000+ hours/year and $3,000+ in software costs by adding QR-based single-use-token photo uploads (90% faster image handling), automated PDF prescriptions, and an offline-first Next.js UI on local SQLite that avoids $500+/year in cloud fees.",
+    "Built SkinPro, a custom client and appointment system that cut manual admin work, streamlined photo uploads, and automated prescriptions.",
   stack: [
     "TypeScript",
     "JavaScript",
@@ -54,7 +54,7 @@ const apotheca = {
         `,
 
     subtitle: `
-            Apotheca | Remote | Part-time
+            Apotheca | Contract
         `,
 
     github: `
