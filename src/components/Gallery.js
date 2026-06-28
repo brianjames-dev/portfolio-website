@@ -12,6 +12,7 @@ const SUPERZOOM_MAX_SCALE = 12;
 const TAP_EXIT_MAX_MS = 260;
 const TAP_EXIT_MAX_MOVEMENT = 8;
 const PAN_EXIT_SUPPRESSION_MS = 220;
+const ZOOM_BOUNDS_EPSILON = 0.5;
 
 const getDefaultZoomGesture = () => ({
   moved: false,
@@ -37,6 +38,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
   const stageRef = useRef(null);
   const zoomTapStartRef = useRef(null);
   const zoomGestureRef = useRef(getDefaultZoomGesture());
+  const isApplyingZoomBoundsRef = useRef(false);
   const thumbnailRefs = useRef([]);
   const overlayRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -624,6 +626,62 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     resetZoomTapTracking();
   };
 
+  const enforceZoomViewportBounds = useCallback((transformRef, transformState) => {
+    if (isApplyingZoomBoundsRef.current) return;
+
+    const state =
+      transformState?.positionX === undefined
+        ? transformRef?.instance?.transformState
+        : transformState;
+    if (!state) return;
+
+    const root = overlayRef.current;
+    const imageNode = root?.querySelector(".fullscreen-image.superzoomed");
+    const viewportNode = root?.querySelector(
+      ".fullscreen-image-wrapper.superzoom-mode"
+    );
+    if (!imageNode || !viewportNode) return;
+
+    const imageRect = imageNode.getBoundingClientRect();
+    const viewportRect = viewportNode.getBoundingClientRect();
+    if (!imageRect.width || !imageRect.height || !viewportRect.width) return;
+
+    const centerX = viewportRect.left + viewportRect.width / 2;
+    const centerY = viewportRect.top + viewportRect.height / 2;
+    let correctionX = 0;
+    let correctionY = 0;
+
+    if (imageRect.left > centerX) {
+      correctionX = centerX - imageRect.left;
+    } else if (imageRect.right < centerX) {
+      correctionX = centerX - imageRect.right;
+    }
+
+    if (imageRect.top > centerY) {
+      correctionY = centerY - imageRect.top;
+    } else if (imageRect.bottom < centerY) {
+      correctionY = centerY - imageRect.bottom;
+    }
+
+    if (
+      Math.abs(correctionX) <= ZOOM_BOUNDS_EPSILON &&
+      Math.abs(correctionY) <= ZOOM_BOUNDS_EPSILON
+    ) {
+      return;
+    }
+
+    isApplyingZoomBoundsRef.current = true;
+    transformRef.setTransform(
+      state.positionX + correctionX,
+      state.positionY + correctionY,
+      state.scale,
+      0
+    );
+    requestAnimationFrame(() => {
+      isApplyingZoomBoundsRef.current = false;
+    });
+  }, []);
+
   if (index === null || !images.length) return null;
 
   const image = images[index];
@@ -734,6 +792,11 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
               centerOnInit
               onPanning={markZoomPanGesture}
               onPanningStop={stopZoomPanGesture}
+              onPinching={enforceZoomViewportBounds}
+              onPinchingStop={enforceZoomViewportBounds}
+              onZoom={enforceZoomViewportBounds}
+              onZoomStop={enforceZoomViewportBounds}
+              onTransformed={enforceZoomViewportBounds}
             >
               <TransformComponent>
                 <div
