@@ -375,6 +375,15 @@ section.projects {
   .container {
     padding: 12px;
   }
+
+  .project-header-card {
+    padding: 8px 14px;
+  }
+
+  .project-header-card h2 {
+    font-size: 1.3rem;
+    line-height: 1.1;
+  }
 }
 
 /* Smooth theme transitions for common surfaces */

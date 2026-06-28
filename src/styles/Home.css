@@ -336,6 +336,7 @@
     justify-content: center;
     gap: 30px;
     margin-top: 15px;
+    margin-bottom: 18px;
   }
 
   .home-social-links a:active .icon-wrapper img.hover {
@@ -443,6 +444,7 @@
 
   .home-social-links {
     gap: 10px;
+    margin-bottom: 0;
   }
 
   .icon-wrapper {

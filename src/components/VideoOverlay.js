@@ -16,6 +16,36 @@ function VideoOverlay({ isOpen, video, onClose }) {
     document.body.classList.add("video-overlay-open");
     document.body.style.top = `-${y}px`;
 
+    const setViewportVars = () => {
+      const viewport = window.visualViewport;
+      const width = viewport?.width || window.innerWidth;
+      const height = viewport?.height || window.innerHeight;
+      const offsetTop = viewport?.offsetTop || 0;
+      const offsetLeft = viewport?.offsetLeft || 0;
+
+      document.documentElement.style.setProperty(
+        "--video-viewport-width",
+        `${width}px`
+      );
+      document.documentElement.style.setProperty(
+        "--video-viewport-height",
+        `${height}px`
+      );
+      document.documentElement.style.setProperty(
+        "--video-viewport-top",
+        `${offsetTop}px`
+      );
+      document.documentElement.style.setProperty(
+        "--video-viewport-left",
+        `${offsetLeft}px`
+      );
+    };
+
+    setViewportVars();
+    window.visualViewport?.addEventListener("resize", setViewportVars);
+    window.visualViewport?.addEventListener("scroll", setViewportVars);
+    window.addEventListener("resize", setViewportVars);
+
     const focusTimer = window.setTimeout(() => {
       closeButtonRef.current?.focus();
     }, 0);
@@ -53,6 +83,13 @@ function VideoOverlay({ isOpen, video, onClose }) {
       window.clearTimeout(focusTimer);
       document.removeEventListener("keydown", handleKeyDown);
       const prevY = parseInt(document.body.style.top || "0", 10) * -1;
+      window.visualViewport?.removeEventListener("resize", setViewportVars);
+      window.visualViewport?.removeEventListener("scroll", setViewportVars);
+      window.removeEventListener("resize", setViewportVars);
+      document.documentElement.style.removeProperty("--video-viewport-width");
+      document.documentElement.style.removeProperty("--video-viewport-height");
+      document.documentElement.style.removeProperty("--video-viewport-top");
+      document.documentElement.style.removeProperty("--video-viewport-left");
       document.body.classList.remove("no-scroll");
       document.body.classList.remove("video-overlay-open");
       document.body.style.top = "";

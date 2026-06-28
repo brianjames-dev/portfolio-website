@@ -489,3 +489,85 @@
 [data-theme="dark"] .project-divider {
   background: var(--divider-line);
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 950px) {
+  .project-card {
+    max-width: calc(100vw - 24px);
+    margin: 12px auto;
+    padding: 14px;
+  }
+
+  .project-header,
+  .expanded-title-row {
+    min-height: 40px;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .project-title-block,
+  .expanded-title-block {
+    gap: 10px;
+  }
+
+  .project-header .title,
+  .expanded-title-row h3 {
+    font-size: 1.15rem;
+    line-height: 1.08;
+  }
+
+  .project-subtitle,
+  .expanded-subtitle {
+    font-size: 0.86rem;
+  }
+
+  .experience-logo-frame {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    padding: 4px;
+  }
+
+  .project-stack {
+    margin: 8px 0 12px;
+  }
+
+  .tag {
+    min-height: 22px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-size: 0.78rem;
+  }
+
+  .project-description,
+  .project-section p,
+  .custom-bullet-list li,
+  .tech-purpose {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .project-section h4 {
+    font-size: 1rem;
+  }
+
+  .project-actions {
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .expanded-top-button,
+  .learn-more-btn {
+    height: 34px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+
+  .button-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .section-divider {
+    margin: 1.5rem 0 1rem;
+  }
+}

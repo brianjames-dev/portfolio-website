@@ -1,11 +1,16 @@
 .video-overlay {
   position: fixed;
-  inset: 0;
+  top: var(--video-viewport-top, 0);
+  left: var(--video-viewport-left, 0);
+  width: var(--video-viewport-width, 100dvw);
+  height: var(--video-viewport-height, 100dvh);
   background-color: var(--color-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
   --video-overlay-gap: clamp(24px, 8vh, 160px);
+  --video-effective-height: var(--video-viewport-height, 100dvh);
+  --video-effective-width: var(--video-viewport-width, 100dvw);
   padding: var(--video-overlay-gap);
   transition: padding 0.25s ease;
   z-index: 12000;
@@ -19,11 +24,23 @@ body.video-overlay-open .site-header {
 .video-overlay-card {
   position: relative;
   width: min(
-    92vw,
+    calc(
+      var(--video-effective-width) - var(--video-overlay-gap) -
+        var(--video-overlay-gap)
+    ),
     1800px,
-    calc((100vh - (2 * var(--video-overlay-gap))) * 16 / 9)
+    calc(
+      (
+          var(--video-effective-height) - var(--video-overlay-gap) -
+            var(--video-overlay-gap)
+        ) *
+        16 / 9
+    )
   );
-  max-height: calc(100vh - (2 * var(--video-overlay-gap)));
+  max-height: calc(
+    var(--video-effective-height) - var(--video-overlay-gap) -
+      var(--video-overlay-gap)
+  );
   background:
     linear-gradient(
         color-mix(in srgb, var(--color-header) 64%, transparent),
@@ -68,7 +85,10 @@ body.video-overlay-open .site-header {
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  max-height: calc(100vh - (2 * var(--video-overlay-gap)) - 36px);
+  max-height: calc(
+    var(--video-effective-height) - var(--video-overlay-gap) -
+      var(--video-overlay-gap) - 36px
+  );
 }
 
 .video-embed iframe {
@@ -97,28 +117,46 @@ body.video-overlay-open .site-header {
 
 @media (orientation: landscape) and (max-height: 500px) {
   .video-overlay {
-    --video-overlay-gap: 8px;
-    padding: 8px;
+    --video-overlay-gap: max(6px, env(safe-area-inset-bottom));
+    padding: var(--video-overlay-gap);
     align-items: stretch;
   }
 
   .video-overlay-card {
-    width: min(100%, calc((100vh - 16px) * 16 / 9));
-    max-height: calc(100vh - 16px);
+    width: min(
+      calc(
+        var(--video-effective-width) - var(--video-overlay-gap) -
+          var(--video-overlay-gap)
+      ),
+      calc(
+        (
+            var(--video-effective-height) - var(--video-overlay-gap) -
+              var(--video-overlay-gap)
+          ) *
+          16 / 9
+      )
+    );
+    max-height: calc(
+      var(--video-effective-height) - var(--video-overlay-gap) -
+        var(--video-overlay-gap)
+    );
     align-self: center;
     margin: auto;
-    padding: 8px;
+    padding: 6px;
     border-radius: var(--radius-sm);
   }
 
   .video-embed {
-    max-height: calc(100vh - 32px);
+    max-height: calc(
+      var(--video-effective-height) - var(--video-overlay-gap) -
+        var(--video-overlay-gap) - 12px
+    );
     border-radius: var(--radius-sm);
   }
 
   .video-overlay-close {
-    top: 8px;
-    right: 8px;
+    top: 6px;
+    right: 6px;
     padding: 6px;
     z-index: 1;
     background: rgba(9, 15, 19, 0.82);

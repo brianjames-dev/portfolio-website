@@ -31,3 +31,21 @@
 /* ========== Mobile Styles ========== */
 @media (max-width: 600px) {
 }
+
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 950px) {
+  .about-card {
+    max-width: calc(100vw - 24px);
+    margin: 12px auto;
+    padding: 14px;
+  }
+
+  .about h2 {
+    font-size: 1.3rem;
+    line-height: 1.1;
+  }
+
+  .about .description {
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+}
