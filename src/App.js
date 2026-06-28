@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./App.css";
 import ParticlesBackground from "./ParticlesBackground";
 import About from "./pages/About";
@@ -10,6 +10,13 @@ import Projects from "./pages/Projects";
 
 function App() {
   const [activeSection, setActiveSection] = useState("home");
+  const scrollDragRef = useRef(null);
+  const [scrollIndicator, setScrollIndicator] = useState({
+    enabled: false,
+    visible: false,
+    thumbHeight: 48,
+    thumbTop: 0,
+  });
 
   useLayoutEffect(() => {
     const initialNavigation = window.__PORTFOLIO_INITIAL_NAVIGATION__ || {};
@@ -37,6 +44,252 @@ function App() {
       window.history.scrollRestoration = "manual";
     }
   }, []);
+
+  useEffect(() => {
+    const desktopQuery = window.matchMedia("(min-width: 601px)");
+    let rafId = 0;
+    let hideTimer = 0;
+
+    const getScrollElement = () =>
+      document.scrollingElement || document.documentElement;
+
+    const readHeaderOffset = () => {
+      const headerVar = getComputedStyle(document.documentElement)
+        .getPropertyValue("--header-height")
+        .trim();
+      const headerHeight = parseInt(headerVar || "60", 10) || 60;
+      return headerHeight + 12;
+    };
+
+    const updateScrollIndicator = (show) => {
+      const scrollElement = getScrollElement();
+      const maxScroll = Math.max(
+        0,
+        scrollElement.scrollHeight - window.innerHeight
+      );
+      const headerOffset = readHeaderOffset();
+      const trackHeight = Math.max(80, window.innerHeight - headerOffset - 12);
+      const thumbHeight =
+        maxScroll > 0
+          ? Math.max(
+              44,
+              Math.round(
+                (window.innerHeight / scrollElement.scrollHeight) * trackHeight
+              )
+            )
+          : trackHeight;
+      const progress = maxScroll > 0 ? scrollElement.scrollTop / maxScroll : 0;
+      const thumbTop = Math.round(
+        Math.max(0, Math.min(1, progress)) *
+          Math.max(0, trackHeight - thumbHeight)
+      );
+      const enabled = desktopQuery.matches && maxScroll > 4;
+
+      setScrollIndicator((prev) => ({
+        enabled,
+        visible: enabled && (show || prev.visible),
+        thumbHeight,
+        thumbTop,
+      }));
+    };
+
+    const scheduleUpdate = (show = false) => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        updateScrollIndicator(show);
+      });
+
+      if (show) {
+        if (hideTimer) window.clearTimeout(hideTimer);
+        hideTimer = window.setTimeout(() => {
+          setScrollIndicator((prev) => ({ ...prev, visible: false }));
+          hideTimer = 0;
+        }, 850);
+      }
+    };
+
+    const handleScroll = () => scheduleUpdate(true);
+    const handleResize = () => scheduleUpdate(false);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+    desktopQuery.addEventListener?.("change", handleResize);
+    scheduleUpdate(false);
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      if (hideTimer) window.clearTimeout(hideTimer);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      desktopQuery.removeEventListener?.("change", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const desktopQuery = window.matchMedia("(min-width: 601px)");
+    let rafId = 0;
+    let pendingDeltaY = 0;
+
+    const getScrollElement = () =>
+      document.scrollingElement || document.documentElement;
+
+    const targetHasScrollableParent = (target, deltaY) => {
+      let node = target instanceof Element ? target : target?.parentElement;
+      while (node && node !== document.body && node !== document.documentElement) {
+        const styles = getComputedStyle(node);
+        const canScrollY =
+          /(auto|scroll)/.test(styles.overflowY) &&
+          node.scrollHeight > node.clientHeight;
+
+        if (canScrollY) {
+          const atTop = node.scrollTop <= 0;
+          const atBottom =
+            Math.ceil(node.scrollTop + node.clientHeight) >= node.scrollHeight;
+          if ((deltaY < 0 && !atTop) || (deltaY > 0 && !atBottom)) {
+            return true;
+          }
+        }
+
+        node = node.parentElement;
+      }
+
+      return false;
+    };
+
+    const normalizeWheelDelta = (event) => {
+      const modeMultiplier =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 16
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? window.innerHeight
+            : 1;
+
+      return event.deltaY * modeMultiplier;
+    };
+
+    const flushWheelScroll = () => {
+      rafId = 0;
+
+      const scrollElement = getScrollElement();
+      const maxScroll = Math.max(
+        0,
+        scrollElement.scrollHeight - window.innerHeight
+      );
+      if (maxScroll <= 0 || pendingDeltaY === 0) {
+        pendingDeltaY = 0;
+        return;
+      }
+
+      const nextTop = Math.max(
+        0,
+        Math.min(maxScroll, scrollElement.scrollTop + pendingDeltaY)
+      );
+      pendingDeltaY = 0;
+      scrollElement.scrollTop = nextTop;
+    };
+
+    const handleDesktopWheel = (event) => {
+      const deltaY = normalizeWheelDelta(event);
+
+      if (
+        !desktopQuery.matches ||
+        event.ctrlKey ||
+        Math.abs(deltaY) < 0.01 ||
+        document.body.classList.contains("no-scroll") ||
+        document.documentElement.classList.contains("modal-scroll-lock") ||
+        targetHasScrollableParent(event.target, deltaY)
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      pendingDeltaY += deltaY;
+
+      if (!rafId) {
+        rafId = requestAnimationFrame(flushWheelScroll);
+      }
+    };
+
+    window.addEventListener("wheel", handleDesktopWheel, {
+      capture: true,
+      passive: false,
+    });
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("wheel", handleDesktopWheel, {
+        capture: true,
+      });
+    };
+  }, []);
+
+  const scrollToScrollbarPointer = (clientY) => {
+    const dragState = scrollDragRef.current;
+    if (!dragState) return;
+
+    const scrollElement =
+      document.scrollingElement || document.documentElement;
+    const maxScroll = Math.max(
+      0,
+      scrollElement.scrollHeight - window.innerHeight
+    );
+    const maxThumbTop = Math.max(
+      0,
+      dragState.trackHeight - dragState.thumbHeight
+    );
+
+    if (maxScroll <= 0 || maxThumbTop <= 0) return;
+
+    const nextThumbTop = Math.max(
+      0,
+      Math.min(
+        maxThumbTop,
+        clientY - dragState.trackTop - dragState.pointerOffsetY
+      )
+    );
+    const progress = nextThumbTop / maxThumbTop;
+    scrollElement.scrollTop = progress * maxScroll;
+  };
+
+  const handleScrollbarPointerDown = (event) => {
+    if (event.button !== 0) return;
+
+    event.preventDefault();
+    const trackRect = event.currentTarget.getBoundingClientRect();
+    const thumbElement = event.currentTarget.querySelector(
+      ".desktop-scrollbar-thumb"
+    );
+    const thumbRect = thumbElement?.getBoundingClientRect();
+    const pointerIsOnThumb =
+      thumbRect &&
+      event.clientY >= thumbRect.top &&
+      event.clientY <= thumbRect.bottom;
+
+    scrollDragRef.current = {
+      trackTop: trackRect.top,
+      trackHeight: trackRect.height,
+      thumbHeight: scrollIndicator.thumbHeight,
+      pointerOffsetY: pointerIsOnThumb
+        ? event.clientY - thumbRect.top
+        : scrollIndicator.thumbHeight / 2,
+    };
+
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    setScrollIndicator((prev) => ({ ...prev, visible: true }));
+    scrollToScrollbarPointer(event.clientY);
+  };
+
+  const handleScrollbarPointerMove = (event) => {
+    if (!scrollDragRef.current) return;
+    event.preventDefault();
+    scrollToScrollbarPointer(event.clientY);
+  };
+
+  const handleScrollbarPointerEnd = (event) => {
+    scrollDragRef.current = null;
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+  };
 
   useEffect(() => {
     const coarsePointerQuery = window.matchMedia(
@@ -247,6 +500,26 @@ function App() {
         <Projects />
         <Contact />
       </main>
+      {scrollIndicator.enabled && (
+        <div
+          className={`desktop-scrollbar ${
+            scrollIndicator.visible ? "is-visible" : ""
+          }`}
+          aria-hidden="true"
+          onPointerDown={handleScrollbarPointerDown}
+          onPointerMove={handleScrollbarPointerMove}
+          onPointerUp={handleScrollbarPointerEnd}
+          onPointerCancel={handleScrollbarPointerEnd}
+        >
+          <div
+            className="desktop-scrollbar-thumb"
+            style={{
+              height: `${scrollIndicator.thumbHeight}px`,
+              transform: `translateY(${scrollIndicator.thumbTop}px)`,
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

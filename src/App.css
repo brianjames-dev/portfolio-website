@@ -404,37 +404,66 @@ section.projects {
 @media (min-width: 601px) {
   html,
   body {
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--color-accent) 72%, transparent)
-      transparent;
+    scrollbar-width: none;
   }
 
   html::-webkit-scrollbar,
   body::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 0;
+    height: 0;
   }
 
-  html::-webkit-scrollbar-track,
-  body::-webkit-scrollbar-track {
+  .desktop-scrollbar {
+    position: fixed;
+    top: calc(var(--header-height, 60px) + 12px);
+    right: 0;
+    bottom: 12px;
+    z-index: 1200;
+    display: block;
+    width: 10px;
+    border-radius: 0;
     background: transparent;
+    opacity: 0;
+    pointer-events: auto;
+    touch-action: none;
+    transition:
+      opacity var(--motion-duration-normal, 260ms)
+        var(--motion-ease-standard, ease);
   }
 
-  html::-webkit-scrollbar-thumb,
-  body::-webkit-scrollbar-thumb {
+  .desktop-scrollbar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 2px;
+    bottom: 0;
+    width: 3px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+
+  .desktop-scrollbar.is-visible {
+    opacity: 1;
+  }
+
+  .desktop-scrollbar-thumb {
+    position: relative;
+    z-index: 1;
+    width: 3px;
+    margin-left: auto;
+    margin-right: 2px;
+    min-height: 44px;
     border-radius: 999px;
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--color-focus) 82%, var(--color-accent)),
       color-mix(in srgb, var(--color-accent) 86%, var(--color-warm))
     );
-    border: 1px solid transparent;
-    background-clip: padding-box;
-  }
-
-  html::-webkit-scrollbar-thumb:hover,
-  body::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent-hover);
+    box-shadow: 0 4px 10px rgba(var(--color-accent-rgb), 0.16);
+    transition:
+      transform 120ms linear,
+      height var(--motion-duration-fast, 200ms)
+        var(--motion-ease-standard, ease);
   }
 }
 
