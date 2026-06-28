@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import iconMap from "../data/iconMap.js";
+import IconGlyph from "./IconGlyph";
 
 function getInitialTheme() {
   try {
@@ -37,11 +37,10 @@ export default function ThemeToggle({ className = "" }) {
       }
       onClick={toggle}
     >
-      {theme === "dark" ? (
-        <img src={iconMap["Sun"]} alt="Sun icon" />
-      ) : (
-        <img src={iconMap["Moon"]} alt="Moon icon" />
-      )}
+      <IconGlyph
+        name={theme === "dark" ? "sun" : "moon"}
+        className="theme-toggle-icon"
+      />
     </button>
   );
 }

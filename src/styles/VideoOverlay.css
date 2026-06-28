@@ -1,7 +1,7 @@
 .video-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(15, 15, 15, 0.9);
+  background-color: var(--color-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,9 +19,15 @@
     calc((100vh - (2 * var(--video-overlay-gap))) * 16 / 9)
   );
   max-height: calc(100vh - (2 * var(--video-overlay-gap)));
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  background:
+    linear-gradient(
+        color-mix(in srgb, var(--color-header) 64%, transparent),
+        color-mix(in srgb, var(--color-header) 64%, transparent)
+      )
+      padding-box,
+    var(--card-stroke) border-box;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
   padding: 18px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
   transition: padding 0.25s ease, width 0.25s ease, max-height 0.25s ease;
@@ -31,9 +37,10 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--overlay-control-bg);
+  color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 8px 10px;
   cursor: pointer;
   display: flex;
@@ -41,15 +48,20 @@
   justify-content: center;
 }
 
-.video-overlay-close img {
+.video-overlay-close-icon {
   width: 24px;
   height: 24px;
+  color: currentColor;
+}
+
+.video-overlay-close:hover {
+  background: var(--overlay-control-hover);
 }
 
 .video-embed {
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   max-height: calc(100vh - (2 * var(--video-overlay-gap)) - 36px);
 }
@@ -72,7 +84,7 @@
 }
 
 @media (max-width: 700px) {
-  .video-overlay-close img {
+  .video-overlay-close-icon {
     width: 22px;
     height: 22px;
   }

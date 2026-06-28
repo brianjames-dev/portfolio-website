@@ -1,6 +1,7 @@
 // /components/ProjectGallery.js
 import { useEffect, useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
+import IconGlyph from "./IconGlyph";
 import iconMap from "../data/iconMap.js";
 
 function ProjectGallery({ images, index, setIndex, onClose }) {
@@ -10,12 +11,31 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
   const [mouseDownPos, setMouseDownPos] = useState({ x: 0, y: 0 });
   const mouseWasDraggedRef = useRef(false);
   const thumbnailRefs = useRef([]);
+  const overlayRef = useRef(null);
+  const closeButtonRef = useRef(null);
+  const previouslyFocusedRef = useRef(null);
+  const currentStateRef = useRef({
+    imageIndex: index,
+    isSuperZoomed,
+    imagesLength: images.length,
+  });
   const hasShownSwipeHintRef = useRef(false);
   const hintTimeoutRef = useRef(null);
 
+  const stripRef = useRef(null);
+  const isOpen = index !== null;
+
+  useEffect(() => {
+    currentStateRef.current = {
+      imageIndex: index,
+      isSuperZoomed,
+      imagesLength: images.length,
+    };
+  }, [images.length, index, isSuperZoomed]);
+
   const scrollToThumbnail = (i, smooth = true) => {
     const el = thumbnailRefs.current[i];
-    const strip = document.querySelector(".thumbnail-strip");
+    const strip = stripRef.current;
     if (!el || !strip) return;
     const elLeft = el.offsetLeft;
     const elWidth = el.offsetWidth;
@@ -26,7 +46,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
 
   // Re-centering thumbnail scroll logic
   useEffect(() => {
-    const strip = document.querySelector(".thumbnail-strip");
+    const strip = stripRef.current;
     if (!strip || index === null) return;
 
     let scrollTimeout;
@@ -48,7 +68,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
 
   // Thumbnail row drag-scroll
   useEffect(() => {
-    const strip = document.querySelector(".thumbnail-strip");
+    const strip = stripRef.current;
     if (!strip) return;
 
     let isDragging = false;
@@ -170,12 +190,71 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     };
   }, [index, images]);
 
-  // Keyboard escape
+  // Keyboard controls and modal focus
   useEffect(() => {
-    const handleEsc = (e) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, [onClose]);
+    if (!isOpen) return undefined;
+
+    previouslyFocusedRef.current = document.activeElement;
+    const focusTimer = window.setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, 0);
+
+    const handleKeyDown = (event) => {
+      const {
+        imageIndex,
+        isSuperZoomed: zoomed,
+        imagesLength,
+      } = currentStateRef.current;
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        if (zoomed) {
+          setIsSuperZoomed(false);
+        } else {
+          onClose();
+        }
+        return;
+      }
+
+      if (!zoomed && event.key === "ArrowLeft" && imageIndex > 0) {
+        event.preventDefault();
+        setIndex(imageIndex - 1);
+        return;
+      }
+
+      if (!zoomed && event.key === "ArrowRight" && imageIndex < imagesLength - 1) {
+        event.preventDefault();
+        setIndex(imageIndex + 1);
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const focusable = overlayRef.current?.querySelectorAll(
+        'button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      const elements = Array.from(focusable || []);
+      if (!elements.length) return;
+
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener("keydown", handleKeyDown);
+      previouslyFocusedRef.current?.focus?.();
+    };
+  }, [isOpen, onClose, setIndex]);
 
   // Mobile swipe
   useEffect(() => {
@@ -222,7 +301,11 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
 
   return (
     <div
+      ref={overlayRef}
       className="fullscreen-overlay visible"
+      role="dialog"
+      aria-modal="true"
+      aria-label={image?.caption || `Image ${index + 1} of ${images.length}`}
       onClick={() => {
         if (isSuperZoomed) {
           setIsSuperZoomed(false);
@@ -233,7 +316,12 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     >
       {/* Swipe Hint */}
       {showSwipeHint && (
-        <img src={iconMap["Swipe"]} alt="Swipe hint" className="swipe-hint" />
+        <img
+          src={iconMap["Swipe"]}
+          alt=""
+          aria-hidden="true"
+          className="swipe-hint"
+        />
       )}
 
       {/* Centered Image */}
@@ -290,16 +378,22 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
               </TransformComponent>
             </TransformWrapper>
           ) : (
-            <img
-              src={image?.src}
-              alt={image?.caption || "Fullscreen"}
-              className="fullscreen-image"
-              style={{ transform: "scale(1)", cursor: "zoom-in" }}
+            <button
+              type="button"
+              className="fullscreen-image-button"
+              aria-label="Zoom image"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsSuperZoomed(true);
               }}
-            />
+            >
+              <img
+                src={image?.src}
+                alt={image?.caption || "Fullscreen"}
+                className="fullscreen-image"
+                style={{ transform: "scale(1)" }}
+              />
+            </button>
           )}
         </div>
 
@@ -309,12 +403,20 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
       </div>
 
       {/* Thumbnails */}
-      <div className={`thumbnail-strip ${isSuperZoomed ? "hidden" : ""}`}>
+      <div
+        className={`thumbnail-strip ${isSuperZoomed ? "hidden" : ""}`}
+        ref={stripRef}
+        aria-hidden={isSuperZoomed ? "true" : undefined}
+      >
         {images.map((img, i) => (
-          <div
+          <button
+            type="button"
             key={i}
             className={`thumbnail-container ${i === index ? "active" : ""}`}
             ref={(el) => (thumbnailRefs.current[i] = el)}
+            aria-label={`Show image ${i + 1}`}
+            aria-current={i === index ? "true" : undefined}
+            tabIndex={isSuperZoomed ? -1 : undefined}
             onClick={(e) => {
               e.stopPropagation();
               setIndex(i);
@@ -322,17 +424,22 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
             }}
           >
             <img
-              src={img.src}
+              src={img.thumbnailSrc || img.src}
               alt={img.caption || `Thumbnail ${i + 1}`}
               className="thumbnail-image"
+              loading="lazy"
+              decoding="async"
             />
-          </div>
+          </button>
         ))}
       </div>
 
       {/* Close Button */}
       <button
+        ref={closeButtonRef}
         className="fullscreen-close-btn"
+        type="button"
+        aria-label="Close gallery"
         onClick={(e) => {
           e.stopPropagation();
           setIsSuperZoomed(false);
@@ -340,7 +447,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
         }}
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <img src={iconMap["Close"]} alt="Close" />
+        <IconGlyph name="close" className="fullscreen-close-icon" />
       </button>
 
       {/* Arrows */}
@@ -348,6 +455,9 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
         className={`carousel-arrow left ${
           index > 0 && !isSuperZoomed ? "" : "hidden"
         }`}
+        aria-label="Previous image"
+        aria-hidden={index > 0 && !isSuperZoomed ? undefined : "true"}
+        disabled={index <= 0 || isSuperZoomed}
         onClick={(e) => {
           e.stopPropagation();
           setIndex(index - 1);
@@ -360,6 +470,11 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
         className={`carousel-arrow right ${
           index < images.length - 1 && !isSuperZoomed ? "" : "hidden"
         }`}
+        aria-label="Next image"
+        aria-hidden={
+          index < images.length - 1 && !isSuperZoomed ? undefined : "true"
+        }
+        disabled={index >= images.length - 1 || isSuperZoomed}
         onClick={(e) => {
           e.stopPropagation();
           setIndex(index + 1);

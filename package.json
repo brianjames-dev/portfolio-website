@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.848.0",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.9.1",
@@ -11,14 +10,12 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-google-recaptcha": "^3.1.0",
-    "react-scripts": "^5.0.0",
     "react-zoom-pan-pinch": "^3.7.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
   },
   "main": "index.js",
   "keywords": [],
@@ -39,14 +36,16 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
-    "@squoosh/cli": "^0.7.3",
+    "@vitejs/plugin-react": "^5.2.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^16.3.0",
     "prettier": "^3.6.2",
-    "sharp": "^0.34.3"
+    "sharp": "^0.34.3",
+    "vite": "^7.3.6"
   }
 }

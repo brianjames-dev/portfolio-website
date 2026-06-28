@@ -1,12 +1,22 @@
-// ParticlesBackground.js
-import { initParticlesEngine } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
 import { lazy, memo, Suspense, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
-const engineReadyPromise = initParticlesEngine(async (engine) => {
-  await loadSlim(engine);
-});
+let engineReadyPromise;
+
+const loadParticlesEngine = async () => {
+  if (!engineReadyPromise) {
+    engineReadyPromise = Promise.all([
+      import("@tsparticles/react"),
+      import("@tsparticles/slim"),
+    ]).then(([particlesReact, particlesSlim]) =>
+      particlesReact.initParticlesEngine(async (engine) => {
+        await particlesSlim.loadSlim(engine);
+      })
+    );
+  }
+
+  return engineReadyPromise;
+};
 
 const LazyParticles = lazy(() =>
   import("@tsparticles/react").then((m) => ({ default: m.Particles }))
@@ -17,14 +27,34 @@ function ParticlesBackground() {
   const [mounted, setMounted] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [backgroundColor, setBackgroundColor] = useState("#f8f3d9");
+  const [backgroundColor, setBackgroundColor] = useState("#f5f8f4");
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
-    import("@tsparticles/react");
-    engineReadyPromise.then(() => setEngineReady(true));
+    const media = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    if (media?.matches) {
+      setPrefersReducedMotion(true);
+      return undefined;
+    }
+
+    const idleId = window.requestIdleCallback
+      ? window.requestIdleCallback(() => {
+          loadParticlesEngine().then(() => setEngineReady(true));
+        })
+      : window.setTimeout(() => {
+          loadParticlesEngine().then(() => setEngineReady(true));
+        }, 700);
+
     const raf = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      if (window.cancelIdleCallback && typeof idleId === "number") {
+        window.cancelIdleCallback(idleId);
+      } else {
+        window.clearTimeout(idleId);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -67,7 +97,7 @@ function ParticlesBackground() {
   }, [engineReady, mounted, loaded]);
 
   const options = useMemo(() => {
-    const particleColor = isDarkMode ? "#F8F3D9" : "#504B38";
+    const particleColor = isDarkMode ? "#8FC89D" : "#1F5137";
 
     const dpr =
       typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
@@ -75,16 +105,16 @@ function ParticlesBackground() {
       typeof window !== "undefined" &&
       window.matchMedia?.("(max-width: 600px)")?.matches;
 
-    const count = Math.round(120 * (dpr > 1.5 ? 0.7 : 1)); // scale on hi-DPR
-    const fps = 120;
-    const linkDist = small ? 150 : 200;
-    const repulseDist = small ? 70 : 100;
-    const repulseDuration = 0.25;
+    const count = Math.round((small ? 22 : 56) * (dpr > 1.5 ? 0.75 : 1));
+    const fps = small ? 24 : 45;
+    const linkDist = small ? 0 : 170;
+    const repulseDist = small ? 0 : 90;
+    const repulseDuration = 0.2;
 
     return {
       fullScreen: { enable: true, zIndex: 0 },
       background: { color: backgroundColor },
-      detectRetina: true,
+      detectRetina: !small,
       fpsLimit: fps,
       pauseOnBlur: true,
       pauseOnOutsideViewport: true,
@@ -92,34 +122,36 @@ function ParticlesBackground() {
         number: { value: count, density: { enable: true, area: 800 } },
         color: { value: particleColor },
         shape: { type: "circle" },
-        opacity: { value: 0.7 },
-        size: { value: { min: 1, max: 4 } },
+        opacity: { value: isDarkMode ? 0.28 : 0.22 },
+        size: { value: { min: 1, max: small ? 2.4 : 3.2 } },
         links: {
-          enable: true,
+          enable: !small,
           distance: linkDist,
           color: particleColor,
-          opacity: 0.5,
+          opacity: isDarkMode ? 0.2 : 0.16,
           width: 1,
         },
-        move: { enable: true, speed: 0.5, outModes: { default: "bounce" } },
+        move: {
+          enable: true,
+          speed: small ? 0.12 : 0.32,
+          outModes: { default: "bounce" },
+        },
       },
       interactivity: {
-        // listen on window so the layer can keep pointer-events: none
         detectsOn: "window",
         events: {
-          onHover: { enable: true, mode: "repulse" },
-          onClick: { enable: true, mode: "push" },
+          onHover: { enable: !small, mode: "repulse" },
+          onClick: { enable: false },
           resize: false,
         },
         modes: {
           repulse: { distance: repulseDist, duration: repulseDuration },
-          push: { quantity: 4 },
         },
       },
     };
   }, [backgroundColor, isDarkMode]);
 
-  if (!engineReady || !mounted) return null;
+  if (prefersReducedMotion || !engineReady || !mounted) return null;
 
   const layer = (
     <div

@@ -1,3 +1,4 @@
+import IconGlyph from "./IconGlyph";
 import iconMap from "../data/iconMap.js";
 import "../styles/CollapsedCard.css";
 import { renderTag } from "../utils/renderTag.js";
@@ -77,30 +78,20 @@ function CollapsedCard({
                 onGalleryClick(project.images);
               }}
             >
-              <img
-                src={iconMap["Gallery"]}
-                alt="Gallery"
-                className="button-icon"
-              />
+              <IconGlyph name="gallery" className="button-icon" />
               Gallery
               {isLockable &&
                 (isGalleryLocked ? (
-                  <span
-                    className="lock-state-icon icon-mask"
-                    aria-label="Locked"
-                    style={{
-                      WebkitMaskImage: `url(${iconMap["Locked"]})`,
-                      maskImage: `url(${iconMap["Locked"]})`,
-                    }}
+                  <IconGlyph
+                    name="locked"
+                    className="lock-state-icon"
+                    label="Locked"
                   />
                 ) : (
-                  <span
-                    className="lock-state-icon icon-mask"
-                    aria-label="Unlocked"
-                    style={{
-                      WebkitMaskImage: `url(${iconMap["Unlocked"]})`,
-                      maskImage: `url(${iconMap["Unlocked"]})`,
-                    }}
+                  <IconGlyph
+                    name="unlocked"
+                    className="lock-state-icon"
+                    label="Unlocked"
                   />
                 ))}
             </button>
@@ -113,33 +104,20 @@ function CollapsedCard({
                 onDemoClick?.(project.demoVideo);
               }}
             >
-              <span
-                className="button-icon icon-mask"
-                aria-label="Video"
-                style={{
-                  WebkitMaskImage: `url(${iconMap["Video"]})`,
-                  maskImage: `url(${iconMap["Video"]})`,
-                }}
-              />
+              <IconGlyph name="video" className="button-icon" />
               Demo
               {isLockable &&
                 (isGalleryLocked ? (
-                  <span
-                    className="lock-state-icon icon-mask"
-                    aria-label="Locked"
-                    style={{
-                      WebkitMaskImage: `url(${iconMap["Locked"]})`,
-                      maskImage: `url(${iconMap["Locked"]})`,
-                    }}
+                  <IconGlyph
+                    name="locked"
+                    className="lock-state-icon"
+                    label="Locked"
                   />
                 ) : (
-                  <span
-                    className="lock-state-icon icon-mask"
-                    aria-label="Unlocked"
-                    style={{
-                      WebkitMaskImage: `url(${iconMap["Unlocked"]})`,
-                      maskImage: `url(${iconMap["Unlocked"]})`,
-                    }}
+                  <IconGlyph
+                    name="unlocked"
+                    className="lock-state-icon"
+                    label="Unlocked"
                   />
                 ))}
             </button>
@@ -152,7 +130,7 @@ function CollapsedCard({
                 onExpand();
               }}
             >
-              <img src={iconMap["Info"]} alt="Info" className="button-icon" />
+              <IconGlyph name="info" className="button-icon" />
               Learn More
             </button>
           )}

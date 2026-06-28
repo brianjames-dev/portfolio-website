@@ -30,7 +30,12 @@ export function renderContentBlock(block, i) {
         key={`image-${i}`}
         className={`block-image ${block.className || ""}`}
       >
-        <img src={block.src} alt={block.alt || ""} />
+        <img
+          src={block.src}
+          alt={block.alt || ""}
+          loading="lazy"
+          decoding="async"
+        />
         {block.caption && (
           <figcaption dangerouslySetInnerHTML={{ __html: block.caption }} />
         )}

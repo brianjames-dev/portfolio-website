@@ -4,3 +4,4 @@ build/
 .env
 EOT
 reference/
+lambda/*.zip

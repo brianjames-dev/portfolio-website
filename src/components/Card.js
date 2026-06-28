@@ -1,4 +1,9 @@
-import { AnimatePresence, motion, useSpring } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useSpring,
+} from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const FADE_DURATION = 0.5; // Content fade duration
@@ -16,6 +21,9 @@ export default function Card({
   const cardRef = useRef(null);
   const contentRef = useRef(null); // Ref for inner content
   const scrollTimeoutRef = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
+  const fadeDuration = shouldReduceMotion ? 0 : FADE_DURATION;
+  const morphDuration = shouldReduceMotion ? 0 : MORPH_DURATION;
 
   const isCardTopVisible = useCallback(() => {
     if (typeof window === "undefined") return true;
@@ -74,35 +82,32 @@ export default function Card({
 
   // Measure height after render and on state changes
   useEffect(() => {
-    // Snapshot refs & derived lists for this effect instance
     const el = contentRef.current;
-    const children = el ? Array.from(el.querySelectorAll("*")) : [];
+    let rafId = 0;
 
-    // Timers
-    const initialTimeout = setTimeout(measureHeight, 100);
+    const scheduleMeasure = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(measureHeight);
+    };
+
+    const initialTimeout = setTimeout(scheduleMeasure, 100);
     const animationTimeout = setTimeout(
-      measureHeight,
-      (FADE_DURATION + MORPH_DURATION) * 1000
+      scheduleMeasure,
+      (fadeDuration + morphDuration) * 1000
     );
 
-    // Observe size changes
-    const observer = new ResizeObserver(measureHeight);
+    const observer = new ResizeObserver(scheduleMeasure);
     if (el) {
       observer.observe(el);
-      children.forEach((child) => observer.observe(child));
     }
 
-    // Cleanup uses ONLY the snapshots above
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       clearTimeout(initialTimeout);
       clearTimeout(animationTimeout);
-      if (el) {
-        observer.unobserve(el);
-        children.forEach((child) => observer.unobserve(child));
-      }
-      // (optional) observer.disconnect(); // safe if you’re done with it entirely
+      observer.disconnect();
     };
-  }, [isExpanded, measureHeight]);
+  }, [isExpanded, measureHeight, fadeDuration, morphDuration]);
 
   const scrollCardIntoView = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -117,9 +122,9 @@ export default function Card({
     const targetTop = rect.top + window.pageYOffset - headerOffset - 8;
     window.scrollTo({
       top: Math.max(0, targetTop),
-      behavior: "smooth",
+      behavior: shouldReduceMotion ? "auto" : "smooth",
     });
-  }, []);
+  }, [shouldReduceMotion]);
 
   const handleToggle = useCallback(
     (options = {}) => {
@@ -144,7 +149,7 @@ export default function Card({
         () => {
           setIsAnimating(false);
         },
-        (FADE_DURATION + MORPH_DURATION) * 1000
+        (fadeDuration + morphDuration) * 1000
       );
     },
     [
@@ -152,6 +157,8 @@ export default function Card({
       isAnimating,
       isExpanded,
       isCardTopVisible,
+      fadeDuration,
+      morphDuration,
       onToggle,
       scrollCardIntoView,
     ]
@@ -171,14 +178,14 @@ export default function Card({
       ref={cardRef}
       transition={{
         layout: {
-          duration: MORPH_DURATION,
+          duration: morphDuration,
           ease: [0.4, 0, 0.2, 1], // Smoother easing for width/position
         },
       }}
       style={{
         width: isExpanded ? "1000px" : "800px", // Explicit width animation
         maxWidth: "100%", // Ensure responsiveness
-        height: springHeight, // Use spring for height animation
+        height: shouldReduceMotion ? "auto" : springHeight,
         margin: "20px auto",
       }}
     >
@@ -191,7 +198,7 @@ export default function Card({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{
-                duration: FADE_DURATION,
+                duration: fadeDuration,
                 ease: "easeInOut",
               }}
             >
@@ -206,7 +213,7 @@ export default function Card({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{
-                duration: FADE_DURATION,
+                duration: fadeDuration,
                 ease: "easeInOut",
               }}
               onClick={(e) => e.stopPropagation()}

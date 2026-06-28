@@ -4,6 +4,9 @@ import crypto from "crypto";
 const GALLERY_PASSWORD = process.env.GALLERY_PASSWORD || "";
 const GALLERY_TOKEN_SECRET = process.env.GALLERY_TOKEN_SECRET || "";
 const TOKEN_TTL_MS = Number(process.env.GALLERY_TOKEN_TTL_MS || 1000 * 60 * 60 * 24 * 7);
+const FAILED_ATTEMPT_WINDOW_MS = 1000 * 60 * 15;
+const MAX_FAILED_ATTEMPTS = 8;
+const failedAttempts = new Map();
 
 export const handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
@@ -14,11 +17,31 @@ export const handler = async (event) => {
     };
   }
 
-  const body = JSON.parse(event.body || "{}");
+  const bodyResult = parseBody(event.body);
+  if (!bodyResult.ok) {
+    return {
+      statusCode: 400,
+      headers: corsHeaders(),
+      body: JSON.stringify({ error: "Invalid request body" }),
+    };
+  }
+
+  const body = bodyResult.value;
   const { password, token } = body;
+  const requestKey = getRequestKey(event);
 
   if (password) {
-    return handleUnlock(password);
+    if (isRateLimited(requestKey)) {
+      return {
+        statusCode: 429,
+        headers: corsHeaders(),
+        body: JSON.stringify({ error: "Too many attempts. Try again later." }),
+      };
+    }
+    const response = handleUnlock(password);
+    if (response.statusCode === 401) recordFailedAttempt(requestKey);
+    if (response.statusCode === 200) clearFailedAttempts(requestKey);
+    return response;
   }
 
   if (token) {
@@ -31,6 +54,47 @@ export const handler = async (event) => {
     body: JSON.stringify({ error: "Missing password or token" }),
   };
 };
+
+function parseBody(rawBody) {
+  try {
+    return { ok: true, value: JSON.parse(rawBody || "{}") };
+  } catch (error) {
+    return { ok: false };
+  }
+}
+
+function getRequestKey(event) {
+  return (
+    event?.requestContext?.identity?.sourceIp ||
+    event?.requestContext?.http?.sourceIp ||
+    "unknown"
+  );
+}
+
+function getAttemptRecord(key) {
+  const now = Date.now();
+  const record = failedAttempts.get(key);
+  if (!record || now - record.firstAttemptAt > FAILED_ATTEMPT_WINDOW_MS) {
+    return { count: 0, firstAttemptAt: now };
+  }
+  return record;
+}
+
+function isRateLimited(key) {
+  return getAttemptRecord(key).count >= MAX_FAILED_ATTEMPTS;
+}
+
+function recordFailedAttempt(key) {
+  const record = getAttemptRecord(key);
+  failedAttempts.set(key, {
+    count: record.count + 1,
+    firstAttemptAt: record.firstAttemptAt,
+  });
+}
+
+function clearFailedAttempts(key) {
+  failedAttempts.delete(key);
+}
 
 function handleUnlock(password) {
   if (!GALLERY_PASSWORD || !GALLERY_TOKEN_SECRET) {

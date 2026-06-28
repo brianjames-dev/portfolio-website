@@ -1,7 +1,8 @@
 /* ========== Desktop Styles ========== */
 .site-header {
   height: var(--header-height, 60px);
-  background: #504b38;
+  background: color-mix(in srgb, var(--color-header) 94%, transparent);
+  backdrop-filter: blur(14px);
   position: fixed;
   top: 0;
   left: 0;
@@ -10,7 +11,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 8px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* Logo */
@@ -24,7 +26,7 @@
 }
 
 .site-header .logo a {
-  color: #f8f3d9;
+  color: #ffffff;
   text-decoration: none;
 }
 
@@ -44,7 +46,7 @@
 .site-header nav a {
   margin: 0 var(--nav-margin, 30px);
   text-decoration: none;
-  color: #f8f3d9;
+  color: rgba(255, 255, 255, 0.86);
   font-weight: 600;
   font-size: var(--nav-font-size, 1rem);
   position: relative; /* for bubble overlap */
@@ -54,11 +56,11 @@
 }
 
 .site-header nav a:hover {
-  color: #b9b28a;
+  color: #ffffff;
 }
 
 .site-header nav a.active {
-  color: #504b38;
+  color: var(--nav-pill-text);
 }
 
 /* Bubble indicator */
@@ -67,8 +69,8 @@
   top: 50%;
   transform: translateY(-50%);
   height: 32px;
-  border-radius: 10px;
-  background-color: #ebe5c2;
+  border-radius: var(--radius-md);
+  background-color: var(--nav-pill-bg);
   width: 0;
   left: 0;
   transition:
@@ -83,10 +85,13 @@
 .menu-button {
   display: none;
   position: absolute;
-  bottom: 5px;
   right: 20px;
   cursor: pointer;
   z-index: 1100;
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  padding: 0;
 }
 
 /* Theme toggle button */
@@ -97,32 +102,40 @@
   right: 64px; /* leave space for hamburger on mobile */
   height: 34px;
   width: 34px;
-  border-radius: 8px;
-  border: 1px solid var(--border-soft);
-  background: var(--surface-card);
-  color: var(--on-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-header);
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease-in-out;
 }
 
 .theme-toggle:hover {
   transform: translateY(-50%) scale(1.08);
-  background-color: var(--color-accent);
-  color: var(--button-text);
-  border-color: var(--border-soft);
+  background-color: #ffffff;
+  color: var(--color-accent-hover);
+  border-color: rgba(255, 255, 255, 0.44);
 }
 
 /* Improve accessibility focus and keep distinct from header color */
 .theme-toggle:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
-  background-color: var(--color-accent);
-  color: var(--button-text);
+  background-color: #ffffff;
+  color: var(--color-accent-hover);
 }
 
-.theme-toggle img {
+.theme-toggle-icon {
+  display: block;
   width: 20px;
   height: 20px;
+}
+
+.menu-button-icon {
+  display: block;
+  width: 34px;
+  height: 34px;
+  color: currentColor;
 }
 
 
@@ -161,6 +174,10 @@
     top: 20%;
   }
 
+  .menu-button:hover {
+    background: transparent;
+  }
+
   .theme-toggle {
     top: 50%;
     transform: translateY(-50%);
@@ -176,15 +193,15 @@
   .site-header nav {
     display: flex;
     flex-direction: column;
-    background: #504b38;
+    background: var(--color-header);
     position: fixed;
     top: var(--header-height);
     right: 0;        /* anchor to the right */
     left: auto;      /* ensure no left anchoring */
-    width: 31%;
+    width: min(48vw, 220px);
     transform: translateX(100%); /* hidden just off the right edge */
     transition: transform 0.25s ease; /* animate open/close */
-    box-shadow: 0 8px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-soft);
   }
 
   .site-header nav.active {
@@ -200,19 +217,19 @@
     margin: 0;
     padding: 10px;
     text-align: center;
-    border-top: 1px solid #b9b28a;
-    color: #f8f3d9;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
   }
 
   .site-header nav a.active {
-    color: #504b38;
+    color: var(--nav-pill-text);
   }
 
   .bubble-indicator {
     display: block; /* Allow bubble to show when menu is open */
     border-radius: 0px; /* Match desktop rounded shape */
-    background-color: #ebe5c2; /* Match desktop color */
+    background-color: var(--nav-pill-bg);
     opacity: 0; /* Start hidden, controlled by JS */
     transition:
       width 0.25s ease,
@@ -235,10 +252,5 @@
     display: none; /* Hide bubble when menu is closed */
   }
 }
-
-
-
-
-
 
 

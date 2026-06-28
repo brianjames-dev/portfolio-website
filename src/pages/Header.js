@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import iconMap from "../data/iconMap.js";
+import IconGlyph from "../components/IconGlyph";
 import ThemeToggle from "../components/ThemeToggle";
 import "../styles/Header.css";
 
@@ -7,6 +7,9 @@ let hasAnimatedIn = false;
 
 function Header({ activeSection }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth <= 600 : false
+  );
   const navRef = useRef(null);
   const bubbleRef = useRef(null);
 
@@ -52,7 +55,7 @@ function Header({ activeSection }) {
       lastScrollY = currentScrollY;
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
       root.classList.remove("header-hidden");
@@ -69,8 +72,9 @@ function Header({ activeSection }) {
       nav.classList.add("no-animate");
       setTimeout(() => nav.classList.remove("no-animate"), 300);
 
-      const isMobile = window.innerWidth <= 600;
-      if (isMobile && !hasAnimatedIn) {
+      const nextIsMobile = window.innerWidth <= 600;
+      setIsMobile(nextIsMobile);
+      if (nextIsMobile && !hasAnimatedIn) {
         nav.classList.add("hidden-on-load");
         setTimeout(() => {
           nav.classList.remove("hidden-on-load");
@@ -87,11 +91,41 @@ function Header({ activeSection }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+
+    const handlePointerDown = (event) => {
+      const nav = navRef.current;
+      if (
+        nav &&
+        !nav.contains(event.target) &&
+        !event.target.closest(".menu-button")
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [menuOpen]);
+
   // Update bubble position
   useEffect(() => {
     const bubble = bubbleRef.current;
     const nav = navRef.current;
     if (!bubble || !nav) return;
+
+    let rafId = 0;
 
     const updateBubblePosition = () => {
       const activeLink = nav.querySelector(`a[href="#${activeSection}"]`);
@@ -132,14 +166,25 @@ function Header({ activeSection }) {
       }
     };
 
-    updateBubblePosition();
+    const scheduleBubblePosition = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        updateBubblePosition();
+      });
+    };
+
+    scheduleBubblePosition();
 
     // Update on resize, scroll, or menu toggle
-    window.addEventListener("resize", updateBubblePosition);
-    window.addEventListener("scroll", updateBubblePosition);
+    window.addEventListener("resize", scheduleBubblePosition);
+    window.addEventListener("scroll", scheduleBubblePosition, {
+      passive: true,
+    });
     return () => {
-      window.removeEventListener("resize", updateBubblePosition);
-      window.removeEventListener("scroll", updateBubblePosition);
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", scheduleBubblePosition);
+      window.removeEventListener("scroll", scheduleBubblePosition);
     };
   }, [activeSection, menuOpen]); // Add menuOpen as a dependency
 
@@ -152,23 +197,36 @@ function Header({ activeSection }) {
           </a>
         </h1>
 
-        <div className="menu-button" onClick={() => setMenuOpen(!menuOpen)}>
-          <img
-            src={menuOpen ? iconMap["Close"] : iconMap["Menu"]}
-            alt={menuOpen ? "Close menu" : "Open menu"}
+        <button
+          type="button"
+          className="menu-button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          aria-controls="site-navigation"
+        >
+          <IconGlyph
+            name={menuOpen ? "close" : "menu"}
+            className="menu-button-icon"
           />
-        </div>
+        </button>
 
         {/* Theme toggle (visible on all viewports) */}
         <ThemeToggle />
 
-        <nav ref={navRef} className={menuOpen ? "active" : ""}>
+        <nav
+          id="site-navigation"
+          ref={navRef}
+          className={menuOpen ? "active" : ""}
+          aria-hidden={isMobile && !menuOpen ? "true" : undefined}
+        >
           {["home", "about", "experience", "projects", "contact"].map(
             (section) => (
               <a
                 key={section}
                 className={activeSection === section ? "active" : ""}
                 href={`#${section}`}
+                tabIndex={isMobile && !menuOpen ? -1 : undefined}
                 onClick={(e) => {
                   // Always close the menu on click
                   setMenuOpen(false);

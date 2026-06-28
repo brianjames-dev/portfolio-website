@@ -2,7 +2,7 @@
   --modal-offset-y: calc(var(--header-height) * 0.5);
   position: fixed;
   inset: 0;
-  background: rgba(15, 15, 15, 0.65);
+  background: color-mix(in srgb, var(--color-overlay) 78%, transparent);
   display: grid;
   place-items: center;
   padding: 24px;
@@ -22,10 +22,12 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  background: var(--surface-card);
-  border: 1px solid var(--border-soft);
-  border-radius: 14px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  background:
+    linear-gradient(var(--surface-card), var(--surface-card)) padding-box,
+    var(--card-stroke) border-box;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
   padding: 20px;
   color: var(--color-text);
   transform: translate(-50%, -50%) translateY(var(--modal-offset-y));
@@ -54,9 +56,10 @@
 
 .gallery-lock-close {
   background: transparent;
+  color: var(--color-text);
   border: none;
   padding: 6px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: transform 0.25s linear;
 }
@@ -66,10 +69,11 @@
   transform: scale(1.3);
 }
 
-.gallery-lock-close img {
+.gallery-lock-close-icon {
   width: 28px;
   height: 28px;
   display: block;
+  color: currentColor;
 }
 
 .gallery-lock-hint {
@@ -113,9 +117,9 @@
   width: 100%;
   height: 40px;
   padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #504b38;
-  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-soft);
+  background: var(--surface-card-strong);
   color: var(--color-text);
 }
 
@@ -130,7 +134,7 @@
   transform: translateY(-50%);
   height: 28px;
   padding: 0 10px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border-soft);
   background: var(--color-accent);
   color: var(--button-text);
@@ -146,7 +150,7 @@
 }
 
 .gallery-lock-input:focus {
-  outline: 2px solid var(--color-text);
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
@@ -161,7 +165,7 @@
 
 .gallery-lock-error {
   margin: 0;
-  color: #b23b3b;
+  color: var(--color-warm);
   font-size: 0.9rem;
 }
 
@@ -170,15 +174,14 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 2px 8px;
-  border-radius: 999px;
   border: 1px solid var(--border-soft);
-  color: var(--button-text);
-  background: rgba(0, 0, 0, 0.2);
+  color: var(--color-accent-hover);
+  background: var(--color-accent-soft);
 }
 
 .gallery-lock-divider {
   height: 1px;
-  background: var(--color-text);
+  background: var(--divider-line);
   margin: 20px 0;
 }
 
@@ -207,8 +210,8 @@
   height: 40px;
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid #504b38;
-  background: var(--color-bg);
+  border: 1px solid var(--border-soft);
+  background: var(--surface-card-strong);
   color: var(--color-text) !important;
   caret-color: var(--color-text);
   -webkit-text-fill-color: var(--color-text);
@@ -239,7 +242,7 @@
 
 .gallery-access-request input:focus,
 .gallery-access-request textarea:focus {
-  outline: 2px solid var(--color-text);
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
@@ -257,28 +260,30 @@
 
 .error {
   font-size: 0.82rem;
-  color: #b23b3b;
+  color: var(--color-warm);
 }
 
 .input-error {
-  border-color: #b23b3b;
+  border-color: var(--color-warm);
 }
 
 .form-feedback {
   margin-top: 10px;
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
 }
 
 .form-feedback.success {
-  background: rgba(27, 99, 61, 0.12);
-  color: #1b633d;
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid color-mix(in srgb, var(--color-success) 35%, transparent);
 }
 
 .form-feedback.error {
-  background: rgba(178, 59, 59, 0.12);
-  color: #b23b3b;
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  border: 1px solid color-mix(in srgb, var(--color-error) 35%, transparent);
 }
 
 @media (max-width: 600px) {
@@ -355,6 +360,7 @@
 .gallery-lock-button-icon {
   width: 24px;
   height: 24px;
+  color: currentColor;
 }
 
 .gallery-lock-button-icon--small {

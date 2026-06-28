@@ -10,13 +10,22 @@ const Projects = lazy(() => import("./pages/Projects"));
 
 function App() {
   const [activeSection, setActiveSection] = useState("home");
-  const [expandedProjectIndex, setExpandedProjectIndex] = useState(null); // Updated to include setter
 
   useEffect(() => {
+    const sectionIds = ["home", "about", "experience", "projects", "contact"];
     const getSections = () =>
       Array.from(document.querySelectorAll("section[id]"));
 
     let sections = getSections();
+    let rafId = 0;
+    let headerHeight = 60;
+
+    const readHeaderHeight = () => {
+      const headerVar = getComputedStyle(document.documentElement)
+        .getPropertyValue("--header-height")
+        .trim();
+      headerHeight = parseInt(headerVar || "60", 10) || 60;
+    };
 
     const updateActiveSectionFromViewport = () => {
       if (!sections.length) return;
@@ -24,11 +33,6 @@ function App() {
       const viewportHeight = window.innerHeight || 1;
       const viewportCenter = viewportHeight / 2;
       const bandOffset = viewportHeight * 0.1; // 20% band around center
-      const root = document.documentElement;
-      const headerVar = getComputedStyle(root)
-        .getPropertyValue("--header-height")
-        .trim();
-      const headerHeight = parseInt(headerVar || "60", 10) || 60;
       const originalBandTop = viewportCenter - bandOffset;
       const bandTop = Math.min(originalBandTop, headerHeight);
       const bandBottom = viewportCenter + bandOffset;
@@ -68,46 +72,63 @@ function App() {
       }
     };
 
-    const mutationObserver = new MutationObserver(() => {
+    const scheduleUpdate = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        updateActiveSectionFromViewport();
+      });
+    };
+
+    const refreshSections = () => {
       sections = getSections();
-      updateActiveSectionFromViewport();
+      scheduleUpdate();
+      return sectionIds.every((id) => document.getElementById(id));
+    };
+
+    const mutationObserver = new MutationObserver(() => {
+      if (refreshSections()) {
+        mutationObserver.disconnect();
+      }
     });
 
-    mutationObserver.observe(document.body, {
+    const main = document.querySelector("main") || document.body;
+    mutationObserver.observe(main, {
       childList: true,
       subtree: true,
     });
 
-    window.addEventListener("scroll", updateActiveSectionFromViewport, {
+    const handleResize = () => {
+      readHeaderHeight();
+      scheduleUpdate();
+    };
+
+    window.addEventListener("scroll", scheduleUpdate, {
       passive: true,
     });
-    window.addEventListener("resize", updateActiveSectionFromViewport);
+    window.addEventListener("resize", handleResize);
 
-    updateActiveSectionFromViewport();
+    readHeaderHeight();
+    refreshSections();
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       mutationObserver.disconnect();
-      window.removeEventListener("scroll", updateActiveSectionFromViewport);
-      window.removeEventListener("resize", updateActiveSectionFromViewport);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
     <div className="App">
-      <Header
-        activeSection={activeSection}
-        expandedProjectIndex={expandedProjectIndex}
-      />
+      <Header activeSection={activeSection} />
       <ParticlesBackground />
       <main>
         <Home />
         <Suspense fallback={null}>
           <About />
           <Experience />
-          <Projects
-            expandedProjectIndex={expandedProjectIndex}
-            setExpandedProjectIndex={setExpandedProjectIndex} // Added setter prop
-          />
+          <Projects />
           <Contact />
         </Suspense>
       </main>

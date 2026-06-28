@@ -6,12 +6,12 @@ import {
   useRef,
   useState,
 } from "react";
+import IconGlyph from "./IconGlyph";
 import {
   GALLERY_ACCESS_REQUEST_HINT,
   GALLERY_ACCESS_REQUEST_URL,
   GALLERY_LOCK_HINT,
 } from "../config/galleryLock";
-import iconMap from "../data/iconMap.js";
 import "../styles/GalleryLock.css";
 
 const LazyReCAPTCHA = lazy(() => import("react-google-recaptcha"));
@@ -20,7 +20,6 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
   const [password, setPassword] = useState("");
   const [unlockError, setUnlockError] = useState("");
   const [unlockLoading, setUnlockLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeView, setActiveView] = useState("unlock");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -39,8 +38,6 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
 
   useEffect(() => {
     if (!isOpen) return;
-    const root = document.documentElement;
-    setIsDarkMode(root.getAttribute("data-theme") === "dark");
     setPassword("");
     setUnlockError("");
     setUnlockLoading(false);
@@ -61,19 +58,10 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
       }
     };
 
-    const observer = new MutationObserver(() => {
-      setIsDarkMode(root.getAttribute("data-theme") === "dark");
-    });
-    observer.observe(root, {
-      attributes: true,
-      attributeFilter: ["data-theme"],
-    });
-
     document.addEventListener("keydown", handleKeyDown);
     document.body.classList.add("no-scroll");
 
     return () => {
-      observer.disconnect();
       document.removeEventListener("keydown", handleKeyDown);
       document.body.classList.remove("no-scroll");
     };
@@ -212,11 +200,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
             onClick={onClose}
             aria-label="Close"
           >
-            <img
-              src={iconMap[isDarkMode ? "Close" : "CloseDark"]}
-              alt=""
-              aria-hidden="true"
-            />
+            <IconGlyph name="close" className="gallery-lock-close-icon" />
           </button>
         </div>
         {activeView === "unlock" ? (
@@ -252,13 +236,10 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
                   className="learn-more-btn gallery-lock-submit-inline"
                   disabled={unlockLoading}
                 >
-                  <span
-                    className="gallery-lock-button-icon icon-mask gallery-lock-button-icon--small"
-                    aria-label="Locked"
-                    style={{
-                      WebkitMaskImage: `url(${iconMap["Locked"]})`,
-                      maskImage: `url(${iconMap["Locked"]})`,
-                    }}
+                  <IconGlyph
+                    name="locked"
+                    className="gallery-lock-button-icon gallery-lock-button-icon--small"
+                    label="Locked"
                   />
                   <span className="button-text-full">
                     {unlockLoading ? "Unlocking..." : "Unlock Gallery"}
@@ -272,13 +253,10 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
                   className="learn-more-btn gallery-lock-submit-inline"
                   onClick={handleRequestAccessClick}
                 >
-                  <span
-                    className="gallery-lock-button-icon icon-mask gallery-lock-button-icon--small"
-                    aria-label="Request access"
-                    style={{
-                      WebkitMaskImage: `url(${iconMap["Send"]})`,
-                      maskImage: `url(${iconMap["Send"]})`,
-                    }}
+                  <IconGlyph
+                    name="send"
+                    className="gallery-lock-button-icon gallery-lock-button-icon--small"
+                    label="Request access"
                   />
                   <span className="button-text-full">Request Access</span>
                   <span className="button-text-short">Request</span>
@@ -365,12 +343,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
                   className="learn-more-btn gallery-lock-submit-inline"
                   disabled={requestLoading}
                 >
-                  <img
-                    src={iconMap["Send"]}
-                    alt=""
-                    aria-hidden="true"
-                    className="gallery-lock-button-icon"
-                  />
+                  <IconGlyph name="send" className="gallery-lock-button-icon" />
                   {requestLoading ? "Sending..." : "Send Request"}
                 </button>
               </div>

@@ -1,3 +1,4 @@
+import IconGlyph from "../components/IconGlyph";
 import iconMap from "../data/iconMap.js";
 import "../styles/Home.css";
 
@@ -42,18 +43,17 @@ function Home() {
         <div className="home-under-line">
           {/* Resume & Email buttons aligned under avatar */}
           <div className="home-action-buttons">
-            <a href="/resume.pdf" download>
-              <button>
-                <img src={iconMap["Download"]} alt="Download icon" />
-                Résumé
-              </button>
+            <a href="/resume.pdf" download className="home-action-link">
+              <IconGlyph name="download" className="button-icon" />
+              Résumé
             </a>
 
-            <a href="mailto:brianjames.dev@gmail.com">
-              <button>
-                <img src={iconMap["Send"]} alt="Email Send icon" />
-                Email Me
-              </button>
+            <a
+              href="mailto:brianjames.dev@gmail.com"
+              className="home-action-link"
+            >
+              <IconGlyph name="send" className="button-icon" />
+              Email Me
             </a>
           </div>
 
@@ -63,16 +63,19 @@ function Home() {
               href="https://github.com/brianjames-dev"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="GitHub"
             >
               <span className="icon-wrapper">
                 <img
                   src={iconMap["GitHubThemed"]}
-                  alt="GitHub"
+                  alt=""
+                  aria-hidden="true"
                   className="default"
                 />
                 <img
                   src={iconMap["GitHubHover"]}
-                  alt="GitHub"
+                  alt=""
+                  aria-hidden="true"
                   className="hover"
                 />
               </span>
@@ -81,16 +84,19 @@ function Home() {
               href="https://www.linkedin.com/in/brianjames-dev/"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="LinkedIn"
             >
               <span className="icon-wrapper">
                 <img
                   src={iconMap["LinkedInThemed"]}
-                  alt="LinkedIn"
+                  alt=""
+                  aria-hidden="true"
                   className="default"
                 />
                 <img
                   src={iconMap["LinkedInHover"]}
-                  alt="LinkedIn"
+                  alt=""
+                  aria-hidden="true"
                   className="hover"
                 />
               </span>
@@ -99,16 +105,19 @@ function Home() {
               href="https://www.instagram.com/brianallenjames"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Instagram"
             >
               <span className="icon-wrapper">
                 <img
                   src={iconMap["InstagramThemed"]}
-                  alt="Instagram"
+                  alt=""
+                  aria-hidden="true"
                   className="default"
                 />
                 <img
                   src={iconMap["InstagramHover"]}
-                  alt="Instagram"
+                  alt=""
+                  aria-hidden="true"
                   className="hover"
                 />
               </span>

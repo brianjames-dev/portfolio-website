@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { CONTACT_FORM_URL } from "../config/contact";
 import iconMap from "../data/iconMap.js";
 import "../styles/Contact.css";
 
@@ -52,6 +53,9 @@ function Contact() {
     const newErrors = {};
     if (!form.name.trim()) newErrors.name = "Name is required.";
     if (!form.email.trim()) newErrors.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      newErrors.email = "Enter a valid email address.";
+    }
     if (!form.message.trim()) newErrors.message = "Message is required.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -69,16 +73,17 @@ function Contact() {
 
     setLoading(true);
     try {
-      const response = await fetch(
-        "https://7ohwfvw4b9.execute-api.us-west-1.amazonaws.com/default/contactFormHandler",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...form, captchaToken }),
-        }
-      );
+      if (!CONTACT_FORM_URL) {
+        throw new Error("Contact service is not configured.");
+      }
 
-      const data = await response.json();
+      const response = await fetch(CONTACT_FORM_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, captchaToken }),
+      });
+
+      const data = await response.json().catch(() => ({}));
       if (response.ok) {
         setStatus("success");
         setMessage("Message sent! I'll get back to you soon.");
@@ -91,8 +96,7 @@ function Contact() {
           data.error || "Something went wrong. Please try again later."
         );
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
       setStatus("error");
       setMessage("Failed to send. Check your internet connection.");
     } finally {
@@ -121,16 +125,6 @@ function Contact() {
       onMouseEnter={onFirstInteract}
     >
       <div className="contact-card">
-        <div className="availability-badge">
-          <span
-            className="availability-icon icon-mask-info"
-            aria-hidden="true"
-          />
-          <div className="availability-text">
-            <strong>Open to Opportunities</strong>
-            <span>Full-time • Contract • Remote</span>
-          </div>
-        </div>
         <div className="contact-left">
           <h2>Get In Touch</h2>
           <p>
@@ -215,7 +209,7 @@ function Contact() {
                       cy="25"
                       r="20"
                       fill="none"
-                      stroke="#F8F3D9"
+                      stroke="currentColor"
                       strokeWidth="5"
                       strokeLinecap="round"
                       strokeDasharray="90 150"
@@ -243,7 +237,7 @@ function Contact() {
           <p>
             <strong>Address</strong>
             <br />
-            Somewhere in Sacramento, CA
+            SF Bay Area
           </p>
 
           <div className="contact-links-row">
@@ -256,16 +250,19 @@ function Contact() {
                 href="https://github.com/brianjames-dev"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="GitHub"
               >
                 <span className="contact-icon-wrapper">
                   <img
                     src={iconMap["GitHubThemed"]}
-                    alt="GitHub"
+                    alt=""
+                    aria-hidden="true"
                     className="default"
                   />
                   <img
                     src={iconMap["GitHubHover"]}
-                    alt="GitHub"
+                    alt=""
+                    aria-hidden="true"
                     className="hover"
                   />
                 </span>
@@ -274,16 +271,19 @@ function Contact() {
                 href="https://www.linkedin.com/in/brianjames-dev/"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="LinkedIn"
               >
                 <span className="contact-icon-wrapper">
                   <img
                     src={iconMap["LinkedInThemed"]}
-                    alt="LinkedIn"
+                    alt=""
+                    aria-hidden="true"
                     className="default"
                   />
                   <img
                     src={iconMap["LinkedInHover"]}
-                    alt="LinkedIn"
+                    alt=""
+                    aria-hidden="true"
                     className="hover"
                   />
                 </span>
@@ -292,16 +292,19 @@ function Contact() {
                 href="https://www.instagram.com/brianallenjames"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Instagram"
               >
                 <span className="contact-icon-wrapper">
                   <img
                     src={iconMap["InstagramThemed"]}
-                    alt="Instagram"
+                    alt=""
+                    aria-hidden="true"
                     className="default"
                   />
                   <img
                     src={iconMap["InstagramHover"]}
-                    alt="Instagram"
+                    alt=""
+                    aria-hidden="true"
                     className="hover"
                   />
                 </span>

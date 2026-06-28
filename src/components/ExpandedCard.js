@@ -1,7 +1,7 @@
 // src/components/ExpandedCard.js
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
-import iconMap from "../data/iconMap.js";
+import React from "react";
+import IconGlyph from "./IconGlyph";
 import "../styles/BookieBot.css";
 import "../styles/CollapsedCard.css"; // for shared section styles
 import { renderContentBlock } from "../utils/renderContentBlock.js";
@@ -20,10 +20,6 @@ function ExpandedCard({
   handleClose,
   handleCloseAndScroll,
 }) {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof document === "undefined") return false;
-    return document.documentElement.getAttribute("data-theme") === "dark";
-  });
   const hasGallery =
     (project.images?.length || 0) > 0 || Boolean(showGalleryButton);
   const hasDemo = Boolean(showDemoButton);
@@ -36,37 +32,23 @@ function ExpandedCard({
   const hasVideoEmbed =
     videoEmbed?.provider === "youtube" && Boolean(videoEmbedId);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return undefined;
-    const root = document.documentElement;
-    if (!root) return undefined;
-
-    const updateMode = () =>
-      setIsDarkMode(root.getAttribute("data-theme") === "dark");
-    updateMode();
-
-    const observer = new MutationObserver(updateMode);
-    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => observer.disconnect();
-  }, []);
-
-  const closeIconKey = isDarkMode ? "Close" : "CloseDark";
-
   return (
     <div className="expanded-block">
       {/* Expanded Title / Subtitle / Close */}
       <div className="expanded-header">
         <div className="expanded-title-row">
           <h3>{project.expanded?.title}</h3>
-          <img
-            src={iconMap[closeIconKey]}
-            alt="Close"
-            className="close-button-icon"
+          <button
+            type="button"
+            className="close-button-icon-button"
+            aria-label="Close details"
             onClick={(e) => {
               e.stopPropagation();
               handleClose();
             }}
-          />
+          >
+            <IconGlyph name="close" className="close-button-icon" />
+          </button>
         </div>
         <p className="expanded-subtitle">{project.expanded?.subtitle}</p>
 
@@ -83,30 +65,20 @@ function ExpandedCard({
                   onGalleryClick(project.images);
                 }}
               >
-                <img
-                  src={iconMap["Gallery"]}
-                  alt="Gallery"
-                  className="button-icon"
-                />
+                <IconGlyph name="gallery" className="button-icon" />
                 Gallery
                 {isLockable &&
                   (isGalleryLocked ? (
-                    <span
-                      className="lock-state-icon icon-mask"
-                      aria-label="Locked"
-                      style={{
-                        WebkitMaskImage: `url(${iconMap["Locked"]})`,
-                        maskImage: `url(${iconMap["Locked"]})`,
-                      }}
+                    <IconGlyph
+                      name="locked"
+                      className="lock-state-icon"
+                      label="Locked"
                     />
                   ) : (
-                    <span
-                      className="lock-state-icon icon-mask"
-                      aria-label="Unlocked"
-                      style={{
-                        WebkitMaskImage: `url(${iconMap["Unlocked"]})`,
-                        maskImage: `url(${iconMap["Unlocked"]})`,
-                      }}
+                    <IconGlyph
+                      name="unlocked"
+                      className="lock-state-icon"
+                      label="Unlocked"
                     />
                   ))}
               </button>
@@ -119,33 +91,20 @@ function ExpandedCard({
                   onDemoClick?.(project.demoVideo);
                 }}
               >
-                <span
-                  className="button-icon icon-mask"
-                  aria-label="Video"
-                  style={{
-                    WebkitMaskImage: `url(${iconMap["Video"]})`,
-                    maskImage: `url(${iconMap["Video"]})`,
-                }}
-              />
+                <IconGlyph name="video" className="button-icon" />
                 Demo
                 {isLockable &&
                   (isGalleryLocked ? (
-                    <span
-                      className="lock-state-icon icon-mask"
-                      aria-label="Locked"
-                      style={{
-                        WebkitMaskImage: `url(${iconMap["Locked"]})`,
-                        maskImage: `url(${iconMap["Locked"]})`,
-                      }}
+                    <IconGlyph
+                      name="locked"
+                      className="lock-state-icon"
+                      label="Locked"
                     />
                   ) : (
-                    <span
-                      className="lock-state-icon icon-mask"
-                      aria-label="Unlocked"
-                      style={{
-                        WebkitMaskImage: `url(${iconMap["Unlocked"]})`,
-                        maskImage: `url(${iconMap["Unlocked"]})`,
-                      }}
+                    <IconGlyph
+                      name="unlocked"
+                      className="lock-state-icon"
+                      label="Unlocked"
                     />
                   ))}
               </button>
@@ -158,11 +117,7 @@ function ExpandedCard({
                   window.open(project.expanded.github, "_blank");
                 }}
               >
-                <img
-                  src={iconMap["GitLight"]}
-                  alt="GitHub"
-                  className="button-icon"
-                />
+                <IconGlyph name="github" className="button-icon" />
                 GitHub
               </button>
             )}
@@ -280,30 +235,20 @@ function ExpandedCard({
               onGalleryClick(project.images);
             }}
           >
-            <img
-              src={iconMap["Gallery"]}
-              alt="Gallery"
-              className="button-icon"
-            />
+            <IconGlyph name="gallery" className="button-icon" />
             Gallery
             {isLockable &&
               (isGalleryLocked ? (
-                <span
-                  className="lock-state-icon icon-mask"
-                  aria-label="Locked"
-                  style={{
-                    WebkitMaskImage: `url(${iconMap["Locked"]})`,
-                    maskImage: `url(${iconMap["Locked"]})`,
-                  }}
+                <IconGlyph
+                  name="locked"
+                  className="lock-state-icon"
+                  label="Locked"
                 />
               ) : (
-                <span
-                  className="lock-state-icon icon-mask"
-                  aria-label="Unlocked"
-                  style={{
-                    WebkitMaskImage: `url(${iconMap["Unlocked"]})`,
-                    maskImage: `url(${iconMap["Unlocked"]})`,
-                  }}
+                <IconGlyph
+                  name="unlocked"
+                  className="lock-state-icon"
+                  label="Unlocked"
                 />
               ))}
           </button>
@@ -316,33 +261,20 @@ function ExpandedCard({
               onDemoClick?.(project.demoVideo);
             }}
           >
-            <span
-              className="button-icon icon-mask"
-              aria-label="Video"
-              style={{
-                WebkitMaskImage: `url(${iconMap["Video"]})`,
-                maskImage: `url(${iconMap["Video"]})`,
-              }}
-            />
+            <IconGlyph name="video" className="button-icon" />
             Demo
             {isLockable &&
               (isGalleryLocked ? (
-                <span
-                  className="lock-state-icon icon-mask"
-                  aria-label="Locked"
-                  style={{
-                    WebkitMaskImage: `url(${iconMap["Locked"]})`,
-                    maskImage: `url(${iconMap["Locked"]})`,
-                  }}
+                <IconGlyph
+                  name="locked"
+                  className="lock-state-icon"
+                  label="Locked"
                 />
               ) : (
-                <span
-                  className="lock-state-icon icon-mask"
-                  aria-label="Unlocked"
-                  style={{
-                    WebkitMaskImage: `url(${iconMap["Unlocked"]})`,
-                    maskImage: `url(${iconMap["Unlocked"]})`,
-                  }}
+                <IconGlyph
+                  name="unlocked"
+                  className="lock-state-icon"
+                  label="Unlocked"
                 />
               ))}
           </button>
@@ -354,11 +286,7 @@ function ExpandedCard({
             (handleCloseAndScroll || handleClose)();
           }}
         >
-          <img
-            src={iconMap["Collapse"]}
-            alt="Collapse"
-            className="button-icon"
-          />
+          <IconGlyph name="collapse" className="button-icon" />
           Close
         </button>
       </div>

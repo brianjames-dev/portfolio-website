@@ -8,6 +8,9 @@ const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
 const TO_EMAIL = process.env.SES_TO_EMAIL;
 const FROM_EMAIL = process.env.SES_FROM_EMAIL || "no-reply@brianjames.dev";
 const APPROVAL_BASE_URL = process.env.GALLERY_APPROVAL_BASE_URL || "";
+const MAX_NAME_LENGTH = 120;
+const MAX_EMAIL_LENGTH = 254;
+const MAX_MESSAGE_LENGTH = 4000;
 
 export const handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
@@ -22,8 +25,33 @@ export const handler = async (event) => {
     };
   }
 
-  const body = JSON.parse(event.body || "{}");
-  const { name, email, message, captchaToken } = body;
+  const body = parseBody(event.body);
+  if (!body.ok) {
+    return {
+      statusCode: 400,
+      headers: corsHeaders(),
+      body: JSON.stringify({ error: "Invalid request body" }),
+    };
+  }
+
+  if (!RECAPTCHA_SECRET_KEY || !TO_EMAIL || !FROM_EMAIL) {
+    return {
+      statusCode: 503,
+      headers: corsHeaders(),
+      body: JSON.stringify({ error: "Access request service is not configured" }),
+    };
+  }
+
+  const validation = validateAccessRequestBody(body.value);
+  if (!validation.ok) {
+    return {
+      statusCode: 400,
+      headers: corsHeaders(),
+      body: JSON.stringify({ error: validation.error }),
+    };
+  }
+
+  const { name, email, message, captchaToken } = validation.value;
 
   if (!captchaToken) {
     return {
@@ -97,8 +125,49 @@ export const handler = async (event) => {
   }
 };
 
+function parseBody(rawBody) {
+  try {
+    return { ok: true, value: JSON.parse(rawBody || "{}") };
+  } catch (error) {
+    return { ok: false };
+  }
+}
+
+function validateAccessRequestBody(body) {
+  const name = normalizeField(body.name);
+  const email = normalizeField(body.email).toLowerCase();
+  const message = normalizeField(body.message);
+  const captchaToken = normalizeField(body.captchaToken);
+
+  if (!name || !email || !message) {
+    return { ok: false, error: "Name, email, and message are required" };
+  }
+  if (name.length > MAX_NAME_LENGTH) {
+    return { ok: false, error: "Name is too long" };
+  }
+  if (email.length > MAX_EMAIL_LENGTH || !isValidEmail(email)) {
+    return { ok: false, error: "Enter a valid email address" };
+  }
+  if (message.length > MAX_MESSAGE_LENGTH) {
+    return { ok: false, error: "Message is too long" };
+  }
+
+  return { ok: true, value: { name, email, message, captchaToken } };
+}
+
+function normalizeField(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
 function verifyCaptcha(token) {
-  const postData = `secret=${RECAPTCHA_SECRET_KEY}&response=${token}`;
+  const postData = new URLSearchParams({
+    secret: RECAPTCHA_SECRET_KEY,
+    response: token,
+  }).toString();
   const options = {
     hostname: "www.google.com",
     path: "/recaptcha/api/siteverify",
