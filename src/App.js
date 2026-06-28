@@ -1,12 +1,12 @@
-import { Suspense, lazy, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import ParticlesBackground from "./ParticlesBackground";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Experience from "./pages/Experience";
 import Header from "./pages/Header";
 import Home from "./pages/Home";
-const About = lazy(() => import("./pages/About"));
-const Contact = lazy(() => import("./pages/Contact"));
-const Experience = lazy(() => import("./pages/Experience"));
-const Projects = lazy(() => import("./pages/Projects"));
+import Projects from "./pages/Projects";
 
 function App() {
   const [activeSection, setActiveSection] = useState("home");
@@ -61,7 +61,6 @@ function App() {
     const initialNavigation = window.__PORTFOLIO_INITIAL_NAVIGATION__ || {};
     if (initialNavigation.type === "back_forward") return undefined;
 
-    const sectionIds = ["home", "about", "experience", "projects", "contact"];
     const shouldTrackLazySections =
       initialNavigation.type === "reload" || Boolean(window.location.hash);
     const getMaxScroll = () =>
@@ -98,41 +97,40 @@ function App() {
     };
 
     let cancelled = false;
+    let userInteracted = false;
+    const cancelStartupRestore = () => {
+      userInteracted = true;
+      timers.forEach((timer) => window.clearTimeout(timer));
+    };
+
     const restoreScroll = () => {
-      if (cancelled) return;
+      if (cancelled || userInteracted) return;
       window.scrollTo(0, getTargetScrollY());
     };
 
     const restoreDelays = shouldTrackLazySections
-      ? [0, 80, 180, 360, 720, 1200]
+      ? [0, 80, 180, 360]
       : [0];
     const timers = restoreDelays.map((delay) =>
       window.setTimeout(restoreScroll, delay)
     );
 
-    let observer = null;
-    if (shouldTrackLazySections) {
-      observer = new MutationObserver(() => {
-        if (
-          sectionIds.every((id) => document.getElementById(id)) &&
-          !cancelled
-        ) {
-          restoreScroll();
-          observer?.disconnect();
-          observer = null;
-        }
-      });
-
-      observer.observe(document.querySelector("main") || document.body, {
-        childList: true,
-        subtree: true,
-      });
-    }
+    window.addEventListener("wheel", cancelStartupRestore, { passive: true });
+    window.addEventListener("touchstart", cancelStartupRestore, {
+      passive: true,
+    });
+    window.addEventListener("pointerdown", cancelStartupRestore, {
+      passive: true,
+    });
+    window.addEventListener("keydown", cancelStartupRestore);
 
     return () => {
       cancelled = true;
       timers.forEach((timer) => window.clearTimeout(timer));
-      observer?.disconnect();
+      window.removeEventListener("wheel", cancelStartupRestore);
+      window.removeEventListener("touchstart", cancelStartupRestore);
+      window.removeEventListener("pointerdown", cancelStartupRestore);
+      window.removeEventListener("keydown", cancelStartupRestore);
     };
   }, []);
 
@@ -404,12 +402,10 @@ function App() {
       <ParticlesBackground />
       <main>
         <Home />
-        <Suspense fallback={null}>
-          <About />
-          <Experience />
-          <Projects />
-          <Contact />
-        </Suspense>
+        <About />
+        <Experience />
+        <Projects />
+        <Contact />
       </main>
     </div>
   );

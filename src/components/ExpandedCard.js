@@ -96,7 +96,8 @@ function ExpandedCard({
 
   const scrollToCardTop = useCallback(
     (event) => {
-      event.stopPropagation();
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
       const block = blockRef.current;
       if (!block || typeof window === "undefined") return;
 
@@ -122,6 +123,8 @@ function ExpandedCard({
             className="expanded-scroll-top-button"
             aria-label="Scroll to top of card"
             onClick={scrollToCardTop}
+            onPointerDown={scrollToCardTop}
+            onTouchStart={scrollToCardTop}
             initial={
               shouldReduceMotion ? false : { opacity: 0, y: -8, scale: 0.92 }
             }

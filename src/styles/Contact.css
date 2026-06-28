@@ -3,12 +3,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--card-block-gap, 20px);
   min-height: 0;
   padding: 60px var(--page-card-gutter, 20px)
     max(var(--card-block-gap, 20px), env(safe-area-inset-bottom, 0px));
   scroll-margin-top: var(--header-height);
+}
+
+section#contact.contact-section {
+  min-height: auto;
 }
 
 .contact-card {
@@ -330,6 +334,11 @@
 
 /* ========== Mobile Styles ========== */
 @media (max-width: 600px) {
+  section#contact.contact-section {
+    min-height: auto !important;
+    justify-content: flex-start;
+  }
+
   .contact-section {
     padding-top: var(--page-card-gutter, 16px);
     padding-bottom: max(
