@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import RevealOnView from "../components/RevealOnView";
 import { CONTACT_FORM_URL } from "../config/contact";
 import iconMap from "../data/iconMap.js";
 import "../styles/Contact.css";
@@ -124,13 +125,13 @@ function Contact() {
       onFocusCapture={onFirstInteract}
       onMouseEnter={onFirstInteract}
     >
-      <div className="project-header-wrapper">
+      <RevealOnView className="project-header-wrapper">
         <div className="project-header-card">
           <h2>Get In Touch</h2>
         </div>
-      </div>
+      </RevealOnView>
 
-      <div className="contact-card">
+      <RevealOnView className="contact-card" delay={0.05}>
         <div className="contact-left">
           <p>
             Feel free to fill out the form below to send me a message, or
@@ -317,7 +318,7 @@ function Contact() {
             </div>
           </div>
         </div>
-      </div>
+      </RevealOnView>
     </section>
   );
 }

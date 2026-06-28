@@ -1,16 +1,17 @@
+import RevealOnView from "../components/RevealOnView";
 import "../styles/About.css";
 
 function About() {
   return (
     <section id="about" className="about" data-snap-target>
       <div className="container">
-        <div className="project-header-wrapper">
+        <RevealOnView className="project-header-wrapper">
           <div className="project-header-card">
             <h2>About Me</h2>
           </div>
-        </div>
+        </RevealOnView>
 
-        <div className="about-card">
+        <RevealOnView className="about-card" delay={0.05}>
           <p className="description">
             I'm a creative and detail-oriented developer who finds joy and
             fulfillment in the complexities of code. Whether I'm fine-tuning UI
@@ -32,7 +33,7 @@ function About() {
             polish and backend logic into scalable tools to support a team with
             complicated projects and to improve program efficacy in all I do.
           </p>
-        </div>
+        </RevealOnView>
       </div>
     </section>
   );

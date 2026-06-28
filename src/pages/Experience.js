@@ -3,6 +3,7 @@ import Card from "../components/Card";
 import CollapsedCard from "../components/CollapsedCard";
 import ExpandedCard from "../components/ExpandedCard";
 import GalleryLockModal from "../components/GalleryLockModal";
+import RevealOnView from "../components/RevealOnView";
 import VideoOverlay from "../components/VideoOverlay";
 import experiences from "../data/experience";
 import useCardExpansion from "../hooks/useCardExpansion";
@@ -70,11 +71,11 @@ function Experience() {
   return (
     <section id="experience" className="projects" data-snap-target>
       <div className="container">
-        <div className="project-header-wrapper">
+        <RevealOnView className="project-header-wrapper">
           <div className="project-header-card">
             <h2>Experience</h2>
           </div>
-        </div>
+        </RevealOnView>
         {experiences.map((exp) => (
           <Card
             key={exp.id}

@@ -151,15 +151,28 @@
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+  transition:
+    background-color var(--motion-duration-fast, 160ms)
+      var(--motion-ease-standard, ease),
+    color var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
+    border-color var(--motion-duration-fast, 160ms)
+      var(--motion-ease-standard, ease),
+    transform var(--motion-duration-fast, 160ms)
+      var(--motion-ease-press, ease);
 
   width: auto;
   margin-top: 10px;
   align-self: flex-start;
 }
 
-.contact-submit-row button:hover {
-  background-color: var(--color-accent-hover);
+@media (hover: hover) and (pointer: fine) {
+  .contact-submit-row button:hover {
+    background-color: var(--color-accent-hover);
+  }
+}
+
+.contact-submit-row button:active {
+  transform: scale(0.98);
 }
 
 /* Spinner animation */
@@ -243,8 +256,9 @@
   height: 34px;
   color: var(--social-icon);
   transition:
-    color 0.2s ease,
-    transform 0.2s ease;
+    color var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
+    transform var(--motion-duration-fast, 160ms)
+      var(--motion-ease-press, ease);
 }
 
 [data-theme="dark"] .contact-social-links img.default,
@@ -257,8 +271,9 @@
   top: 0;
   left: 0;
   transition:
-    opacity 0.3s ease,
-    transform 0.2s ease; /* ease only for contact social icons */
+    opacity var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
+    transform var(--motion-duration-fast, 160ms)
+      var(--motion-ease-press, ease); /* ease only for contact social icons */
   width: 100%;
   height: auto;
 }
@@ -267,12 +282,23 @@
   opacity: 0;
 }
 
-.contact-icon-wrapper:hover img.hover {
-  opacity: 1;
-  transform: scale(1.1); /* scale up on hover */
+@media (hover: hover) and (pointer: fine) {
+  .contact-icon-wrapper:hover img.hover {
+    opacity: 1;
+    transform: scale(1.1); /* scale up on hover */
+  }
+
+  .contact-icon-wrapper:hover img.default {
+    opacity: 0;
+  }
 }
 
-.contact-icon-wrapper:hover img.default {
+.contact-social-links a:active .contact-icon-wrapper img.hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.contact-social-links a:active .contact-icon-wrapper img.default {
   opacity: 0;
 }
 

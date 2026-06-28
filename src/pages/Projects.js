@@ -2,6 +2,7 @@ import { lazy, Suspense, useState } from "react";
 import Card from "../components/Card";
 import CollapsedCard from "../components/CollapsedCard";
 import ExpandedCard from "../components/ExpandedCard";
+import RevealOnView from "../components/RevealOnView";
 import projects from "../data/projects";
 import useCardExpansion from "../hooks/useCardExpansion";
 import "../styles/Projects.css";
@@ -25,11 +26,11 @@ function Projects() {
   return (
     <section id="projects" className="projects" data-snap-target>
       <div className="container">
-        <div className="project-header-wrapper">
+        <RevealOnView className="project-header-wrapper">
           <div className="project-header-card">
             <h2>Projects</h2>
           </div>
-        </div>
+        </RevealOnView>
 
         {projects.map((proj) => (
           <Card

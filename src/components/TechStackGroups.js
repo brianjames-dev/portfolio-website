@@ -1,3 +1,4 @@
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { renderTag } from "../utils/renderTag";
 
@@ -146,6 +147,7 @@ function getFeaturedStack(stack = []) {
 
 export default function TechStackGroups({ stack = [] }) {
   const [showAll, setShowAll] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const groups = useMemo(() => groupStack(stack), [stack]);
   const featuredStack = useMemo(() => getFeaturedStack(stack), [stack]);
   const visibleGroups = useMemo(
@@ -156,52 +158,90 @@ export default function TechStackGroups({ stack = [] }) {
 
   if (!stack.length) return null;
 
+  const revealTransition = {
+    duration: shouldReduceMotion ? 0 : 0.28,
+    ease: [0.22, 1, 0.36, 1],
+  };
+
   return (
     <div className="project-stack" aria-label="Technology stack">
-      {!showAll && (
-        <div className="stack-featured-row">
-          {featuredStack.map((tech, i) =>
-            renderTag(tech, `featured-${tech}-${i}`)
-          )}
-          {hiddenCount > 0 && (
-            <button
-              className="stack-more-toggle stack-more-toggle--inline"
-              type="button"
-              aria-expanded={showAll}
-              onClick={(event) => {
-                event.stopPropagation();
-                setShowAll(true);
-              }}
-            >
-              +{hiddenCount} more
-            </button>
-          )}
-        </div>
-      )}
-      {showAll &&
-        visibleGroups.map((group) => (
-          <div className="stack-group" key={group.label}>
-            <span className="stack-group-label">{group.label}</span>
-            <div className="stack-tag-row">
-              {group.items.map((tech, i) =>
-                renderTag(tech, `${group.label}-${tech}-${i}`)
-              )}
-            </div>
-          </div>
-        ))}
-      {showAll && hiddenCount > 0 && (
-        <button
-          className="stack-more-toggle"
-          type="button"
-          aria-expanded={showAll}
-          onClick={(event) => {
-            event.stopPropagation();
-            setShowAll((current) => !current);
-          }}
-        >
-          {showAll ? "Show less" : `+${hiddenCount} more`}
-        </button>
-      )}
+      <AnimatePresence initial={false} mode="popLayout">
+        {!showAll && (
+          <motion.div
+            className="stack-featured-row"
+            key="featured-stack"
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            transition={revealTransition}
+          >
+            {featuredStack.map((tech, i) =>
+              renderTag(tech, `featured-${tech}-${i}`)
+            )}
+            {hiddenCount > 0 && (
+              <button
+                className="stack-more-toggle stack-more-toggle--inline"
+                type="button"
+                aria-expanded={showAll}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setShowAll(true);
+                }}
+              >
+                +{hiddenCount} more
+              </button>
+            )}
+          </motion.div>
+        )}
+
+        {showAll && (
+          <motion.div
+            className="stack-expanded-groups"
+            key="expanded-stack"
+            initial={
+              shouldReduceMotion ? false : { opacity: 0, y: 10, height: 0 }
+            }
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={
+              shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, height: 0 }
+            }
+            transition={revealTransition}
+          >
+            {visibleGroups.map((group, groupIndex) => (
+              <motion.div
+                className="stack-group"
+                key={group.label}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  ...revealTransition,
+                  delay: shouldReduceMotion ? 0 : groupIndex * 0.035,
+                }}
+              >
+                <span className="stack-group-label">{group.label}</span>
+                <div className="stack-tag-row">
+                  {group.items.map((tech, i) =>
+                    renderTag(tech, `${group.label}-${tech}-${i}`)
+                  )}
+                </div>
+              </motion.div>
+            ))}
+            {hiddenCount > 0 && (
+              <button
+                className="stack-more-toggle"
+                type="button"
+                aria-expanded={showAll}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setShowAll(false);
+                }}
+              >
+                Show less
+              </button>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

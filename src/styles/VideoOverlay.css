@@ -12,7 +12,8 @@
   --video-effective-height: var(--video-viewport-height, 100dvh);
   --video-effective-width: var(--video-viewport-width, 100dvw);
   padding: var(--video-overlay-gap);
-  transition: padding 0.25s ease;
+  transition: padding var(--motion-duration-normal, 260ms)
+    var(--motion-ease-standard, ease);
   z-index: 12000;
 }
 
@@ -52,7 +53,13 @@ body.video-overlay-open .site-header {
   border-radius: var(--radius-md);
   padding: 18px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-  transition: padding 0.25s ease, width 0.25s ease, max-height 0.25s ease;
+  transition:
+    padding var(--motion-duration-normal, 260ms)
+      var(--motion-ease-standard, ease),
+    width var(--motion-duration-normal, 260ms)
+      var(--motion-ease-standard, ease),
+    max-height var(--motion-duration-normal, 260ms)
+      var(--motion-ease-standard, ease);
 }
 
 .video-overlay-close {
@@ -76,8 +83,14 @@ body.video-overlay-open .site-header {
   color: currentColor;
 }
 
-.video-overlay-close:hover {
-  background: var(--overlay-control-hover);
+@media (hover: hover) and (pointer: fine) {
+  .video-overlay-close:hover {
+    background: var(--overlay-control-hover);
+  }
+}
+
+.video-overlay-close:active {
+  transform: scale(0.96);
 }
 
 .video-embed {

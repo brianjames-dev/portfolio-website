@@ -48,7 +48,8 @@
   object-fit: contain;
   border-radius: 8px;
   cursor: zoom-in;
-  transition: transform 0.3s ease;
+  transition: transform var(--motion-duration-normal, 260ms)
+    var(--motion-ease-standard, ease);
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1); /* optional frosty border */
 }
@@ -135,23 +136,29 @@
 
   opacity: 1;
   transition:
-    opacity 0.3s ease,
-    background-color 0.3s ease;
+    opacity var(--motion-duration-normal, 260ms)
+      var(--motion-ease-standard, ease),
+    background-color var(--motion-duration-normal, 260ms)
+      var(--motion-ease-standard, ease);
   pointer-events: auto;
 }
 
 .fullscreen-close-btn,
 .carousel-arrow {
   transition:
-    background-color 0.3s ease,
-    opacity 0.3s ease;
+    background-color var(--motion-duration-normal, 260ms)
+      var(--motion-ease-standard, ease),
+    opacity var(--motion-duration-normal, 260ms)
+      var(--motion-ease-standard, ease);
   border: 1px solid rgba(255, 255, 255, 0.1); /* optional frosty border */
   border-radius: 8px;
 }
 
-.fullscreen-close-btn:hover,
-.carousel-arrow:hover {
-  background-color: var(--overlay-control-hover);
+@media (hover: hover) and (pointer: fine) {
+  .fullscreen-close-btn:hover,
+  .carousel-arrow:hover {
+    background-color: var(--overlay-control-hover);
+  }
 }
 
 .carousel-arrow.hidden {
@@ -173,8 +180,10 @@
   line-height: 0;
 }
 
-.fullscreen-image-button:hover {
-  background: transparent;
+@media (hover: hover) and (pointer: fine) {
+  .fullscreen-image-button:hover {
+    background: transparent;
+  }
 }
 
 .carousel-arrow.left {
@@ -246,14 +255,17 @@
   border-radius: 6px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform var(--motion-duration-fast, 160ms)
+    var(--motion-ease-press, ease);
   border: 0;
   padding: 0;
   background: transparent;
 }
 
-.thumbnail-container:hover {
-  transform: scale(1.1);
+@media (hover: hover) and (pointer: fine) {
+  .thumbnail-container:hover {
+    transform: scale(1.1);
+  }
 }
 
 .thumbnail-container.active {
@@ -291,11 +303,14 @@
 
   .clickable-gallery-image {
     cursor: zoom-in;
-    transition: transform 0.2s ease;
+    transition: transform var(--motion-duration-fast, 160ms)
+      var(--motion-ease-press, ease);
   }
 
-  .clickable-gallery-image:hover {
-    transform: scale(1.03);
+  @media (hover: hover) and (pointer: fine) {
+    .clickable-gallery-image:hover {
+      transform: scale(1.03);
+    }
   }
 
   @keyframes swipeWave {

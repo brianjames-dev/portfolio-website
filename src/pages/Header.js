@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import IconGlyph from "../components/IconGlyph";
 import ThemeToggle from "../components/ThemeToggle";
 import "../styles/Header.css";
 
@@ -12,6 +11,7 @@ function Header({ activeSection }) {
   );
   const navRef = useRef(null);
   const bubbleRef = useRef(null);
+  const lastMenuToggleRef = useRef(0);
 
   // Preload the lazy chunk for react-google-recaptcha
   const preloadRecaptcha = () => {
@@ -235,16 +235,22 @@ function Header({ activeSection }) {
 
         <button
           type="button"
-          className="menu-button"
-          onClick={() => setMenuOpen(!menuOpen)}
+          className={`menu-button ${menuOpen ? "is-open" : ""}`}
+          onClick={() => {
+            const now = Date.now();
+            if (now - lastMenuToggleRef.current < 500) return;
+            lastMenuToggleRef.current = now;
+            setMenuOpen((current) => !current);
+          }}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           aria-controls="site-navigation"
         >
-          <IconGlyph
-            name={menuOpen ? "close" : "menu"}
-            className="menu-button-icon"
-          />
+          <span className="menu-button-icon" aria-hidden="true">
+            <span className="menu-button-line" />
+            <span className="menu-button-line" />
+            <span className="menu-button-line" />
+          </span>
         </button>
 
         {/* Theme toggle (visible on all viewports) */}

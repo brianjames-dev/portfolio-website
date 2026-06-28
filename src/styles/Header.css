@@ -36,7 +36,11 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  transition: left 0.25s ease, transform 0.25s ease;
+  transition:
+    left var(--motion-duration-normal, 240ms)
+      var(--motion-ease-standard, ease),
+    transform var(--motion-duration-normal, 240ms)
+      var(--motion-ease-standard, ease);
 }
 
 .site-header nav.hidden-on-load {
@@ -52,11 +56,17 @@
   position: relative; /* for bubble overlap */
   z-index: 1; /* Ensures text sits above the indicator */
 
-  transition: color 0.25s ease, font-size 0.25s ease, margin 0.25s ease;
+  transition:
+    color var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
+    font-size var(--motion-duration-fast, 160ms)
+      var(--motion-ease-standard, ease),
+    margin var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease);
 }
 
-.site-header nav a:hover {
-  color: #ffffff;
+@media (hover: hover) and (pointer: fine) {
+  .site-header nav a:hover {
+    color: #ffffff;
+  }
 }
 
 .site-header nav a.active {
@@ -74,9 +84,12 @@
   width: 0;
   left: 0;
   transition:
-    left 0.25s ease,
-    width 0.25s ease,
-    opacity 0.25s ease;
+    left var(--motion-duration-normal, 240ms)
+      var(--motion-ease-standard, ease),
+    width var(--motion-duration-normal, 240ms)
+      var(--motion-ease-standard, ease),
+    opacity var(--motion-duration-normal, 240ms)
+      var(--motion-ease-standard, ease);
   z-index: 0;
   pointer-events: none; /* Prevent bubble from intercepting clicks */
 }
@@ -91,7 +104,11 @@
   border: 0;
   background: transparent;
   color: #ffffff;
-  padding: 0;
+  width: 40px;
+  height: 40px;
+  padding: 3px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Theme toggle button */
@@ -107,14 +124,23 @@
   background: rgba(255, 255, 255, 0.92);
   color: var(--color-header);
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease-in-out;
+  transition:
+    background-color var(--motion-duration-fast, 160ms)
+      var(--motion-ease-standard, ease),
+    color var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
+    border-color var(--motion-duration-fast, 160ms)
+      var(--motion-ease-standard, ease),
+    transform var(--motion-duration-fast, 160ms)
+      var(--motion-ease-standard, ease);
 }
 
-.theme-toggle:hover {
-  transform: translateY(-50%) scale(1.08);
-  background-color: #ffffff;
-  color: var(--color-accent-hover);
-  border-color: rgba(255, 255, 255, 0.44);
+@media (hover: hover) and (pointer: fine) {
+  .theme-toggle:hover {
+    transform: translateY(-50%) scale(1.08);
+    background-color: #ffffff;
+    color: var(--color-accent-hover);
+    border-color: rgba(255, 255, 255, 0.44);
+  }
 }
 
 /* Improve accessibility focus and keep distinct from header color */
@@ -131,11 +157,51 @@
   height: 20px;
 }
 
+.theme-toggle:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
 .menu-button-icon {
-  display: block;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   width: 34px;
   height: 34px;
   color: currentColor;
+  transition: transform var(--motion-duration-fast, 160ms)
+    var(--motion-ease-press, ease);
+}
+
+.menu-button-line {
+  display: block;
+  width: 30px;
+  height: 3px;
+  border-radius: 999px;
+  background: currentColor;
+  transform-origin: center;
+  transition:
+    opacity var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
+    transform var(--motion-duration-normal, 240ms)
+      var(--motion-ease-standard, ease);
+}
+
+.menu-button.is-open .menu-button-line:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.menu-button.is-open .menu-button-line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0.3);
+}
+
+.menu-button.is-open .menu-button-line:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+.menu-button:active .menu-button-icon {
+  transform: scale(0.94);
 }
 
 
@@ -185,11 +251,6 @@
     right: auto;
   }
 
-  .menu-button img {
-    width: 34px;
-    height: 34px;
-  }
-
   .site-header nav {
     display: flex;
     flex-direction: column;
@@ -200,7 +261,8 @@
     left: auto;      /* ensure no left anchoring */
     width: min(48vw, 220px);
     transform: translateX(100%); /* hidden just off the right edge */
-    transition: transform 0.25s ease; /* animate open/close */
+    transition: transform var(--motion-duration-normal, 240ms)
+      var(--motion-ease-standard, ease); /* animate open/close */
     box-shadow: var(--shadow-soft);
   }
 
@@ -232,10 +294,14 @@
     background-color: var(--nav-pill-bg);
     opacity: 0; /* Start hidden, controlled by JS */
     transition:
-      width 0.25s ease,
-      height 0.25s ease,
-      left 0.25s ease,
-      opacity 0.25s ease; /* Smooth transitions */
+      width var(--motion-duration-normal, 240ms)
+        var(--motion-ease-standard, ease),
+      height var(--motion-duration-normal, 240ms)
+        var(--motion-ease-standard, ease),
+      left var(--motion-duration-normal, 240ms)
+        var(--motion-ease-standard, ease),
+      opacity var(--motion-duration-normal, 240ms)
+        var(--motion-ease-standard, ease); /* Smooth transitions */
     pointer-events: none; /* Prevent interference with clicks */
   }
 
@@ -252,5 +318,3 @@
     display: none; /* Hide bubble when menu is closed */
   }
 }
-
-

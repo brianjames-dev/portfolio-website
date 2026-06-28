@@ -9,12 +9,25 @@
   max-width: 800px;
   width: calc(100% - (var(--page-card-gutter, 20px) * 2));
   margin: 0;
+  animation: home-card-enter var(--motion-duration-slow, 420ms)
+    var(--motion-ease-standard, ease) both;
 
   background:
     linear-gradient(var(--surface-card), var(--surface-card)) padding-box,
     var(--card-stroke) border-box;
   box-shadow: var(--shadow-soft);
   border: 1px solid transparent;
+}
+
+@keyframes home-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Left side (Avatar) */
@@ -119,9 +132,13 @@
   cursor: pointer;
   font-size: 1rem;
   transition:
-    background-color 0.25s ease,
-    color 0.25s ease,
-    transform 0.25s ease;
+    background-color var(--motion-duration-fast, 160ms)
+      var(--motion-ease-standard, ease),
+    color var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
+    transform var(--motion-duration-fast, 160ms)
+      var(--motion-ease-press, ease),
+    box-shadow var(--motion-duration-fast, 160ms)
+      var(--motion-ease-standard, ease);
 }
 
 .home-action-link img {
@@ -129,10 +146,16 @@
   height: 24px;
 }
 
-.home-action-link:hover {
-  background-color: var(--color-accent-hover);
-  box-shadow: var(--shadow-interactive);
-  transform: translateY(-1px);
+@media (hover: hover) and (pointer: fine) {
+  .home-action-link:hover {
+    background-color: var(--color-accent-hover);
+    box-shadow: var(--shadow-interactive);
+    transform: translateY(-1px);
+  }
+}
+
+.home-action-link:active {
+  transform: scale(0.98);
 }
 
 /* Resume + Social links shared styles */
@@ -147,14 +170,16 @@
 .home-resume-button img {
   width: 40px;
   height: 40px;
-  transition: transform 0.2s linear;
+  transition: transform var(--motion-duration-fast, 160ms)
+    var(--motion-ease-press, ease);
 }
 
 /* Social icons keep eased transitions */
 .home-social-links img {
   width: 40px;
   height: 40px;
-  transition: transform 0.2s ease;
+  transition: transform var(--motion-duration-fast, 160ms)
+    var(--motion-ease-press, ease);
 }
 
 /* Social link hover effect */
@@ -167,8 +192,9 @@
   cursor: pointer;
   touch-action: manipulation;
   transition:
-    color 0.2s ease,
-    transform 0.2s ease;
+    color var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
+    transform var(--motion-duration-fast, 160ms)
+      var(--motion-ease-press, ease);
 }
 
 [data-theme="dark"] .home-social-links img.default,
@@ -182,8 +208,9 @@
   width: 100%;
   height: 100%;
   transition:
-    opacity 0.3s ease,
-    transform 0.2s ease;
+    opacity var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
+    transform var(--motion-duration-fast, 160ms)
+      var(--motion-ease-press, ease);
   pointer-events: none; /* avoids blocking taps on overlapping layers */
 }
 
@@ -192,13 +219,15 @@
 }
 
 /* Desktop hover, mobile tap fallback */
-.home-social-links a:hover .icon-wrapper img.hover {
-  opacity: 1;
-  transform: scale(1.1);
-}
+@media (hover: hover) and (pointer: fine) {
+  .home-social-links a:hover .icon-wrapper img.hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
 
-.home-social-links a:hover .icon-wrapper img.default {
-  opacity: 0;
+  .home-social-links a:hover .icon-wrapper img.default {
+    opacity: 0;
+  }
 }
 
 .home-social-links {
@@ -324,7 +353,11 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s linear;
+    transition:
+      background-color var(--motion-duration-fast, 160ms)
+        var(--motion-ease-standard, ease),
+      transform var(--motion-duration-fast, 160ms)
+        var(--motion-ease-press, ease);
   }
 
   .home-action-link img {
@@ -355,8 +388,10 @@
   background-color: var(--color-accent);
   color: var(--button-text);
 }
-[data-theme="dark"] .home-action-link:hover {
-  background-color: var(--color-accent-hover);
+@media (hover: hover) and (pointer: fine) {
+  [data-theme="dark"] .home-action-link:hover {
+    background-color: var(--color-accent-hover);
+  }
 }
 
 /* Dark mode: use a compact card like Contact, not full-screen */

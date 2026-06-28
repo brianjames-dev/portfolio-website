@@ -176,10 +176,21 @@ export default function Card({
       layoutId={`card-${id}`}
       className={`project-card ${isExpanded ? "expanded-card" : ""}`}
       ref={cardRef}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 28 }}
+      whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.18 }}
       transition={{
         layout: {
           duration: morphDuration,
           ease: [0.4, 0, 0.2, 1], // Smoother easing for width/position
+        },
+        opacity: {
+          duration: 0.42,
+          ease: [0.22, 1, 0.36, 1],
+        },
+        y: {
+          duration: 0.42,
+          ease: [0.22, 1, 0.36, 1],
         },
       }}
       style={{

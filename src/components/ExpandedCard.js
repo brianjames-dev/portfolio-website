@@ -1,5 +1,5 @@
 // src/components/ExpandedCard.js
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import React from "react";
 import IconGlyph from "./IconGlyph";
 import "../styles/BookieBot.css";
@@ -20,6 +20,7 @@ function ExpandedCard({
   handleClose,
   handleCloseAndScroll,
 }) {
+  const shouldReduceMotion = useReducedMotion();
   const hasGallery =
     (project.images?.length || 0) > 0 || Boolean(showGalleryButton);
   const hasDemo = Boolean(showDemoButton);
@@ -168,11 +169,15 @@ function ExpandedCard({
             )}
             <motion.div
               className="project-section"
-              initial={{ opacity: 0, y: 60 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+              whileInView={
+                shouldReduceMotion ? undefined : { opacity: 1, y: 0 }
+              }
+              viewport={{ once: true, amount: 0.22 }}
               transition={{
                 duration: CONTENT_FADE_DURATION,
-                delay: idx * 0.2,
+                delay: Math.min(idx * 0.04, 0.16),
+                ease: [0.22, 1, 0.36, 1],
               }}
             >
               <h4>{label}</h4>
