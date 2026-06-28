@@ -383,7 +383,7 @@
   margin: 0 auto 20px auto;
 }
 
-@media (orientation: landscape) and (max-height: 500px) and (max-width: 950px) {
+@media (orientation: landscape) and (max-height: 700px) and (max-width: 1100px) {
   .home-card,
   [data-theme="dark"] .home-card,
   [data-theme="light"] .home-card {
@@ -411,7 +411,7 @@
 
   .home-right .greeting,
   .home-right .subtitle {
-    font-size: 0.9rem;
+    font-size: 0.84rem;
   }
 
   .home-right .name {
@@ -421,7 +421,7 @@
   .home-right .description {
     min-width: 0;
     padding-top: 12px;
-    font-size: 0.86rem;
+    font-size: 0.82rem;
     line-height: 1.35;
   }
 
@@ -433,7 +433,7 @@
   .home-action-link {
     min-height: 34px;
     padding: 6px 10px;
-    font-size: 0.88rem;
+    font-size: var(--landscape-button-text, 0.78rem);
   }
 
   .home-action-link img,

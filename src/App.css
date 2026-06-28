@@ -364,9 +364,15 @@ section.projects {
   }
 }
 
-@media (orientation: landscape) and (max-height: 500px) and (max-width: 950px) {
+@media (orientation: landscape) and (max-height: 700px) and (max-width: 1100px) {
   :root {
     --header-height: 52px;
+    --landscape-title-text: 1.12rem;
+    --landscape-subtitle-text: 0.78rem;
+    --landscape-body-text: 0.78rem;
+    --landscape-card-body-text: 0.74rem;
+    --landscape-chip-text: 0.68rem;
+    --landscape-button-text: 0.78rem;
   }
 
   section {
@@ -388,7 +394,7 @@ section.projects {
   }
 
   .project-header-card h2 {
-    font-size: 1.3rem;
+    font-size: var(--landscape-title-text);
     line-height: 1.1;
   }
 }

@@ -490,7 +490,7 @@
   background: var(--divider-line);
 }
 
-@media (orientation: landscape) and (max-height: 500px) and (max-width: 950px) {
+@media (orientation: landscape) and (max-height: 700px) and (max-width: 1100px) {
   .project-card {
     max-width: calc(100vw - 24px);
     margin: 12px auto;
@@ -511,13 +511,13 @@
 
   .project-header .title,
   .expanded-title-row h3 {
-    font-size: 1.15rem;
+    font-size: var(--landscape-title-text, 1.12rem);
     line-height: 1.08;
   }
 
   .project-subtitle,
   .expanded-subtitle {
-    font-size: 0.86rem;
+    font-size: var(--landscape-subtitle-text, 0.78rem);
   }
 
   .experience-logo-frame {
@@ -535,25 +535,24 @@
     min-height: 22px;
     padding-top: 3px;
     padding-bottom: 3px;
-    font-size: 0.78rem;
+    font-size: var(--landscape-chip-text, 0.68rem);
   }
 
-  .project-description,
   .project-section p,
   .custom-bullet-list li,
   .tech-purpose {
-    font-size: 0.82rem;
+    font-size: var(--landscape-body-text, 0.78rem);
     line-height: 1.35;
   }
 
   .project-description {
-    font-size: 0.72rem;
+    font-size: var(--landscape-card-body-text, 0.74rem);
     line-height: 1.32;
     margin-top: 12px;
   }
 
   .project-section h4 {
-    font-size: 1rem;
+    font-size: 0.92rem;
   }
 
   .project-actions {
@@ -565,7 +564,7 @@
   .learn-more-btn {
     height: 34px;
     padding: 6px 10px;
-    font-size: 0.85rem;
+    font-size: var(--landscape-button-text, 0.78rem);
   }
 
   .button-icon {
@@ -584,7 +583,7 @@
   }
 
   .project-description {
-    font-size: 0.72rem;
+    font-size: var(--landscape-card-body-text, 0.74rem);
     line-height: 1.32;
     margin-top: 12px;
   }
