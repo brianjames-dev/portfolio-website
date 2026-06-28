@@ -473,6 +473,13 @@
     border-color 0.2s ease;
 }
 
+.stack-more-toggle--inline {
+  align-self: center;
+  margin-left: 0;
+  min-height: 24px;
+  padding: 4px 9px;
+}
+
 .stack-more-toggle:hover,
 .stack-more-toggle:focus-visible {
   background: var(--color-accent);

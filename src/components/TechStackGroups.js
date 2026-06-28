@@ -163,6 +163,19 @@ export default function TechStackGroups({ stack = [] }) {
           {featuredStack.map((tech, i) =>
             renderTag(tech, `featured-${tech}-${i}`)
           )}
+          {hiddenCount > 0 && (
+            <button
+              className="stack-more-toggle stack-more-toggle--inline"
+              type="button"
+              aria-expanded={showAll}
+              onClick={(event) => {
+                event.stopPropagation();
+                setShowAll(true);
+              }}
+            >
+              +{hiddenCount} more
+            </button>
+          )}
         </div>
       )}
       {showAll &&
@@ -176,7 +189,7 @@ export default function TechStackGroups({ stack = [] }) {
             </div>
           </div>
         ))}
-      {hiddenCount > 0 && (
+      {showAll && hiddenCount > 0 && (
         <button
           className="stack-more-toggle"
           type="button"
