@@ -1,7 +1,10 @@
 /* ========== Desktop Styles ========== */
 .contact-section {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: var(--card-block-gap, 20px);
   padding: 60px var(--page-card-gutter, 20px) var(--card-block-gap, 20px);
 }
 
@@ -27,11 +30,8 @@
   min-width: 300px;
 }
 
-.contact-left h2 {
-  margin: 0 0 20px 0;
-}
-
 .contact-left p {
+  margin-top: 0;
   line-height: 1.5rem;
 }
 
@@ -283,7 +283,6 @@
     padding: 16px 12px 20px;
   }
 
-  .contact-left h2,
   .contact-left p {
     text-align: center;
   }
@@ -306,6 +305,7 @@
 @media (orientation: landscape) and (max-height: 500px) and (max-width: 950px) {
   .contact-section {
     align-items: flex-start;
+    gap: var(--card-block-gap, 16px);
     padding: calc(var(--header-height) + var(--card-block-gap, 16px))
       var(--page-card-gutter, 16px) var(--card-block-gap, 16px);
   }

@@ -124,9 +124,14 @@ function Contact() {
       onFocusCapture={onFirstInteract}
       onMouseEnter={onFirstInteract}
     >
+      <div className="project-header-wrapper">
+        <div className="project-header-card">
+          <h2>Get In Touch</h2>
+        </div>
+      </div>
+
       <div className="contact-card">
         <div className="contact-left">
-          <h2>Get In Touch</h2>
           <p>
             Feel free to fill out the form below to send me a message, or
             contact me directly by email.
