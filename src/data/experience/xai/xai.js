@@ -3,7 +3,7 @@ const xai = {
   title: "Software Engineering Specialist",
   team: "xAI | Full-time",
   logo: {
-    src: "/img/logos/xai.jpg",
+    src: "/img/logos/xai-logo.jpeg",
     alt: "xAI logo",
     className: "experience-logo-frame--xai",
   },
