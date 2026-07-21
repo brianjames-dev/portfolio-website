@@ -175,6 +175,16 @@
   object-fit: contain;
 }
 
+.experience-logo-frame.experience-logo-frame--xai {
+  padding: 0;
+  border: 0;
+  background: #000000;
+}
+
+.experience-logo-frame--xai .experience-logo {
+  object-fit: cover;
+}
+
 .experience-logo-frame--insurity .experience-logo {
   transform: scale(1.26);
   transform-origin: center;

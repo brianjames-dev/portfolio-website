@@ -5,6 +5,7 @@ const xai = {
   logo: {
     src: "/img/logos/xai.jpg",
     alt: "xAI logo",
+    className: "experience-logo-frame--xai",
   },
   description:
     "Full-time Software Engineering Specialist role at xAI focused on software engineering work across AI systems, tooling, and product workflows.",
