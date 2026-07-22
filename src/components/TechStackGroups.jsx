@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import useDesktopMotionPreference from "../hooks/useDesktopMotionPreference";
-import { renderTag } from "../utils/renderTag";
+import { renderTag } from "../utils/renderTag.jsx";
 
 const CATEGORY_ORDER = [
   "AI",

@@ -1,5 +1,6 @@
-import IconGlyph from "./IconGlyph";
-import TechStackGroups from "./TechStackGroups";
+import React from "react";
+import IconGlyph from "./IconGlyph.jsx";
+import TechStackGroups from "./TechStackGroups.jsx";
 import iconMap from "../data/iconMap.js";
 import "../styles/CollapsedCard.css";
 
@@ -69,8 +70,12 @@ function CollapsedCard({
 
       <hr className="project-divider" />
 
-      {/* Description */}
-      <p className="project-description">{project.description}</p>
+      {project.outcome && (
+        <div className="project-outcome">
+          <span className="project-outcome-label">Impact</span>
+          <p>{project.outcome}</p>
+        </div>
+      )}
 
       {/* Actions */}
       {(hasGallery || hasDemo || canExpand) && (
@@ -79,8 +84,8 @@ function CollapsedCard({
             <button
               className="learn-more-btn"
               data-locked={isGalleryLocked}
-              onMouseEnter={() => import("../components/Gallery")}
-              onFocus={() => import("../components/Gallery")}
+              onMouseEnter={() => import("../components/Gallery.jsx")}
+              onFocus={() => import("../components/Gallery.jsx")}
               onClick={(e) => {
                 e.stopPropagation();
                 onGalleryClick(project.images, e.currentTarget);
@@ -139,7 +144,7 @@ function CollapsedCard({
               }}
             >
               <IconGlyph name="info" className="button-icon" />
-              Learn More
+              Case Study
             </button>
           )}
         </div>

@@ -1,3 +1,4 @@
+import React from "react";
 // /utils/renderTechStackItem.js
 import iconMap from "../data/iconMap";
 
@@ -57,15 +58,6 @@ const projectPurposeMap = {
     S3: "Static asset + build artifact hosting.",
     CloudFront: "Global CDN for low-latency page loads.",
     SES: "Email delivery for the contact workflow.",
-  },
-  "task-checklist": {
-    React: "Reusable list components and UI state management.",
-    JavaScript: "Client-side form validation and interactions.",
-    "Node.js": "Runtime for the backend API.",
-    "Express.js": "REST endpoints handling CRUD operations.",
-    MongoDB: "Document store for tasks and user data.",
-    HTML: "Base markup for the SPA shell.",
-    CSS: "Custom styling for modals, cards, and layout.",
   },
   "nes-emulator": {
     "C++": "Cycle-accurate CPU/APU emulation core.",

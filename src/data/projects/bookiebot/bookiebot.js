@@ -13,7 +13,9 @@ const bookiebot = {
   title: "BookieBot | AI Agent",
   team: "Solo Project",
   description:
-    "BookieBot is an autonomous AI finance chatbot that allows users to log, query, and visualize their expenses using natural language and supports multi-user workflows, role-based access, and over 30 analytics intents.",
+    "AI workflow automation system for shared budgeting: natural-language expense capture, structured validation, Google Sheets sync, multi-user access, and analytics over 30+ query intents.",
+  outcome:
+    "Replaced a manual spreadsheet workflow with a Discord-native finance agent that logs, validates, queries, and visualizes expenses from normal messages.",
   stack: [
     "Python",
     "Discord.py",
@@ -53,7 +55,7 @@ const bookiebot = {
         type: "text",
         className: "desc-text",
         content: `
-          BookieBot is an <strong>autonomous AI finance chatbot</strong> that allows users to log, query, and visualize their expenses with <strong>natural language</strong> and supports <strong>multi-user workflows, role-based access, and over thirty analytics intents.</strong>
+          BookieBot is an <strong>AI workflow automation system</strong> that lets users log, query, and visualize shared expenses through <strong>natural language</strong>. It supports <strong>multi-user workflows, role-based access, Google Sheets synchronization, and over thirty analytics intents.</strong>
         `,
       },
       {
@@ -71,12 +73,12 @@ const bookiebot = {
     ],
 
     background: `
-      BookieBot began as a solution for a personal problem: my partner and I tracked our shared expenses using a custom Google Sheets budget, but logging purchases meant stopping what we were doing, switching tabs, finding the right row, and formatting everything correctly — a small but constant friction that made budgeting feel like a chore, which meant we didn’t do it. BookieBot was born out of our need for a simple, user-friendly solution to allow expense input to become simpler.
+      BookieBot began with a real workflow problem: my partner and I tracked shared expenses in a custom Google Sheet, but the data entry step was slow enough that the spreadsheet drifted out of date. I built a Discord-native automation layer so the interface became a normal message, while the system handled parsing, validation, logging, and reporting.
     `,
 
     challenge: `
-      We didn’t have a logging problem — we had <strong>a convenience problem.</strong>
-      Even though we were motivated to budget together, the workflow wasn’t compatible with daily life. In moments when we were busy or distracted — grabbing coffee, getting groceries — we’d forget to log things, lose receipts, and the data would slowly drift further away from cohesive and correct. To keep things simple in the beginning, my partner would drop a message into our shared Discord with the amount and item of their purchase, which I would gradually enter into the shared spreadsheet. At a certain point, I realized I was working harder, and not smarter. What if budgeting was as simple as chatting?
+      We did not have a motivation problem. We had <strong>an interface problem.</strong>
+      The budget only worked when data entry happened immediately, but daily life made that unreliable. I replaced the fragile handoff with a bot that could understand short natural-language messages, normalize them into structured records, and keep the spreadsheet trustworthy without extra UI friction.
     `,
 
     goal: [
@@ -124,7 +126,7 @@ const bookiebot = {
       {
         type: "text",
         className: "research-text",
-        content: `Most existing solutions (YNAB, Mint, Notion templates) were either too rigid or required dedicated UI interaction. I didn’t want an additional learning curve for either of us. I realized that a <strong>GPT-powered Discord bot</strong> could act as the "interface" — something we could message naturally and forget about.`,
+        content: `Most existing solutions (YNAB, Mint, Notion templates) were either too rigid or required dedicated UI interaction. I did not want an additional learning curve for either of us. I realized that a <strong>GPT-powered Discord bot</strong> could act as the interface: something we could message naturally and forget about.`,
       },
       {
         type: "group",
@@ -216,7 +218,7 @@ const bookiebot = {
             src: storyboard.naturalLanguageLogging.src,
             alt: "Google Sheets Sync",
             caption:
-              "<strong>Google Sheets Sync:</strong><br> Each expense is logged into a clean, timestamped row in our shared Google Sheet — no human editing required.",
+              "<strong>Google Sheets Sync:</strong><br> Each expense is logged into a clean, timestamped row in our shared Google Sheet with no human editing required.",
           },
           {
             type: "image",

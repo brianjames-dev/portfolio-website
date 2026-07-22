@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import IconGlyph from "./IconGlyph";
+import React, { useEffect, useState } from "react";
+import IconGlyph from "./IconGlyph.jsx";
 
 function getInitialTheme() {
   const currentTheme = document.documentElement.getAttribute("data-theme");

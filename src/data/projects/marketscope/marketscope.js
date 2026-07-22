@@ -21,7 +21,9 @@ const marketscope = {
   title: "MarketScope",
   team: "2-Person Team",
   description:
-    "MarketScope discovers local businesses actively running Google Ads, estimates keyword economics (CPC, volume, competition), benchmarks landing pages, and generates outreach-ready lead reports for agencies and SMBs.",
+    "Lead intelligence platform that turns niche and location searches into ranked advertiser briefs with SERP evidence, keyword economics, landing-page audits, and outreach-ready exports.",
+  outcome:
+    "Condenses local ad research into a repeatable pipeline that produces ranked lead lists and prospect briefs from messy SERP, keyword, and landing-page signals.",
   stack: [
     "TypeScript",
     "React",
@@ -81,7 +83,7 @@ const marketscope = {
     ],
 
     background: `
-      I built MarketScope after repeatedly needing a <strong>clean, programmatic way</strong> to discover <em>local advertisers</em> and quantify <em>keyword economics</em> for niches like “concrete contractor” or “roof repair.” Manual checks in search engines were slow and inconsistent. Existing tools favored national brands or required expensive seats. I wanted a <strong>developer-friendly pipeline</strong> that generated <strong>actionable lead lists and one-pager briefs</strong> I could send the same day.
+      I built MarketScope after repeatedly needing a <strong>clean, programmatic way</strong> to discover <em>local advertisers</em> and quantify <em>keyword economics</em> for niches like "concrete contractor" or "roof repair." Manual checks in search engines were slow and inconsistent. Existing tools favored national brands or required expensive seats. I wanted a <strong>developer-friendly pipeline</strong> that generated <strong>actionable lead lists and one-pager briefs</strong> I could send the same day.
     `,
 
     challenge: `
@@ -96,7 +98,7 @@ const marketscope = {
       {
         type: "text",
         className: "goal-intro",
-        content: `Deliver a repeatable system that turns a query like <strong>“concrete contractor — Tyler, TX”</strong> into a <strong>ranked lead list</strong> with <strong>keyword plan</strong> and <strong>audit-backed talking points</strong> in under an hour.`,
+        content: `Deliver a repeatable system that turns a query like <strong>"concrete contractor - Tyler, TX"</strong> into a <strong>ranked lead list</strong> with <strong>keyword plan</strong> and <strong>audit-backed talking points</strong> in under an hour.`,
       },
       {
         type: "text",
@@ -267,7 +269,7 @@ const marketscope = {
         type: "text",
         className: "reflection-intro",
         content: `
-          Shipping MarketScope reinforced a pattern: <strong>join multiple “okay” signals into one reliable score</strong>. The value isn’t a single metric—it’s the <em>blend</em> and the <em>explainability</em> behind it.
+          Shipping MarketScope reinforced a pattern: <strong>join multiple "okay" signals into one reliable score</strong>. The value is not a single metric. It is the <em>blend</em> and the <em>explainability</em> behind it.
         `,
       },
       {
@@ -291,7 +293,7 @@ const marketscope = {
             type: "text",
             className: "reflection-text",
             content:
-              "Investing in <em>contactability checks</em> up front saved time—bounced outreach is the hidden tax of prospecting.",
+              "Investing in <em>contactability checks</em> up front saved time because bounced outreach is the hidden tax of prospecting.",
           },
         ],
       },

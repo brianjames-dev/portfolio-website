@@ -1,5 +1,6 @@
-import { useEffect, useRef } from "react";
-import IconGlyph from "./IconGlyph";
+import React, { useEffect, useRef } from "react";
+import IconGlyph from "./IconGlyph.jsx";
+import { lockPageScroll } from "../utils/pageScrollLock.js";
 import "../styles/VideoOverlay.css";
 
 function VideoOverlay({ isOpen, video, onClose }) {
@@ -16,23 +17,13 @@ function VideoOverlay({ isOpen, video, onClose }) {
     if (!isOpen) return undefined;
 
     previouslyFocusedRef.current = document.activeElement;
-    const y = window.scrollY;
-    let isRestoringScroll = false;
-    const keepScrollPinned = () => {
-      if (isRestoringScroll || Math.abs(window.scrollY - y) < 1) return;
-      isRestoringScroll = true;
-      window.scrollTo(0, y);
-      window.requestAnimationFrame(() => {
-        isRestoringScroll = false;
-      });
-    };
+    const releaseScrollLock = lockPageScroll();
 
     const preventBackgroundTouch = (event) => {
       event.preventDefault();
     };
 
     document.documentElement.classList.add("modal-scroll-lock");
-    document.body.classList.add("no-scroll");
     document.body.classList.add("video-overlay-open");
 
     const setViewportVars = () => {
@@ -63,14 +54,11 @@ function VideoOverlay({ isOpen, video, onClose }) {
     setViewportVars();
     const refreshViewportLock = () => {
       setViewportVars();
-      window.requestAnimationFrame(keepScrollPinned);
     };
 
     window.visualViewport?.addEventListener("resize", refreshViewportLock);
-    window.visualViewport?.addEventListener("scroll", refreshViewportLock);
     window.addEventListener("resize", refreshViewportLock);
     window.addEventListener("orientationchange", refreshViewportLock);
-    window.addEventListener("scroll", keepScrollPinned, { passive: true });
     document.addEventListener("touchmove", preventBackgroundTouch, {
       passive: false,
     });
@@ -115,22 +103,18 @@ function VideoOverlay({ isOpen, video, onClose }) {
     return () => {
       window.clearTimeout(focusTimer);
       document.removeEventListener("keydown", handleKeyDown);
-      const prevY = y;
       window.visualViewport?.removeEventListener("resize", refreshViewportLock);
-      window.visualViewport?.removeEventListener("scroll", refreshViewportLock);
       window.removeEventListener("resize", refreshViewportLock);
       window.removeEventListener("orientationchange", refreshViewportLock);
-      window.removeEventListener("scroll", keepScrollPinned);
       document.removeEventListener("touchmove", preventBackgroundTouch);
       document.documentElement.style.removeProperty("--video-viewport-width");
       document.documentElement.style.removeProperty("--video-viewport-height");
       document.documentElement.style.removeProperty("--video-viewport-top");
       document.documentElement.style.removeProperty("--video-viewport-left");
       document.documentElement.classList.remove("modal-scroll-lock");
-      document.body.classList.remove("no-scroll");
       document.body.classList.remove("video-overlay-open");
+      releaseScrollLock();
       window.requestAnimationFrame(() => {
-        window.scrollTo(0, prevY || y);
         try {
           previouslyFocusedRef.current?.focus?.({ preventScroll: true });
         } catch (error) {

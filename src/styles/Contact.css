@@ -166,9 +166,7 @@ section#contact.contact-section {
       var(--motion-ease-standard, ease),
     color var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
     border-color var(--motion-duration-fast, 160ms)
-      var(--motion-ease-standard, ease),
-    transform var(--motion-duration-fast, 160ms)
-      var(--motion-ease-press, ease);
+      var(--motion-ease-standard, ease);
 
   width: auto;
   margin-top: 10px;
@@ -179,10 +177,6 @@ section#contact.contact-section {
   .contact-submit-row button:hover {
     background-color: var(--color-accent-hover);
   }
-}
-
-.contact-submit-row button:active {
-  transform: scale(0.98);
 }
 
 /* Spinner animation */

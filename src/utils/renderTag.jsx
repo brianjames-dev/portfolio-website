@@ -1,3 +1,4 @@
+import React from "react";
 // /utils/renderTag.js
 import iconMap from "../data/iconMap";
 

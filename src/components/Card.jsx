@@ -3,7 +3,7 @@ import {
   motion,
   useSpring,
 } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import useDesktopMotionPreference from "../hooks/useDesktopMotionPreference";
 
 const FADE_DURATION = 0.5; // Content fade duration

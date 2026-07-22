@@ -9,7 +9,9 @@ const apotheca = {
   title: "Full-stack Developer",
   team: "Apotheca | Contract",
   description:
-    "Developed SkinPro, a custom client and appointment database app for a skincare business. It streamlined client records, appointments, photo uploads, and prescription generation so the owner could spend less time on admin work and more time with clients.",
+    "Owned SkinPro, a full-stack client operations system for a skincare business, covering records, appointments, photo uploads, follow-up alerts, and prescription generation.",
+  outcome:
+    "Managed 300+ client records and 2,000+ appointments while saving 1,000+ admin hours per year and $3,000+ in recurring software costs.",
   stack: [
     "TypeScript",
     "JavaScript",
@@ -26,17 +28,17 @@ const apotheca = {
   ],
   github: "https://github.com/brianjames-dev/SkinPro",
   images: [
-    { ...gallery.clientsTab, caption: "👩 Clients Tab" },
-    { ...gallery.infoTab, caption: "📝 Info Tab (Client Demographics & History)" },
-    { ...gallery.appointmentsTab, caption: "📅 Appointments Tab" },
-    { ...gallery.photosTab, caption: "📷 Photos Tab (Before & After Comparison)" },
-    { ...gallery.qrUpload, caption: "📲 QR Upload Window" },
-    { ...gallery.uploadPhotos, caption: "📲 Upload In Progress" },
-    { ...gallery.uploadComplete, caption: "📲 Upload Complete" },
-    { ...gallery.rxTab, caption: "💊 Prescriptions Tab" },
-    { ...gallery.rxGenerator, caption: "🧾 Prescription Generator (Dynamic Form)" },
-    { ...gallery.rxPreview, caption: "🖨️ Finished Prescription Preview (Printable)" },
-    { ...gallery.alertsTab, caption: "🔔 Alerts Tab (Follow-up Reminders)" },
+    { ...gallery.clientsTab, caption: "Clients Tab" },
+    { ...gallery.infoTab, caption: "Info Tab (Client Demographics & History)" },
+    { ...gallery.appointmentsTab, caption: "Appointments Tab" },
+    { ...gallery.photosTab, caption: "Photos Tab (Before & After Comparison)" },
+    { ...gallery.qrUpload, caption: "QR Upload Window" },
+    { ...gallery.uploadPhotos, caption: "Upload In Progress" },
+    { ...gallery.uploadComplete, caption: "Upload Complete" },
+    { ...gallery.rxTab, caption: "Prescriptions Tab" },
+    { ...gallery.rxGenerator, caption: "Prescription Generator (Dynamic Form)" },
+    { ...gallery.rxPreview, caption: "Finished Prescription Preview (Printable)" },
+    { ...gallery.alertsTab, caption: "Alerts Tab (Follow-up Reminders)" },
   ],
 
   expanded: {

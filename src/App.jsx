@@ -1,12 +1,12 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./App.css";
-import ParticlesBackground from "./ParticlesBackground";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Experience from "./pages/Experience";
-import Header from "./pages/Header";
-import Home from "./pages/Home";
-import Projects from "./pages/Projects";
+import ParticlesBackground from "./ParticlesBackground.jsx";
+import Background from "./pages/Background.jsx";
+import Contact from "./pages/Contact.jsx";
+import Experience from "./pages/Experience.jsx";
+import Header from "./pages/Header.jsx";
+import Home from "./pages/Home.jsx";
+import Projects from "./pages/Projects.jsx";
 
 function App() {
   const [activeSection, setActiveSection] = useState("home");
@@ -568,7 +568,7 @@ function App() {
       <ParticlesBackground />
       <main>
         <Home />
-        <About />
+        <Background />
         <Experience />
         <Projects />
         <Contact />

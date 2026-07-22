@@ -5,7 +5,9 @@ const serverlessPortfolio = {
   title: "Serverless Portfolio",
   team: "Solo Project",
   description:
-    "Personal portfolio website with a serverless architecture: React frontend deployed on CloudFront and S3, integrated with a cloud-native contact form powered by AWS Lambda, S3, and SES for email delivery.",
+    "Serverless front-end and contact workflow using React, CloudFront, S3, Lambda, and SES, with a custom gallery system, responsive interactions, and optimized image delivery.",
+  outcome:
+    "Ships a low-maintenance portfolio architecture with CDN delivery, cloud-native email handling, lazy-loaded media, and no always-on application server.",
   stack: [
     "React",
     "JavaScript",
@@ -20,6 +22,13 @@ const serverlessPortfolio = {
   ],
   github: "https://github.com/brianjames-dev/portfolio-website",
   images: [],
+  expanded: {
+    title: "Serverless Portfolio",
+    subtitle: "Solo Project",
+    github: "https://github.com/brianjames-dev/portfolio-website",
+    description:
+      "Serverless front-end and contact workflow using React, CloudFront, S3, Lambda, and SES, with a custom gallery system, responsive interactions, and optimized image delivery.",
+  },
 };
 
 export default serverlessPortfolio;

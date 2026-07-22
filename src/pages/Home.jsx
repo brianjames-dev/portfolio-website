@@ -1,4 +1,4 @@
-import IconGlyph from "../components/IconGlyph";
+import IconGlyph from "../components/IconGlyph.jsx";
 import iconMap from "../data/iconMap.js";
 import "../styles/Home.css";
 
@@ -29,9 +29,11 @@ function Home() {
             <h2 className="name">Brian James</h2>
             <p className="subtitle">Software Developer</p>
             <p className="description">
-              From touring musician to Oregon State University CS graduate, I
-              thrive on solving tough problems, providing clean designs, and
-              creating scalable architecture in all of my coding endeavors.
+              I build AI tools, full-stack systems, and automation workflows
+              that remove manual work and streamline complex operations. Before
+              software, I engineered live music systems for global tours,
+              programming lighting and playback automation where timing,
+              reliability, and execution were a non-negotiable.
             </p>
           </div>
         </div>
@@ -106,6 +108,7 @@ function Home() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
+              className="home-social-secondary"
             >
               <span className="icon-wrapper">
                 <img
