@@ -22,6 +22,13 @@ export default function ThemeToggle({ className = "" }) {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.style.colorScheme = theme;
+
+    const favicon = document.getElementById("theme-favicon");
+    if (favicon) {
+      favicon.href = `/favicon_io/favicon-${theme}.png`;
+    }
+
     try {
       localStorage.setItem("theme", theme);
     } catch (e) {

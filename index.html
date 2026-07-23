@@ -35,6 +35,38 @@
       crossorigin
     />
 
+    <!-- Static fallbacks plus a BaJ favicon that follows the site theme. -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/favicon_io/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon_io/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon_io/favicon-16x16.png"
+    />
+    <link
+      rel="shortcut icon"
+      href="/favicon_io/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      id="theme-favicon"
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/favicon_io/favicon-light.png"
+    />
+    <link rel="manifest" href="/favicon_io/site.webmanifest" />
+
     <style>
       html {
         background: #f5f8f4;
@@ -110,6 +142,8 @@
                 : "light";
           document.documentElement.setAttribute("data-theme", theme);
           document.documentElement.style.colorScheme = theme;
+          document.getElementById("theme-favicon").href =
+            "/favicon_io/favicon-" + theme + ".png";
         } catch (e) {
           document.documentElement.setAttribute("data-theme", "light");
           document.documentElement.style.colorScheme = "light";
@@ -132,30 +166,6 @@
     <link rel="preconnect" href="https://www.google.com" crossorigin />
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
 
-    <!-- Favicon links -->
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/favicon_io/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/favicon_io/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/favicon_io/favicon-16x16.png"
-    />
-    <link rel="manifest" href="/favicon_io/site.webmanifest" />
-    <link
-      rel="shortcut icon"
-      href="/favicon_io/favicon.ico"
-      type="image/x-icon"
-    />
     <script type="module" src="/src/index.jsx"></script>
   </head>
   <body>
