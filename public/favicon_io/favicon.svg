@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Brian James favicon</title>
+  <desc id="desc">Angular BJ monogram in the dark-mode green, mint, and warm accent palette.</desc>
+  <rect width="512" height="512" rx="108" fill="#0f1711"/>
+  <path d="M96 108 H166 V404 H96 Z" fill="#b6dec0"/>
+  <path d="M144 108 H290 L330 164 L286 222 H144 Z" fill="#b6dec0"/>
+  <path d="M144 290 H292 L340 346 L292 404 H144 Z" fill="#b6dec0"/>
+  <path d="M186 164 H260 L236 196 H186 Z" fill="#0f1711"/>
+  <path d="M186 336 H262 L236 368 H186 Z" fill="#0f1711"/>
+  <path d="M332 108 H424 L306 404 H214 Z" fill="#eff7f0"/>
+  <path d="M382 108 H424 V318 C424 382 384 424 316 424 H270 L292 356 H318 C358 356 382 335 382 294 Z" fill="#ee8b62"/>
+  <path d="M96 404 L152 290 H204 L148 404 Z" fill="#2f6b4a"/>
+</svg>

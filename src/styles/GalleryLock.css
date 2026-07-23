@@ -62,19 +62,12 @@
   padding: 6px;
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: transform var(--motion-duration-fast, 160ms)
-    var(--motion-ease-press, ease);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .gallery-lock-close:hover {
     background-color: transparent;
-    transform: scale(1.3);
   }
-}
-
-.gallery-lock-close:active {
-  transform: scale(0.9);
 }
 
 .gallery-lock-close-icon {
@@ -141,7 +134,8 @@
   top: 50%;
   transform: translateY(-50%);
   height: 28px;
-  padding: 0 10px;
+  width: 60px;
+  padding: 0;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-soft);
   background: var(--color-accent);
@@ -153,6 +147,11 @@
     background-color var(--motion-duration-fast, 160ms)
       var(--motion-ease-standard, ease),
     color var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease);
+}
+
+.gallery-lock-toggle:active,
+.gallery-lock-toggle.is-touch-active {
+  transform: translateY(-50%);
 }
 
 @media (hover: hover) and (pointer: fine) {

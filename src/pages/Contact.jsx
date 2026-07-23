@@ -1,4 +1,4 @@
-import {
+import React, {
   lazy,
   Suspense,
   useCallback,
@@ -6,8 +6,9 @@ import {
   useRef,
   useState,
 } from "react";
-import RevealOnView from "../components/RevealOnView";
+import RevealOnView from "../components/RevealOnView.jsx";
 import { CONTACT_FORM_URL } from "../config/contact";
+import { RECAPTCHA_SITE_KEY } from "../config/env.js";
 import iconMap from "../data/iconMap.js";
 import "../styles/Contact.css";
 
@@ -192,7 +193,7 @@ function Contact() {
                   {showCaptcha ? (
                     <Suspense fallback={<div style={{ height: 78 }} />}>
                       <LazyReCAPTCHA
-                        sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+                        sitekey={RECAPTCHA_SITE_KEY}
                         onChange={(token) => setCaptchaToken(token)}
                       />
                     </Suspense>

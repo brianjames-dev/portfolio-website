@@ -9,6 +9,13 @@ const nesEmulator = {
   stack: ["C++", "Git", "SDL2", "Dear ImGUI"],
   github: "https://github.com/brianjames-dev/OSUcapstone",
   images: [],
+  expanded: {
+    title: "NES Emulator",
+    subtitle: "5-person Team",
+    github: "https://github.com/brianjames-dev/OSUcapstone",
+    description:
+      "Cycle-accurate NES emulator focused on CPU/APU behavior, regression coverage, cross-platform support, and team delivery across a coordinated C++ codebase.",
+  },
 };
 
 export default nesEmulator;

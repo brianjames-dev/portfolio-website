@@ -1,4 +1,4 @@
-import { lazy, memo, Suspense, useEffect, useMemo, useState } from "react";
+import React, { lazy, memo, Suspense, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
 let engineReadyPromise;

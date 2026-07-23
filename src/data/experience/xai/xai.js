@@ -22,7 +22,7 @@ const xai = {
         `,
 
     description: `
-            •  Full-time Software Engineering Specialist role at xAI focused on software engineering work across AI systems, tooling, and product workflows.
+            •  Full-time Software Engineering Specialist role at xAI focused on engineering work across AI systems, tooling, evaluation workflows, and product operations.
         `,
   },
 };

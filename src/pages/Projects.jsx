@@ -1,47 +1,26 @@
-import { lazy, Suspense, useCallback, useRef, useState } from "react";
-import Card from "../components/Card";
-import CollapsedCard from "../components/CollapsedCard";
-import ExpandedCard from "../components/ExpandedCard";
-import RevealOnView from "../components/RevealOnView";
+import React, { lazy, Suspense, useState } from "react";
+import Card from "../components/Card.jsx";
+import CollapsedCard from "../components/CollapsedCard.jsx";
+import ExpandedCard from "../components/ExpandedCard.jsx";
+import RevealOnView from "../components/RevealOnView.jsx";
 import projects from "../data/projects";
 import useCardExpansion from "../hooks/useCardExpansion";
 import "../styles/Projects.css";
-const Gallery = lazy(() => import("../components/Gallery"));
+const Gallery = lazy(() => import("../components/Gallery.jsx"));
 
 function Projects() {
   const [fullscreenIndex, setFullscreenIndex] = useState(null);
   const [fullscreenImages, setFullscreenImages] = useState([]);
-  const galleryReturnTargetRef = useRef(null);
   const { isExpanded, toggle } = useCardExpansion();
 
-  const scrollGalleryTargetIntoView = useCallback(() => {
-    const target = galleryReturnTargetRef.current;
-    galleryReturnTargetRef.current = null;
-    if (!target || !document.body.contains(target)) return;
-
-    const headerVar = getComputedStyle(document.documentElement)
-      .getPropertyValue("--header-height")
-      .trim();
-    const headerOffset = parseInt(headerVar || "60", 10) || 60;
-    const targetTop =
-      target.getBoundingClientRect().top + window.pageYOffset - headerOffset - 8;
-
-    window.scrollTo({
-      top: Math.max(0, targetTop),
-      behavior: "smooth",
-    });
-  }, []);
-
-  const openGallery = (images, sourceElement) => {
-    import("../components/Gallery");
-    galleryReturnTargetRef.current =
-      sourceElement?.closest?.(".project-card") || null;
+  const openGallery = (images) => {
+    import("../components/Gallery.jsx");
     setFullscreenImages(images);
     setFullscreenIndex(0);
   };
 
-  const onGalleryClick = (images, sourceElement) => {
-    openGallery(images, sourceElement);
+  const onGalleryClick = (images) => {
+    openGallery(images);
   };
 
   return (
@@ -94,7 +73,6 @@ function Projects() {
           onClose={() => {
             setFullscreenImages([]);
             setFullscreenIndex(null);
-            window.setTimeout(scrollGalleryTargetIntoView, 80);
           }}
         />
       </Suspense>

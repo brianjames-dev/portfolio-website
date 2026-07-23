@@ -1,12 +1,12 @@
 // src/components/ExpandedCard.js
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import IconGlyph from "./IconGlyph";
+import IconGlyph from "./IconGlyph.jsx";
 import "../styles/BookieBot.css";
 import "../styles/CollapsedCard.css"; // for shared section styles
 import useDesktopMotionPreference from "../hooks/useDesktopMotionPreference";
-import { renderContentBlock } from "../utils/renderContentBlock.js";
-import { renderTechStackItem } from "../utils/renderTechStackItem.js";
+import { renderContentBlock } from "../utils/renderContentBlock.jsx";
+import { renderTechStackItem } from "../utils/renderTechStackItem.jsx";
 
 const CONTENT_FADE_DURATION = 0.5;
 const MOBILE_SCROLL_BUTTON_MAX_WIDTH = 600;
@@ -69,6 +69,8 @@ function ExpandedCard({
   const hasVideoEmbed =
     videoEmbed?.provider === "youtube" && Boolean(videoEmbedId);
   const logo = project.logo;
+  const caseStudyDescription =
+    project.expanded?.description || project.description;
 
   const updateScrollTopButton = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -227,15 +229,9 @@ function ExpandedCard({
             onClick={scrollToCardTop}
             onPointerDownCapture={scrollToCardTop}
             onTouchStartCapture={scrollToCardTop}
-            initial={
-              shouldReduceMotion ? false : { opacity: 0, y: -8, scale: 0.92 }
-            }
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={
-              shouldReduceMotion
-                ? { opacity: 0 }
-                : { opacity: 0, y: -8, scale: 0.92 }
-            }
+            initial={shouldReduceMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{
               duration: shouldReduceMotion ? 0 : 0.24,
               ease: [0.22, 1, 0.36, 1],
@@ -287,8 +283,8 @@ function ExpandedCard({
               <button
                 className="expanded-top-button"
                 data-locked={isGalleryLocked}
-                onMouseEnter={() => import("../components/Gallery")}
-                onFocus={() => import("../components/Gallery")}
+                onMouseEnter={() => import("../components/Gallery.jsx")}
+                onFocus={() => import("../components/Gallery.jsx")}
                 onClick={(e) => {
                   e.stopPropagation();
                   onGalleryClick(project.images, e.currentTarget);
@@ -358,7 +354,7 @@ function ExpandedCard({
 
       {/* Sections */}
       {[
-        ["Short Description", project.expanded?.description],
+        ["Short Description", caseStudyDescription],
         ["Background", project.expanded?.background],
         ["The Problem", project.expanded?.challenge],
         ["Goal", project.expanded?.goal],
@@ -463,8 +459,8 @@ function ExpandedCard({
           <button
             className="learn-more-btn"
             data-locked={isGalleryLocked}
-            onMouseEnter={() => import("../components/Gallery")}
-            onFocus={() => import("../components/Gallery")}
+            onMouseEnter={() => import("../components/Gallery.jsx")}
+            onFocus={() => import("../components/Gallery.jsx")}
             onClick={(e) => {
               e.stopPropagation();
               onGalleryClick(project.images, e.currentTarget);

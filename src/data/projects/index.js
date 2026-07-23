@@ -5,15 +5,13 @@ import marketscope from "./marketscope/marketscope.js";
 import nesEmulator from "./nesEmulator/nesEmulator.js";
 import serverlessPortfolio from "./serverlessPortfolio/serverlessPortfolio.js";
 import snoozeai from "./snoozeAI/snoozeAI.js";
-import taskChecklist from "./taskChecklist/taskChecklist.js";
 
 const projects = [
   bookiebot,
   marketscope,
   snoozeai,
-  serverlessPortfolio,
   nesEmulator,
-  taskChecklist,
+  serverlessPortfolio,
 ];
 
 export default projects;

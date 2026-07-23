@@ -1,17 +1,20 @@
-import {
+import React, {
   lazy,
   Suspense,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
-import IconGlyph from "./IconGlyph";
+import IconGlyph from "./IconGlyph.jsx";
 import {
   GALLERY_ACCESS_REQUEST_HINT,
   GALLERY_ACCESS_REQUEST_URL,
   GALLERY_LOCK_HINT,
 } from "../config/galleryLock";
+import { RECAPTCHA_SITE_KEY } from "../config/env.js";
+import { lockPageScroll } from "../utils/pageScrollLock.js";
 import "../styles/GalleryLock.css";
 
 const LazyReCAPTCHA = lazy(() => import("react-google-recaptcha"));
@@ -31,6 +34,8 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
   const [requestLoading, setRequestLoading] = useState(false);
   const [showCaptcha, setShowCaptcha] = useState(false);
   const formRef = useRef(null);
+  const passwordInputRef = useRef(null);
+  const passwordSelectionRef = useRef(null);
 
   const prefetchRecaptcha = useCallback(() => {
     import("react-google-recaptcha");
@@ -38,7 +43,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
 
   useEffect(() => {
     if (!isOpen) return;
-    const y = window.scrollY;
+    const releaseScrollLock = lockPageScroll();
     setPassword("");
     setUnlockError("");
     setUnlockLoading(false);
@@ -60,16 +65,12 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
     };
 
     document.addEventListener("keydown", handleKeyDown);
-    document.body.classList.add("no-scroll");
     document.body.classList.add("gallery-lock-open");
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      document.body.classList.remove("no-scroll");
       document.body.classList.remove("gallery-lock-open");
-      window.requestAnimationFrame(() => {
-        window.scrollTo(0, y);
-      });
+      releaseScrollLock();
     };
   }, [isOpen, onClose]);
 
@@ -90,6 +91,24 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
     }, 0);
     return () => window.clearTimeout(timer);
   }, [isOpen, activeView]);
+
+  useLayoutEffect(() => {
+    const selection = passwordSelectionRef.current;
+    const input = passwordInputRef.current;
+    if (!selection || !input) return;
+
+    try {
+      input.focus({ preventScroll: true });
+    } catch (error) {
+      input.focus();
+    }
+    input.setSelectionRange(
+      selection.start,
+      selection.end,
+      selection.direction || "none",
+    );
+    passwordSelectionRef.current = null;
+  }, [showPassword]);
 
   if (!isOpen) return null;
 
@@ -176,6 +195,18 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
     setActiveView("request");
   };
 
+  const handlePasswordVisibilityToggle = () => {
+    const input = passwordInputRef.current;
+    passwordSelectionRef.current = input
+      ? {
+          start: input.selectionStart ?? password.length,
+          end: input.selectionEnd ?? password.length,
+          direction: input.selectionDirection,
+        }
+      : null;
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <div
       className="gallery-lock-overlay"
@@ -218,6 +249,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
               </label>
               <div className="gallery-lock-input-row">
                 <input
+                  ref={passwordInputRef}
                   id="gallery-password"
                   className="gallery-lock-input"
                   type={showPassword ? "text" : "password"}
@@ -231,7 +263,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
                   className="gallery-lock-toggle"
                   aria-pressed={showPassword}
                   onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => setShowPassword((prev) => !prev)}
+                  onClick={handlePasswordVisibilityToggle}
                 >
                   {showPassword ? "Hide" : "Show"}
                 </button>
@@ -334,7 +366,7 @@ function GalleryLockModal({ isOpen, onClose, onUnlock }) {
                     {showCaptcha ? (
                       <Suspense fallback={<div style={{ height: 78 }} />}>
                         <LazyReCAPTCHA
-                          sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+                          sitekey={RECAPTCHA_SITE_KEY}
                           onChange={(token) => setCaptchaToken(token)}
                         />
                       </Suspense>

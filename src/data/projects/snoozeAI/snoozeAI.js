@@ -66,7 +66,7 @@ const snoozeai = {
         type: "text",
         className: "desc-text",
         content: `
-          SnoozeAI is a <strong>notification firewall + concierge</strong> for iOS. It <strong>classifies urgency</strong>, <strong>summarizes</strong> long alerts, and <strong>schedules delivery</strong> for low-priority pings as digests—while allowing <strong>VIP and urgent</strong> items to break through instantly. The result is fewer interruptions and better attention management, without missing important messages.
+          SnoozeAI is a <strong>notification firewall and concierge</strong> for iOS. It <strong>classifies urgency</strong>, <strong>summarizes</strong> long alerts, and <strong>schedules delivery</strong> for low-priority pings as digests while allowing <strong>VIP and urgent</strong> items to break through instantly.
         `,
       },
       // {
@@ -79,11 +79,11 @@ const snoozeai = {
     ],
 
     background: `
-      Between school, an internship, and side projects, my phone became a slot machine. System-level Focus Modes helped, but they were <em>binary</em>. I needed something <strong>context-aware</strong> that could tell the difference between a bank fraud alert and a social like, between “reply ASAP” and “read tonight.” SnoozeAI started as a class project and evolved into a daily driver: a <strong>personal notification agent</strong>.
+      System-level Focus Modes helped, but they were <em>binary</em>. I needed something <strong>context-aware</strong> that could tell the difference between a bank fraud alert and a social notification, between "reply ASAP" and "read tonight." SnoozeAI evolved into a product experiment around attention management and notification triage.
     `,
 
     challenge: `
-      iOS notifications are optimized for delivery, not <strong>decision-making</strong>. The hard part wasn’t receiving pushes—it was <strong>triage</strong>:<br/>
+      iOS notifications are optimized for delivery, not <strong>decision-making</strong>. The hard part was not receiving pushes. It was <strong>triage</strong>:<br/>
       • Parse <em>heterogeneous payloads</em> (bank alerts, chat previews, CI failures, calendar nudges)<br/>
       • <em>Classify urgency</em> using content + source + time (and learn user preferences)<br/>
       • <em>Summarize</em> long messages into one-liners for lock-screen scanning<br/>
@@ -236,7 +236,7 @@ const snoozeai = {
         type: "text",
         className: "reflection-intro",
         content: `
-          The hardest part wasn’t the model—it was the <strong>product semantics</strong>: what “urgent” means changes by person, app, and time. A <em>hybrid of rules + LLM</em> with transparent controls built user trust. System-level integration (Service Extension) kept the experience fast enough to feel native.
+          The hardest part was not the model. It was the <strong>product semantics</strong>: what "urgent" means changes by person, app, and time. A <em>hybrid of rules + LLM</em> with transparent controls built user trust. System-level integration (Service Extension) kept the experience fast enough to feel native.
         `,
       },
       {
@@ -265,7 +265,7 @@ const snoozeai = {
         type: "text",
         className: "future-intro",
         content: `
-          Next up: richer context and broader coverage—without sacrificing privacy or speed.
+          Next up: richer context and broader coverage without sacrificing privacy or speed.
         `,
       },
       {

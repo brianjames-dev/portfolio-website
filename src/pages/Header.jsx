@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import ThemeToggle from "../components/ThemeToggle";
+import React, { useEffect, useRef, useState } from "react";
+import ThemeToggle from "../components/ThemeToggle.jsx";
 import "../styles/Header.css";
 
 let hasAnimatedIn = false;
@@ -215,8 +215,13 @@ function Header({ activeSection, isHidden = false }) {
           className={menuOpen ? "active" : ""}
           aria-hidden={isMobile && !menuOpen ? "true" : undefined}
         >
-          {["home", "about", "experience", "projects", "contact"].map(
-            (section) => (
+          {[
+            ["home", "Home"],
+            ["about", "Background"],
+            ["experience", "Experience"],
+            ["projects", "Projects"],
+            ["contact", "Contact"],
+          ].map(([section, label]) => (
               <a
                 key={section}
                 className={activeSection === section ? "active" : ""}
@@ -271,7 +276,7 @@ function Header({ activeSection, isHidden = false }) {
                   section === "contact" ? preloadRecaptcha : undefined
                 }
               >
-                {section.charAt(0).toUpperCase() + section.slice(1)}
+                {label}
               </a>
             )
           )}

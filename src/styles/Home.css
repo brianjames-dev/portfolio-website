@@ -6,7 +6,7 @@
 
 .home-card {
   border-radius: var(--radius-md);
-  max-width: 800px;
+  max-width: 920px;
   width: calc(100% - (var(--page-card-gutter, 20px) * 2));
   margin: 0;
   animation: home-card-enter var(--motion-duration-slow, 420ms)
@@ -47,7 +47,6 @@
   width: 250px;
   height: auto;
   vertical-align: bottom; /* safe extra nudge */
-  filter: drop-shadow(-10px 0px 14px rgba(31, 81, 55, 0.22));
 }
 
 /* Right side (Text) */
@@ -75,7 +74,7 @@
 
 .home-right .description {
   min-width: 278px;
-  padding-top: 50px;
+  padding-top: 28px;
   margin: 0;
   font-size: 1rem;
   color: var(--color-text);
@@ -134,11 +133,7 @@
   transition:
     background-color var(--motion-duration-fast, 160ms)
       var(--motion-ease-standard, ease),
-    color var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
-    transform var(--motion-duration-fast, 160ms)
-      var(--motion-ease-press, ease),
-    box-shadow var(--motion-duration-fast, 160ms)
-      var(--motion-ease-standard, ease);
+    color var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease);
 }
 
 .home-action-link img {
@@ -149,13 +144,7 @@
 @media (hover: hover) and (pointer: fine) {
   .home-action-link:hover {
     background-color: var(--color-accent-hover);
-    box-shadow: var(--shadow-interactive);
-    transform: translateY(-1px);
   }
-}
-
-.home-action-link:active {
-  transform: scale(0.98);
 }
 
 /* Resume + Social links shared styles */
@@ -255,6 +244,10 @@
   flex-wrap: wrap;
 }
 
+.home-social-secondary {
+  opacity: 0.72;
+}
+
 /* ========== Mobile Styles ========== */
 @media (max-width: 600px) {
   /* Center the Home card on mobile (both themes) */
@@ -320,34 +313,6 @@
     transform-origin: top;
   }
 
-  .avatar-wrapper {
-    position: relative;
-    width: 250px; /* Match the avatar width */
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .avatar-glow {
-    position: absolute;
-    top: 0%;
-    width: 250px;
-    height: 600px;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .avatar-clipper {
-    position: relative;
-    overflow: hidden;
-    height: 260px; /* Adjust this to cut the glow at the divider */
-    width: 100%;
-    z-index: 1;
-  }
-
   .home-divider {
     width: calc(100% - 10px);
     margin-inline: auto;
@@ -372,9 +337,7 @@
     font-size: 1rem;
     transition:
       background-color var(--motion-duration-fast, 160ms)
-        var(--motion-ease-standard, ease),
-      transform var(--motion-duration-fast, 160ms)
-        var(--motion-ease-press, ease);
+        var(--motion-ease-standard, ease);
   }
 
   .home-action-link img {

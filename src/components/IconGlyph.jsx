@@ -1,3 +1,4 @@
+import React from "react";
 const ICONS = {
   close: {
     viewBox: "0 -960 960 960",

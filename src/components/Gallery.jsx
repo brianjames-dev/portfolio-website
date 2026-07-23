@@ -1,7 +1,8 @@
 // /components/ProjectGallery.js
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
-import IconGlyph from "./IconGlyph";
+import { lockPageScroll } from "../utils/pageScrollLock.js";
+import IconGlyph from "./IconGlyph.jsx";
 import iconMap from "../data/iconMap.js";
 
 const PRELOAD_RADIUS = 1;
@@ -349,7 +350,7 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
       }
     };
 
-    if (index !== null) {
+    if (isOpen) {
       document.body.addEventListener("touchmove", preventScroll, {
         passive: false,
       });
@@ -358,30 +359,22 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     return () => {
       document.body.removeEventListener("touchmove", preventScroll);
     };
-  }, [index]);
+  }, [isOpen]);
 
   // Scroll lock when overlay is open
   useEffect(() => {
-    const entering = index !== null;
+    const entering = isOpen;
     if (entering) {
-      const y = window.scrollY;
-      document.body.classList.add("no-scroll");
+      const releaseScrollLock = lockPageScroll();
       document.body.classList.add("gallery-overlay-open");
-      document.body.style.top = `-${y}px`;
+      return () => {
+        document.body.classList.remove("gallery-overlay-open");
+        releaseScrollLock();
+      };
     }
 
-    return () => {
-      if (entering) {
-        const y = parseInt(document.body.style.top || "0") * -1;
-        document.body.classList.remove("no-scroll");
-        document.body.classList.remove("gallery-overlay-open");
-        document.body.style.top = "";
-        window.requestAnimationFrame(() => {
-          window.scrollTo(0, y);
-        });
-      }
-    };
-  }, [index]);
+    return undefined;
+  }, [isOpen]);
 
   // Reset thumbnailRefs on image change
   useEffect(() => {
@@ -588,30 +581,33 @@ function ProjectGallery({ images, index, setIndex, onClose }) {
     }, SWIPE_ANIMATION_MS);
   };
 
-  const handleTrackpadWheel = (event) => {
-    if (isSwipeEnabled || isSuperZoomed || isSwipeAnimating) return;
+  const handleTrackpadWheel = useCallback(
+    (event) => {
+      if (isSwipeEnabled || isSuperZoomed || isSwipeAnimating) return;
 
-    const absX = Math.abs(event.deltaX);
-    const absY = Math.abs(event.deltaY);
-    const isHorizontalGesture = absX > 8 && absX > absY * 1.2;
-    if (!isHorizontalGesture) return;
+      const absX = Math.abs(event.deltaX);
+      const absY = Math.abs(event.deltaY);
+      const isHorizontalGesture = absX > 8 && absX > absY * 1.2;
+      if (!isHorizontalGesture) return;
 
-    event.preventDefault();
-    event.stopPropagation();
+      event.preventDefault();
+      event.stopPropagation();
 
-    const now = Date.now();
-    const wheelState = wheelSwipeRef.current;
-    if (now - wheelState.lastActivatedAt < SWIPE_ANIMATION_MS + 120) return;
+      const now = Date.now();
+      const wheelState = wheelSwipeRef.current;
+      if (now - wheelState.lastActivatedAt < SWIPE_ANIMATION_MS + 120) return;
 
-    wheelState.delta += event.deltaX;
-    const threshold = 70;
-    if (Math.abs(wheelState.delta) < threshold) return;
+      wheelState.delta += event.deltaX;
+      const threshold = 70;
+      if (Math.abs(wheelState.delta) < threshold) return;
 
-    wheelState.lastActivatedAt = now;
-    const direction = wheelState.delta > 0 ? 1 : -1;
-    wheelState.delta = 0;
-    animateToIndex(index + direction);
-  };
+      wheelState.lastActivatedAt = now;
+      const direction = wheelState.delta > 0 ? 1 : -1;
+      wheelState.delta = 0;
+      animateToIndex(index + direction);
+    },
+    [animateToIndex, index, isSuperZoomed, isSwipeAnimating, isSwipeEnabled]
+  );
 
   useEffect(() => {
     const stage = stageRef.current;

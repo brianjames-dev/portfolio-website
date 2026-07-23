@@ -1,7 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
+import {
+  CARD_LAYOUT_TRANSITION,
+  CARD_PANEL_EASE,
+} from "../config/cardMotion.js";
 import useDesktopMotionPreference from "../hooks/useDesktopMotionPreference";
-import { renderTag } from "../utils/renderTag";
+import { renderTag } from "../utils/renderTag.jsx";
 
 const CATEGORY_ORDER = [
   "AI",
@@ -78,8 +82,7 @@ const CATEGORY_MAP = {
 
 const FEATURED_TAG_LIMIT = 5;
 const MIN_HIDDEN_TAGS = 2;
-const STACK_TOGGLE_DURATION = 0.5;
-const STACK_TOGGLE_EASE = [0.4, 0, 0.2, 1];
+const STACK_TOGGLE_DURATION = 0.28;
 
 const FEATURED_PRIORITY = [
   "LangGraph",
@@ -148,7 +151,7 @@ function getFeaturedStack(stack = []) {
     .slice(0, featuredLimit);
 }
 
-export default function TechStackGroups({ stack = [] }) {
+export default function TechStackGroups({ id, stack = [] }) {
   const [showAll, setShowAll] = useState(false);
   const shouldReduceMotion = useDesktopMotionPreference();
   const groups = useMemo(() => groupStack(stack), [stack]);
@@ -163,37 +166,56 @@ export default function TechStackGroups({ stack = [] }) {
 
   const revealTransition = {
     duration: shouldReduceMotion ? 0 : STACK_TOGGLE_DURATION,
-    ease: STACK_TOGGLE_EASE,
+    ease: CARD_PANEL_EASE,
   };
+  const layoutTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : CARD_LAYOUT_TRANSITION;
+  const stackLayoutId = `tech-stack-${id || "card"}`;
 
   return (
-    <div className="project-stack" aria-label="Technology stack">
+    <motion.div
+      className="project-stack"
+      aria-label="Technology stack"
+      layout="position"
+      transition={{ layout: layoutTransition }}
+    >
       <AnimatePresence initial={false} mode="popLayout">
         {!showAll && (
           <motion.div
             className="stack-featured-row"
             key="featured-stack"
-            layout
+            layout="position"
             initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
-            transition={revealTransition}
+            transition={{
+              layout: layoutTransition,
+              opacity: revealTransition,
+              y: revealTransition,
+            }}
           >
             {featuredStack.map((tech, i) =>
-              renderTag(tech, `featured-${tech}-${i}`)
+              renderTag(tech, `featured-${tech}-${i}`, {
+                layoutId: `${stackLayoutId}-tag-${tech}`,
+                layoutTransition,
+              })
             )}
             {hiddenCount > 0 && (
-              <button
+              <motion.button
                 className="stack-more-toggle stack-more-toggle--inline"
                 type="button"
                 aria-expanded={showAll}
+                layout="position"
+                layoutId={`${stackLayoutId}-toggle`}
+                transition={{ layout: layoutTransition }}
                 onClick={(event) => {
                   event.stopPropagation();
                   setShowAll(true);
                 }}
               >
                 +{hiddenCount} more
-              </button>
+              </motion.button>
             )}
           </motion.div>
         )}
@@ -202,54 +224,65 @@ export default function TechStackGroups({ stack = [] }) {
           <motion.div
             className="stack-expanded-groups"
             key="expanded-stack"
-            layout
-            initial={
-              shouldReduceMotion ? false : { opacity: 0, y: 10, height: 0 }
-            }
-            animate={{ opacity: 1, y: 0, height: "auto" }}
-            exit={
-              shouldReduceMotion
-                ? { opacity: 0 }
-                : { opacity: 0, y: -8, height: 0 }
-            }
-            transition={revealTransition}
+            layout="position"
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+            transition={{
+              layout: layoutTransition,
+              opacity: revealTransition,
+              y: revealTransition,
+            }}
           >
             {visibleGroups.map((group, groupIndex) => (
               <motion.div
                 className="stack-group"
                 key={group.label}
-                layout
+                layout="position"
                 initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  ...revealTransition,
-                  delay: shouldReduceMotion ? 0 : groupIndex * 0.035,
+                  layout: layoutTransition,
+                  opacity: {
+                    ...revealTransition,
+                    delay: shouldReduceMotion ? 0 : groupIndex * 0.025,
+                  },
+                  y: {
+                    ...revealTransition,
+                    delay: shouldReduceMotion ? 0 : groupIndex * 0.025,
+                  },
                 }}
               >
                 <span className="stack-group-label">{group.label}</span>
                 <div className="stack-tag-row">
                   {group.items.map((tech, i) =>
-                    renderTag(tech, `${group.label}-${tech}-${i}`)
+                    renderTag(tech, `${group.label}-${tech}-${i}`, {
+                      layoutId: `${stackLayoutId}-tag-${tech}`,
+                      layoutTransition,
+                    })
                   )}
                 </div>
               </motion.div>
             ))}
             {hiddenCount > 0 && (
-              <button
+              <motion.button
                 className="stack-more-toggle"
                 type="button"
                 aria-expanded={showAll}
+                layout="position"
+                layoutId={`${stackLayoutId}-toggle`}
+                transition={{ layout: layoutTransition }}
                 onClick={(event) => {
                   event.stopPropagation();
                   setShowAll(false);
                 }}
               >
                 Show less
-              </button>
+              </motion.button>
             )}
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

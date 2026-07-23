@@ -20,6 +20,13 @@ const serverlessPortfolio = {
   ],
   github: "https://github.com/brianjames-dev/portfolio-website",
   images: [],
+  expanded: {
+    title: "Serverless Portfolio",
+    subtitle: "Solo Project",
+    github: "https://github.com/brianjames-dev/portfolio-website",
+    description:
+      "Serverless front-end and contact workflow using React, CloudFront, S3, Lambda, and SES, with a custom gallery system, responsive interactions, and optimized image delivery.",
+  },
 };
 
 export default serverlessPortfolio;

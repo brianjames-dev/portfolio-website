@@ -294,8 +294,8 @@
   border-radius: 6px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform var(--motion-duration-fast, 160ms)
-    var(--motion-ease-press, ease);
+  transition: opacity var(--motion-duration-fast, 160ms)
+    var(--motion-ease-standard, ease);
   border: 0;
   padding: 0;
   background: transparent;
@@ -303,13 +303,13 @@
 
 @media (hover: hover) and (pointer: fine) {
   .thumbnail-container:hover {
-    transform: scale(1.1);
+    opacity: 0.82;
   }
 }
 
 .thumbnail-container.active {
-  transform: scale(1.2);
-  box-shadow: 0 0 0 2px var(--color-accent-social-hover);
+  outline: 2px solid var(--color-accent-social-hover);
+  outline-offset: 2px;
 }
 
 .thumbnail-image {
@@ -342,14 +342,6 @@
 
   .clickable-gallery-image {
     cursor: zoom-in;
-    transition: transform var(--motion-duration-fast, 160ms)
-      var(--motion-ease-press, ease);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .clickable-gallery-image:hover {
-      transform: scale(1.03);
-    }
   }
 
   @keyframes swipeWave {

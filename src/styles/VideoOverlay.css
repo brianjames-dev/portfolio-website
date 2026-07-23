@@ -89,10 +89,6 @@ body.video-overlay-open .site-header {
   }
 }
 
-.video-overlay-close:active {
-  transform: scale(0.96);
-}
-
 .video-embed {
   width: 100%;
   aspect-ratio: 16 / 9;

@@ -1,13 +1,18 @@
+import { AnimatePresence, motion, useSpring } from "framer-motion";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
-  AnimatePresence,
-  motion,
-  useSpring,
-} from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+  CARD_PANEL_DURATION,
+  CARD_PANEL_EASE,
+  CARD_SPRING,
+  CARD_WIDTH_TRANSITION,
+} from "../config/cardMotion.js";
 import useDesktopMotionPreference from "../hooks/useDesktopMotionPreference";
-
-const FADE_DURATION = 0.5; // Content fade duration
-const MORPH_DURATION = 0.5; // Card container morph duration
 
 export default function Card({
   id,
@@ -19,11 +24,12 @@ export default function Card({
 }) {
   const [isAnimating, setIsAnimating] = useState(false);
   const cardRef = useRef(null);
-  const contentRef = useRef(null); // Ref for inner content
+  const contentRef = useRef(null);
+  const heightInitializedRef = useRef(false);
   const scrollTimeoutRef = useRef(null);
+  const animationTimeoutRef = useRef(null);
   const shouldReduceMotion = useDesktopMotionPreference();
-  const fadeDuration = shouldReduceMotion ? 0 : FADE_DURATION;
-  const morphDuration = shouldReduceMotion ? 0 : MORPH_DURATION;
+  const panelDuration = shouldReduceMotion ? 0 : CARD_PANEL_DURATION;
 
   const isCardTopVisible = useCallback(() => {
     if (typeof window === "undefined") return true;
@@ -39,50 +45,46 @@ export default function Card({
     return rect.top >= safeTop;
   }, []);
 
-  // Spring animation for height
-  const springHeight = useSpring(0, {
-    stiffness: 200,
-    damping: 20,
-    mass: 0.5,
-  });
+  const springHeight = useSpring(0, CARD_SPRING);
 
-  // Measure height of the card content, including margins and padding
   const measureHeight = useCallback(() => {
-    if (contentRef.current && cardRef.current) {
-      // Temporarily remove height constraint to measure natural height
-      const prevHeight = cardRef.current.style.height;
-      cardRef.current.style.height = "auto";
+    const content = contentRef.current;
+    const card = cardRef.current;
+    if (!content || !card) return;
 
-      // Get bounding rect and compute margins for content
-      const contentStyle = window.getComputedStyle(contentRef.current);
-      const contentRect = contentRef.current.getBoundingClientRect();
-      const marginTop = parseFloat(contentStyle.marginTop) || 0;
-      const marginBottom = parseFloat(contentStyle.marginBottom) || 0;
+    const cardStyle = window.getComputedStyle(card);
+    const paddingTop = parseFloat(cardStyle.paddingTop) || 0;
+    const paddingBottom = parseFloat(cardStyle.paddingBottom) || 0;
+    const borderTop = parseFloat(cardStyle.borderTopWidth) || 0;
+    const borderBottom = parseFloat(cardStyle.borderBottomWidth) || 0;
+    const nextHeight = Math.max(
+      100,
+      Math.ceil(
+        content.offsetHeight +
+          paddingTop +
+          paddingBottom +
+          borderTop +
+          borderBottom
+      )
+    );
 
-      // Get padding from card container
-      const cardStyle = window.getComputedStyle(cardRef.current);
-      const paddingTop = parseFloat(cardStyle.paddingTop) || 0;
-      const paddingBottom = parseFloat(cardStyle.paddingBottom) || 0;
-
-      // Calculate total height: content height + margins + card padding
-      let height =
-        contentRect.height +
-        marginTop +
-        marginBottom +
-        paddingTop +
-        paddingBottom;
-
-      // Ensure minimum height to avoid collapse
-      height = Math.max(height, 100); // Prevent collapsing to near-zero
-      cardRef.current.style.height = prevHeight; // Restore height
-      springHeight.set(height); // Update spring with measured height
-      // console.log(`Measured height for ${isExpanded ? "expanded" : "collapsed"}: ${height}px (content: ${contentRect.height}, margins: ${marginTop + marginBottom}, padding: ${paddingTop + paddingBottom})`);
+    if (!heightInitializedRef.current || shouldReduceMotion) {
+      springHeight.jump(nextHeight);
+      heightInitializedRef.current = true;
+      return;
     }
-  }, [springHeight]);
 
-  // Measure height after render and on state changes
-  useEffect(() => {
+    springHeight.set(nextHeight);
+  }, [shouldReduceMotion, springHeight]);
+
+  useLayoutEffect(() => {
+    measureHeight();
+  }, [measureHeight]);
+
+  useLayoutEffect(() => {
     const el = contentRef.current;
+    if (!el) return undefined;
+
     let rafId = 0;
 
     const scheduleMeasure = () => {
@@ -90,24 +92,14 @@ export default function Card({
       rafId = requestAnimationFrame(measureHeight);
     };
 
-    const initialTimeout = setTimeout(scheduleMeasure, 100);
-    const animationTimeout = setTimeout(
-      scheduleMeasure,
-      (fadeDuration + morphDuration) * 1000
-    );
-
     const observer = new ResizeObserver(scheduleMeasure);
-    if (el) {
-      observer.observe(el);
-    }
+    observer.observe(el);
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
-      clearTimeout(initialTimeout);
-      clearTimeout(animationTimeout);
       observer.disconnect();
     };
-  }, [isExpanded, measureHeight, fadeDuration, morphDuration]);
+  }, [measureHeight]);
 
   const scrollCardIntoView = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -145,89 +137,88 @@ export default function Card({
         }, 50);
       }
 
-      setTimeout(
-        () => {
-          setIsAnimating(false);
-        },
-        (fadeDuration + morphDuration) * 1000
-      );
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current);
+      }
+      animationTimeoutRef.current = setTimeout(() => {
+        setIsAnimating(false);
+      }, shouldReduceMotion ? 0 : 800);
     },
     [
       canExpand,
       isAnimating,
       isExpanded,
       isCardTopVisible,
-      fadeDuration,
-      morphDuration,
       onToggle,
       scrollCardIntoView,
+      shouldReduceMotion,
     ]
   );
 
   useEffect(() => {
     return () => {
       if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current);
+      }
     };
   }, []);
 
   return (
     <motion.div
-      layout
-      layoutId={`card-${id}`}
       className={`project-card ${isExpanded ? "expanded-card" : ""}`}
+      data-card-id={id}
       ref={cardRef}
       initial={shouldReduceMotion ? false : { opacity: 0, y: 28 }}
+      animate={{ maxWidth: isExpanded ? 1000 : 800 }}
       whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.18 }}
       transition={{
-        layout: {
-          duration: morphDuration,
-          ease: [0.4, 0, 0.2, 1], // Smoother easing for width/position
-        },
+        maxWidth: shouldReduceMotion
+          ? { duration: 0 }
+          : CARD_WIDTH_TRANSITION,
         opacity: {
           duration: 0.42,
-          ease: [0.22, 1, 0.36, 1],
+          ease: CARD_PANEL_EASE,
         },
         y: {
           duration: 0.42,
-          ease: [0.22, 1, 0.36, 1],
+          ease: CARD_PANEL_EASE,
         },
       }}
       style={{
-        width: isExpanded
-          ? "var(--expanded-card-width, 1000px)"
-          : "var(--collapsed-card-width, 800px)",
-        maxWidth: "100%", // Ensure responsiveness
+        width: "100%",
         height: shouldReduceMotion ? "auto" : springHeight,
         margin: "var(--card-block-gap, 20px) auto",
       }}
     >
-      <div ref={contentRef}>
-        <AnimatePresence mode="wait" initial={false}>
+      <div className="card-content-shell" ref={contentRef}>
+        <AnimatePresence mode="popLayout" initial={false}>
           {!isExpanded && (
             <motion.div
+              className="card-content-panel"
               key="collapsed-content"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
               transition={{
-                duration: fadeDuration,
-                ease: "easeInOut",
+                duration: panelDuration,
+                ease: CARD_PANEL_EASE,
               }}
             >
-              {renderCollapsed({ onExpand: handleToggle })}{" "}
-              {/* Pass handleToggle explicitly */}
+              {renderCollapsed({ onExpand: handleToggle })}
             </motion.div>
           )}
           {isExpanded && (
             <motion.div
+              className="card-content-panel"
               key="expanded-content"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
               transition={{
-                duration: fadeDuration,
-                ease: "easeInOut",
+                duration: panelDuration,
+                ease: CARD_PANEL_EASE,
               }}
               onClick={(e) => e.stopPropagation()}
             >
