@@ -35,35 +35,17 @@
       crossorigin
     />
 
-    <!-- Static fallbacks plus a BaJ favicon that follows the site theme. -->
+    <!-- Touch icon plus one authoritative tab favicon for the active theme. -->
     <link
       rel="apple-touch-icon"
       sizes="180x180"
       href="/favicon_io/apple-touch-icon.png"
     />
     <link
+      data-theme-favicon
       rel="icon"
       type="image/png"
-      sizes="32x32"
-      href="/favicon_io/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/favicon_io/favicon-16x16.png"
-    />
-    <link
-      rel="shortcut icon"
-      href="/favicon_io/favicon.ico"
-      type="image/x-icon"
-    />
-    <link
-      id="theme-favicon"
-      rel="icon"
-      type="image/png"
-      sizes="512x512"
-      href="/favicon_io/favicon-light.png"
+      href="/favicon_io/favicon-baj-light.png"
     />
     <link rel="manifest" href="/favicon_io/site.webmanifest" />
 
@@ -142,8 +124,22 @@
                 : "light";
           document.documentElement.setAttribute("data-theme", theme);
           document.documentElement.style.colorScheme = theme;
-          document.getElementById("theme-favicon").href =
-            "/favicon_io/favicon-" + theme + ".png";
+
+          var currentFavicon = document.querySelector(
+            "link[data-theme-favicon]"
+          );
+          var nextFavicon = document.createElement("link");
+          nextFavicon.rel = "icon";
+          nextFavicon.type = "image/png";
+          nextFavicon.href =
+            "/favicon_io/favicon-baj-" + theme + ".png";
+          nextFavicon.setAttribute("data-theme-favicon", "");
+
+          if (currentFavicon) {
+            currentFavicon.replaceWith(nextFavicon);
+          } else {
+            document.head.appendChild(nextFavicon);
+          }
         } catch (e) {
           document.documentElement.setAttribute("data-theme", "light");
           document.documentElement.style.colorScheme = "light";

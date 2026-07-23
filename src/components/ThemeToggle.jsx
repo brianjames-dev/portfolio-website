@@ -24,9 +24,19 @@ export default function ThemeToggle({ className = "" }) {
     document.documentElement.setAttribute("data-theme", theme);
     document.documentElement.style.colorScheme = theme;
 
-    const favicon = document.getElementById("theme-favicon");
-    if (favicon) {
-      favicon.href = `/favicon_io/favicon-${theme}.png`;
+    const currentFavicon = document.querySelector(
+      "link[data-theme-favicon]"
+    );
+    const nextFavicon = document.createElement("link");
+    nextFavicon.rel = "icon";
+    nextFavicon.type = "image/png";
+    nextFavicon.href = `/favicon_io/favicon-baj-${theme}.png`;
+    nextFavicon.setAttribute("data-theme-favicon", "");
+
+    if (currentFavicon) {
+      currentFavicon.replaceWith(nextFavicon);
+    } else {
+      document.head.appendChild(nextFavicon);
     }
 
     try {
