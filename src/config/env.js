@@ -1,7 +1,6 @@
 const viteEnv = import.meta.env || {};
-const legacyEnv = typeof process !== "undefined" ? process.env || {} : {};
 
-const readEnv = (key) => viteEnv[key] || legacyEnv[key] || "";
+const readEnv = (key) => viteEnv[key] || "";
 
 export const CONTACT_FORM_URL =
   readEnv("VITE_CONTACT_FORM_URL") ||
