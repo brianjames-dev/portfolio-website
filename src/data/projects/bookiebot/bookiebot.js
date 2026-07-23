@@ -13,9 +13,7 @@ const bookiebot = {
   title: "BookieBot | AI Agent",
   team: "Solo Project",
   description:
-    "AI workflow automation system for shared budgeting: natural-language expense capture, structured validation, Google Sheets sync, multi-user access, and analytics over 30+ query intents.",
-  outcome:
-    "Replaced a manual spreadsheet workflow with a Discord-native finance agent that logs, validates, queries, and visualizes expenses from normal messages.",
+    "BookieBot is an autonomous AI finance chatbot that allows users to log, query, and visualize their expenses using natural language and supports multi-user workflows, role-based access, and over 30 analytics intents.",
   stack: [
     "Python",
     "Discord.py",

@@ -5,9 +5,7 @@ const serverlessPortfolio = {
   title: "Serverless Portfolio",
   team: "Solo Project",
   description:
-    "Serverless front-end and contact workflow using React, CloudFront, S3, Lambda, and SES, with a custom gallery system, responsive interactions, and optimized image delivery.",
-  outcome:
-    "Ships a low-maintenance portfolio architecture with CDN delivery, cloud-native email handling, lazy-loaded media, and no always-on application server.",
+    "Personal portfolio website with a serverless architecture: React frontend deployed on CloudFront and S3, integrated with a cloud-native contact form powered by AWS Lambda, S3, and SES for email delivery.",
   stack: [
     "React",
     "JavaScript",

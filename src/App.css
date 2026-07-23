@@ -168,12 +168,9 @@ body {
   overflow-x: hidden;
 }
 
+html.page-scroll-locked,
 body.no-scroll {
   overflow: hidden;
-  position: fixed;
-  left: 0;
-  right: 0;
-  width: 100%;
   overscroll-behavior: none;
 }
 

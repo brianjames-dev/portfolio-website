@@ -10,9 +10,7 @@ const insurity = {
     className: "experience-logo-frame--insurity",
   },
   description:
-    "Built AI and full-stack tools for database performance, appraisal workflows, and legacy .NET modernization, including a LangGraph/Azure OpenAI agent that automated index analysis across 34 databases.",
-  outcome:
-    "Reduced manual DBA analysis time by 80%, improved high-traffic query performance 40-60%, and led a 170+ file migration that cut page loads by 51%.",
+    "Built AI tools that made database monitoring easier by helping teams spot slow queries, review performance issues, and identify better indexing opportunities faster. Also built an end-to-end appraisal system with a third-party-agnostic AWS middleware layer, making it easier for brokers and MGAs to send out appraisals without managing the process manually.",
   stack: [
     "C#",
     ".NET",

@@ -8,9 +8,7 @@ const xai = {
     className: "experience-logo-frame--xai",
   },
   description:
-    "Full-time Software Engineering Specialist role at xAI focused on engineering work across AI systems, tooling, evaluation workflows, and product operations.",
-  outcome:
-    "Contributes to AI systems and developer workflows in a full-time engineering role, with focus areas spanning tools, product operations, and system reliability.",
+    "Full-time Software Engineering Specialist role at xAI focused on software engineering work across AI systems, tooling, and product workflows.",
   stack: ["Software Engineering", "AI Systems", "Developer Tools"],
   images: [],
 

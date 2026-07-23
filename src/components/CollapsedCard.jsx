@@ -1,4 +1,6 @@
+import { LayoutGroup, motion } from "framer-motion";
 import React from "react";
+import { CARD_LAYOUT_TRANSITION } from "../config/cardMotion.js";
 import IconGlyph from "./IconGlyph.jsx";
 import TechStackGroups from "./TechStackGroups.jsx";
 import iconMap from "../data/iconMap.js";
@@ -20,7 +22,7 @@ function CollapsedCard({
   const logo = project.logo;
 
   return (
-    <>
+    <LayoutGroup id={`collapsed-card-${project.id}`}>
       {/* Header */}
       <div className="project-header">
         <div className={`project-title-block ${logo ? "has-logo" : ""}`}>
@@ -66,20 +68,30 @@ function CollapsedCard({
       </div>
 
       {/* Stack tags */}
-      <TechStackGroups stack={project.stack} />
+      <TechStackGroups id={project.id} stack={project.stack} />
 
-      <hr className="project-divider" />
+      <motion.hr
+        className="project-divider"
+        layout="position"
+        transition={{ layout: CARD_LAYOUT_TRANSITION }}
+      />
 
-      {project.outcome && (
-        <div className="project-outcome">
-          <span className="project-outcome-label">Impact</span>
-          <p>{project.outcome}</p>
-        </div>
-      )}
+      {/* Description */}
+      <motion.p
+        className="project-description"
+        layout="position"
+        transition={{ layout: CARD_LAYOUT_TRANSITION }}
+      >
+        {project.description}
+      </motion.p>
 
       {/* Actions */}
       {(hasGallery || hasDemo || canExpand) && (
-        <div className="project-actions">
+        <motion.div
+          className="project-actions"
+          layout="position"
+          transition={{ layout: CARD_LAYOUT_TRANSITION }}
+        >
           {hasGallery && (
             <button
               className="learn-more-btn"
@@ -144,12 +156,12 @@ function CollapsedCard({
               }}
             >
               <IconGlyph name="info" className="button-icon" />
-              Case Study
+              Learn More
             </button>
           )}
-        </div>
+        </motion.div>
       )}
-    </>
+    </LayoutGroup>
   );
 }
 

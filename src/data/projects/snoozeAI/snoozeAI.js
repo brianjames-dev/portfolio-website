@@ -22,9 +22,8 @@ const snoozeai = {
   title: "SnoozeAI | AI Notification Agent",
   team: "Solo Project",
   description:
-    "iOS and cloud notification agent that classifies urgency, summarizes long alerts, schedules low-priority delivery, and lets truly urgent events break through.",
-  outcome:
-    "Personal trials reduced real-time lock-screen interruptions by roughly 40-60% while preserving VIP bypasses and end-of-day recall.",
+    "SnoozeAI is an iOS + cloud agent that classifies, summarizes, and schedules your notifications. It auto-snoozes low-urgency pings, bundles digests, and lets truly urgent alerts break through—reducing distraction without missing what matters.",
+
   stack: [
     "Swift",
     "Python",

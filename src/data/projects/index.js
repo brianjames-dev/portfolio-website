@@ -7,8 +7,8 @@ import serverlessPortfolio from "./serverlessPortfolio/serverlessPortfolio.js";
 import snoozeai from "./snoozeAI/snoozeAI.js";
 
 const projects = [
-  marketscope,
   bookiebot,
+  marketscope,
   snoozeai,
   nesEmulator,
   serverlessPortfolio,

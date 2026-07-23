@@ -166,7 +166,9 @@ function App() {
       const scrollDelta = currentScrollY - lastScrollY;
 
       if (
+        root.classList.contains("page-scroll-locked") ||
         root.classList.contains("modal-scroll-lock") ||
+        document.body.classList.contains("no-scroll") ||
         document.body.classList.contains("video-overlay-open")
       ) {
         lastScrollY = currentScrollY;

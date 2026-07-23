@@ -7,10 +7,8 @@ const entheos = {
   title: "Stage Automation Engineer",
   team: "Entheos | Global | Full-time",
   description: `
-        Engineered a touring show-control system for live sound and lighting, synchronizing 70+ fixtures with instruments and vocals for 60,000+ fans across global performances.
+        Independently programmed a live sound & lighting system (70+ fixtures) in Python and Showbuddy, synchronizing lights with instruments and vocals for 60,000+ fans—reducing tour crew costs by $5,000+ while elevating show quality and merch sales.
     `,
-  outcome:
-    "Reduced tour crew costs by $5,000+ while improving nightly show consistency through programmed lighting and playback automation.",
   stack: ["Python", "Logic Pro X", "Showbuddy"],
   images: [],
   demoVideo: {

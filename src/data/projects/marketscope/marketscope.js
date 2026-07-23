@@ -21,9 +21,7 @@ const marketscope = {
   title: "MarketScope",
   team: "2-Person Team",
   description:
-    "Lead intelligence platform that turns niche and location searches into ranked advertiser briefs with SERP evidence, keyword economics, landing-page audits, and outreach-ready exports.",
-  outcome:
-    "Condenses local ad research into a repeatable pipeline that produces ranked lead lists and prospect briefs from messy SERP, keyword, and landing-page signals.",
+    "MarketScope discovers local businesses actively running Google Ads, estimates keyword economics (CPC, volume, competition), benchmarks landing pages, and generates outreach-ready lead reports for agencies and SMBs.",
   stack: [
     "TypeScript",
     "React",
