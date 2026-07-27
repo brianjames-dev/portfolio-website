@@ -14,6 +14,8 @@ import {
 } from "../config/cardMotion.js";
 import useDesktopMotionPreference from "../hooks/useDesktopMotionPreference";
 
+const CARD_SCROLL_DURATION = 420;
+
 export default function Card({
   id,
   isExpanded,
@@ -26,8 +28,9 @@ export default function Card({
   const cardRef = useRef(null);
   const contentRef = useRef(null);
   const heightInitializedRef = useRef(false);
-  const scrollTimeoutRef = useRef(null);
+  const scrollAnimationFrameRef = useRef(null);
   const animationTimeoutRef = useRef(null);
+  const bodyMinHeightRef = useRef(null);
   const shouldReduceMotion = useDesktopMotionPreference();
   const panelDuration = shouldReduceMotion ? 0 : CARD_PANEL_DURATION;
 
@@ -105,18 +108,81 @@ export default function Card({
     if (typeof window === "undefined") return;
     const cardEl = cardRef.current;
     if (!cardEl) return;
-    const rect = cardEl.getBoundingClientRect();
     const doc = document.documentElement;
     const headerVar = getComputedStyle(doc)
       .getPropertyValue("--header-height")
       .trim();
     const headerOffset = parseInt(headerVar || "60", 10) || 60;
-    const targetTop = rect.top + window.pageYOffset - headerOffset - 8;
-    window.scrollTo({
-      top: Math.max(0, targetTop),
-      behavior: shouldReduceMotion ? "auto" : "smooth",
-    });
+    const getTargetTop = () => {
+      const rect = cardEl.getBoundingClientRect();
+      return Math.max(0, rect.top + window.scrollY - headerOffset - 8);
+    };
+
+    if (scrollAnimationFrameRef.current) {
+      cancelAnimationFrame(scrollAnimationFrameRef.current);
+      scrollAnimationFrameRef.current = null;
+    }
+
+    const startTop = window.scrollY;
+    const initialTargetTop = getTargetTop();
+    if (
+      shouldReduceMotion ||
+      Math.abs(initialTargetTop - startTop) < 2
+    ) {
+      window.scrollTo({ top: initialTargetTop, behavior: "auto" });
+      return;
+    }
+
+    const startTime = performance.now();
+    const step = (now) => {
+      const progress = Math.min(1, (now - startTime) / CARD_SCROLL_DURATION);
+      const easedProgress = 1 - Math.pow(1 - progress, 4);
+      const targetTop = getTargetTop();
+
+      window.scrollTo({
+        top: startTop + (targetTop - startTop) * easedProgress,
+        behavior: "auto",
+      });
+
+      if (progress < 1) {
+        scrollAnimationFrameRef.current = requestAnimationFrame(step);
+        return;
+      }
+
+      // Re-read the live card position on the final frame. This keeps the
+      // destination exact while the card's spring height is still settling.
+      window.scrollTo({ top: getTargetTop(), behavior: "auto" });
+      scrollAnimationFrameRef.current = null;
+    };
+
+    scrollAnimationFrameRef.current = requestAnimationFrame(step);
   }, [shouldReduceMotion]);
+
+  const preserveDocumentHeight = useCallback(() => {
+    if (
+      typeof document === "undefined" ||
+      bodyMinHeightRef.current !== null
+    ) {
+      return;
+    }
+
+    const scrollElement =
+      document.scrollingElement || document.documentElement;
+    bodyMinHeightRef.current = document.body.style.minHeight;
+    document.body.style.minHeight = `${scrollElement.scrollHeight}px`;
+  }, []);
+
+  const releaseDocumentHeight = useCallback(() => {
+    if (
+      typeof document === "undefined" ||
+      bodyMinHeightRef.current === null
+    ) {
+      return;
+    }
+
+    document.body.style.minHeight = bodyMinHeightRef.current;
+    bodyMinHeightRef.current = null;
+  }, []);
 
   const handleToggle = useCallback(
     (options = {}) => {
@@ -128,20 +194,23 @@ export default function Card({
         collapsing && scrollIfOffscreen && !isCardTopVisible();
       const willScroll = shouldScroll || shouldScrollIfOffscreen;
       setIsAnimating(true);
-      onToggle();
 
+      // Start the anchored scroll before React swaps the expanded panel. A
+      // browser-native smooth scroll can be cancelled when the document
+      // rapidly shrinks beneath it, especially on mobile.
       if (willScroll) {
-        if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-        scrollTimeoutRef.current = setTimeout(() => {
-          scrollCardIntoView();
-        }, 50);
+        preserveDocumentHeight();
+        scrollCardIntoView();
       }
+
+      onToggle();
 
       if (animationTimeoutRef.current) {
         clearTimeout(animationTimeoutRef.current);
       }
       animationTimeoutRef.current = setTimeout(() => {
         setIsAnimating(false);
+        releaseDocumentHeight();
       }, shouldReduceMotion ? 0 : 800);
     },
     [
@@ -150,6 +219,8 @@ export default function Card({
       isExpanded,
       isCardTopVisible,
       onToggle,
+      preserveDocumentHeight,
+      releaseDocumentHeight,
       scrollCardIntoView,
       shouldReduceMotion,
     ]
@@ -157,12 +228,15 @@ export default function Card({
 
   useEffect(() => {
     return () => {
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      if (scrollAnimationFrameRef.current) {
+        cancelAnimationFrame(scrollAnimationFrameRef.current);
+      }
       if (animationTimeoutRef.current) {
         clearTimeout(animationTimeoutRef.current);
       }
+      releaseDocumentHeight();
     };
-  }, []);
+  }, [releaseDocumentHeight]);
 
   return (
     <motion.div

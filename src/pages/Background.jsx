@@ -13,12 +13,11 @@ function Background() {
 
         <RevealOnView className="about-card" delay={0.05}>
           <p className="description">
-            I am a software engineer focused on AI-assisted tools, full-stack
-            applications, data workflows, and automation that streamlines
-            repetitive work. My strongest projects involve AI-centric solutions,
-            where the user experience is heavily influenced by underlying
-            foundations that aren't AI to make the user experience seamless and
-            reliable.
+            I’m a software engineer focused on AI-powered tools, full-stack
+            applications, data workflows, and automation. My strongest projects
+            pair AI with thoughtful interfaces and dependable systems, so the
+            technology can be complex without the experience feeling
+            complicated.
             <br></br>
             <br></br>
             Before software, I worked in live production as a touring guitarist,
