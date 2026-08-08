@@ -36,7 +36,7 @@
   }
 
   .about-card {
-    width: calc(100% - (var(--page-card-gutter, 16px) * 2));
+    width: 100%;
     max-width: 100%;
     margin: var(--card-block-gap, 16px) auto 0;
     padding: 16px;
