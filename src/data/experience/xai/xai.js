@@ -1,14 +1,14 @@
 const xai = {
   id: "xai",
   title: "Software Engineering Specialist",
-  team: "xAI | Full-time",
+  team: "SpaceXAI | Full-time",
   logo: {
     src: "/img/logos/xai-logo.jpeg",
-    alt: "xAI logo",
+    alt: "SpaceXAI logo",
     className: "experience-logo-frame--xai",
   },
   description:
-    "Full-time Software Engineering Specialist role at xAI focused on software engineering work across AI systems, tooling, and product workflows.",
+    "Full-time Software Engineering Specialist role at SpaceXAI focused on software engineering work across AI systems, tooling, and product workflows.",
   stack: ["Software Engineering", "AI Systems", "Developer Tools"],
   images: [],
 
@@ -18,11 +18,11 @@ const xai = {
         `,
 
     subtitle: `
-            xAI | Full-time
+            SpaceXAI | Full-time
         `,
 
     description: `
-            •  Full-time Software Engineering Specialist role at xAI focused on engineering work across AI systems, tooling, evaluation workflows, and product operations.
+            •  Full-time Software Engineering Specialist role at SpaceXAI focused on engineering work across AI systems, tooling, evaluation workflows, and product operations.
         `,
   },
 };
