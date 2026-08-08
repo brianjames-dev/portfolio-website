@@ -83,7 +83,6 @@ const CATEGORY_MAP = {
 const FEATURED_TAG_LIMIT = 5;
 const MIN_HIDDEN_TAGS = 2;
 const STACK_TOGGLE_DURATION = 0.28;
-const STACK_REVEAL_DELAY = 0.1;
 
 const FEATURED_PRIORITY = [
   "LangGraph",
@@ -226,19 +225,13 @@ export default function TechStackGroups({ id, stack = [] }) {
             className="stack-expanded-groups"
             key="expanded-stack"
             layout="position"
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{
               layout: layoutTransition,
-              opacity: {
-                ...revealTransition,
-                delay: shouldReduceMotion ? 0 : STACK_REVEAL_DELAY,
-              },
-              y: {
-                ...revealTransition,
-                delay: shouldReduceMotion ? 0 : STACK_REVEAL_DELAY,
-              },
+              opacity: revealTransition,
+              y: revealTransition,
             }}
           >
             {visibleGroups.map((group, groupIndex) => (
