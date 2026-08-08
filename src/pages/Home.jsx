@@ -1,4 +1,5 @@
 import IconGlyph from "../components/IconGlyph.jsx";
+import ThemedIcon from "../components/ThemedIcon.jsx";
 import iconMap from "../data/iconMap.js";
 import "../styles/Home.css";
 
@@ -68,18 +69,7 @@ function Home() {
               aria-label="GitHub"
             >
               <span className="icon-wrapper">
-                <img
-                  src={iconMap["GitHubThemed"]}
-                  alt=""
-                  aria-hidden="true"
-                  className="default"
-                />
-                <img
-                  src={iconMap["GitHubHover"]}
-                  alt=""
-                  aria-hidden="true"
-                  className="hover"
-                />
+                <ThemedIcon src={iconMap["GitHubThemed"]} />
               </span>
             </a>
             <a
@@ -89,18 +79,7 @@ function Home() {
               aria-label="LinkedIn"
             >
               <span className="icon-wrapper">
-                <img
-                  src={iconMap["LinkedInThemed"]}
-                  alt=""
-                  aria-hidden="true"
-                  className="default"
-                />
-                <img
-                  src={iconMap["LinkedInHover"]}
-                  alt=""
-                  aria-hidden="true"
-                  className="hover"
-                />
+                <ThemedIcon src={iconMap["LinkedInThemed"]} />
               </span>
             </a>
             <a
@@ -108,21 +87,9 @@ function Home() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
-              className="home-social-secondary"
             >
               <span className="icon-wrapper">
-                <img
-                  src={iconMap["InstagramThemed"]}
-                  alt=""
-                  aria-hidden="true"
-                  className="default"
-                />
-                <img
-                  src={iconMap["InstagramHover"]}
-                  alt=""
-                  aria-hidden="true"
-                  className="hover"
-                />
+                <ThemedIcon src={iconMap["InstagramThemed"]} />
               </span>
             </a>
           </div>

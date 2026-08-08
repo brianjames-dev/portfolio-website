@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import RevealOnView from "../components/RevealOnView.jsx";
+import ThemedIcon from "../components/ThemedIcon.jsx";
 import { CONTACT_FORM_URL } from "../config/contact";
 import { RECAPTCHA_SITE_KEY } from "../config/env.js";
 import iconMap from "../data/iconMap.js";
@@ -260,18 +261,7 @@ function Contact() {
                 aria-label="GitHub"
               >
                 <span className="contact-icon-wrapper">
-                  <img
-                    src={iconMap["GitHubThemed"]}
-                    alt=""
-                    aria-hidden="true"
-                    className="default"
-                  />
-                  <img
-                    src={iconMap["GitHubHover"]}
-                    alt=""
-                    aria-hidden="true"
-                    className="hover"
-                  />
+                  <ThemedIcon src={iconMap["GitHubThemed"]} />
                 </span>
               </a>
               <a
@@ -281,18 +271,7 @@ function Contact() {
                 aria-label="LinkedIn"
               >
                 <span className="contact-icon-wrapper">
-                  <img
-                    src={iconMap["LinkedInThemed"]}
-                    alt=""
-                    aria-hidden="true"
-                    className="default"
-                  />
-                  <img
-                    src={iconMap["LinkedInHover"]}
-                    alt=""
-                    aria-hidden="true"
-                    className="hover"
-                  />
+                  <ThemedIcon src={iconMap["LinkedInThemed"]} />
                 </span>
               </a>
               <a
@@ -302,18 +281,7 @@ function Contact() {
                 aria-label="Instagram"
               >
                 <span className="contact-icon-wrapper">
-                  <img
-                    src={iconMap["InstagramThemed"]}
-                    alt=""
-                    aria-hidden="true"
-                    className="default"
-                  />
-                  <img
-                    src={iconMap["InstagramHover"]}
-                    alt=""
-                    aria-hidden="true"
-                    className="hover"
-                  />
+                  <ThemedIcon src={iconMap["InstagramThemed"]} />
                 </span>
               </a>
             </div>

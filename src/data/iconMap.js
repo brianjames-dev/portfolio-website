@@ -24,20 +24,17 @@ import gitIcon from "./icons/git.svg";
 import githubIcon from "./icons/github.svg";
 import githubLight from "./icons/github_light.svg";
 import githubThemed from "./icons/github_themed.svg";
-import githubHover from "./icons/github_themed_hover.svg";
 import googleAdsIcon from "./icons/googleAds.svg";
 import htmlIcon from "./icons/html.svg";
 import infoIcon from "./icons/info.svg";
 import instagramIcon from "./icons/instagram.svg";
 import instagramThemed from "./icons/instagram_themed.svg";
-import instagramHover from "./icons/instagram_themed_hover.svg";
 import javaIcon from "./icons/java.svg";
 import javascriptIcon from "./icons/javascript.svg";
 import lambdaIcon from "./icons/lambda.svg";
 import langraphIcon from "./icons/langgraph.svg";
 import linkedinIcon from "./icons/linkedin.svg";
 import linkedinThemed from "./icons/linkedin_themed.svg";
-import linkedinHover from "./icons/linkedin_themed_hover.svg";
 import logicIcon from "./icons/LogicProX.svg";
 import lockedIcon from "./icons/locked.svg";
 import mariadbIcon from "./icons/mariadb.svg";
@@ -135,12 +132,9 @@ const iconMap = {
   Info: infoIcon,
   Collapse: collapseIcon,
   GitHubThemed: githubThemed,
-  GitHubHover: githubHover,
   LinkedInThemed: linkedinThemed,
-  LinkedInHover: linkedinHover,
   Locked: lockedIcon,
   InstagramThemed: instagramThemed,
-  InstagramHover: instagramHover,
   Send: sendIcon,
   "Logic Pro X": logicIcon,
   "AWS Lambda": lambdaIcon,

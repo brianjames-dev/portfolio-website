@@ -14,10 +14,10 @@
   --color-warm: #c25d3b;
   --color-header: #122419;
   --color-focus: #2f6b4a;
-  --nav-pill-bg: #dfe9e1;
-  --nav-pill-text: #122419;
-  --social-icon: #1f5137;
-  --social-icon-hover: #2f6b4a;
+  --nav-pill-bg: var(--color-accent);
+  --nav-pill-text: #ffffff;
+  --social-icon: var(--color-accent);
+  --social-icon-hover: var(--color-accent-hover);
   --color-success: #1f6b43;
   --color-success-bg: rgba(31, 107, 67, 0.12);
   --color-error: #a83f32;
@@ -73,10 +73,10 @@
   --color-warm: #ee8b62;
   --color-header: #07110b;
   --color-focus: #b6dec0;
-  --nav-pill-bg: #2f6b4a;
-  --nav-pill-text: #f5fbf6;
-  --social-icon: #8fc89d;
-  --social-icon-hover: #b6dec0;
+  --nav-pill-bg: var(--color-accent);
+  --nav-pill-text: #ffffff;
+  --social-icon: var(--color-accent);
+  --social-icon-hover: var(--color-accent-hover);
   --color-success: #98d7aa;
   --color-success-bg: rgba(132, 201, 154, 0.14);
   --color-error: #f0987d;
@@ -214,8 +214,8 @@ button {
   }
 
   .stack-more-toggle.is-touch-active {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
     color: var(--button-text);
   }
 

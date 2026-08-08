@@ -186,9 +186,9 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 2px 8px;
-  border: 1px solid var(--border-soft);
-  color: var(--color-accent-hover);
-  background: var(--color-accent-soft);
+  border: 1px solid transparent;
+  color: var(--button-text);
+  background: var(--color-accent);
 }
 
 .gallery-lock-divider {

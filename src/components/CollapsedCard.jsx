@@ -3,7 +3,6 @@ import React from "react";
 import { CARD_LAYOUT_TRANSITION } from "../config/cardMotion.js";
 import IconGlyph from "./IconGlyph.jsx";
 import TechStackGroups from "./TechStackGroups.jsx";
-import iconMap from "../data/iconMap.js";
 import "../styles/CollapsedCard.css";
 
 function CollapsedCard({
@@ -50,18 +49,7 @@ function CollapsedCard({
             aria-label="GitHub repository"
           >
             <span className="github-icon-wrapper">
-              <img
-                src={iconMap["GitHubThemed"]}
-                alt=""
-                className="default"
-                aria-hidden="true"
-              />
-              <img
-                src={iconMap["GitHubHover"]}
-                alt=""
-                className="hover"
-                aria-hidden="true"
-              />
+              <IconGlyph name="github" className="github-icon-glyph" />
             </span>
           </a>
         )}

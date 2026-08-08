@@ -268,53 +268,22 @@ section#contact.contact-section {
   display: inline-block;
   width: 34px;
   height: 34px;
-  color: var(--social-icon);
+  color: var(--color-accent);
   transition:
     color var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
-    transform var(--motion-duration-fast, 160ms)
-      var(--motion-ease-press, ease);
-}
-
-[data-theme="dark"] .contact-social-links img.default,
-[data-theme="dark"] .contact-social-links img.hover {
-  filter: brightness(1.35) saturate(0.95);
-}
-
-.contact-icon-wrapper img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition:
-    opacity var(--motion-duration-fast, 160ms) var(--motion-ease-standard, ease),
-    transform var(--motion-duration-fast, 160ms)
-      var(--motion-ease-press, ease); /* ease only for contact social icons */
-  width: 100%;
-  height: auto;
-  pointer-events: none;
-}
-
-.contact-icon-wrapper img.hover {
-  opacity: 0;
+    transform var(--motion-duration-fast, 160ms) var(--motion-ease-press, ease);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .contact-icon-wrapper:hover img.hover {
-    opacity: 1;
-    transform: scale(1.1); /* scale up on hover */
-  }
-
-  .contact-icon-wrapper:hover img.default {
-    opacity: 0;
+  .contact-icon-wrapper:hover {
+    color: var(--color-accent-hover);
+    transform: scale(1.1);
   }
 }
 
-.contact-social-links a:active .contact-icon-wrapper img.hover {
-  opacity: 1;
+.contact-social-links a:active .contact-icon-wrapper {
+  color: var(--color-accent-hover);
   transform: scale(1.08);
-}
-
-.contact-social-links a:active .contact-icon-wrapper img.default {
-  opacity: 0;
 }
 
 @media (min-width: 601px) {
@@ -330,14 +299,9 @@ section#contact.contact-section {
 }
 
 @media (hover: none), (pointer: coarse) {
-  .contact-social-links a.is-touch-active .contact-icon-wrapper img.hover {
-    opacity: 1;
+  .contact-social-links a.is-touch-active .contact-icon-wrapper {
+    color: var(--color-accent-hover);
     transform: scale(1.12);
-  }
-
-  .contact-social-links a.is-touch-active .contact-icon-wrapper img.default {
-    opacity: 0;
-    transform: scale(0.96);
   }
 }
 
