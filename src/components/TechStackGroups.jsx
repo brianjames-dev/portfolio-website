@@ -83,6 +83,8 @@ const CATEGORY_MAP = {
 const FEATURED_TAG_LIMIT = 5;
 const MIN_HIDDEN_TAGS = 2;
 const STACK_TOGGLE_DURATION = 0.28;
+const STACK_REVEAL_DELAY = 0.14;
+const STACK_GROUP_STAGGER = 0.035;
 
 const FEATURED_PRIORITY = [
   "LangGraph",
@@ -245,11 +247,15 @@ export default function TechStackGroups({ id, stack = [] }) {
                   layout: layoutTransition,
                   opacity: {
                     ...revealTransition,
-                    delay: shouldReduceMotion ? 0 : groupIndex * 0.025,
+                    delay: shouldReduceMotion
+                      ? 0
+                      : STACK_REVEAL_DELAY + groupIndex * STACK_GROUP_STAGGER,
                   },
                   y: {
                     ...revealTransition,
-                    delay: shouldReduceMotion ? 0 : groupIndex * 0.025,
+                    delay: shouldReduceMotion
+                      ? 0
+                      : STACK_REVEAL_DELAY + groupIndex * STACK_GROUP_STAGGER,
                   },
                 }}
               >
@@ -271,7 +277,25 @@ export default function TechStackGroups({ id, stack = [] }) {
                 aria-expanded={showAll}
                 layout="position"
                 layoutId={`${stackLayoutId}-toggle`}
-                transition={{ layout: layoutTransition }}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  layout: layoutTransition,
+                  opacity: {
+                    ...revealTransition,
+                    delay: shouldReduceMotion
+                      ? 0
+                      : STACK_REVEAL_DELAY +
+                        visibleGroups.length * STACK_GROUP_STAGGER,
+                  },
+                  y: {
+                    ...revealTransition,
+                    delay: shouldReduceMotion
+                      ? 0
+                      : STACK_REVEAL_DELAY +
+                        visibleGroups.length * STACK_GROUP_STAGGER,
+                  },
+                }}
                 onClick={(event) => {
                   event.stopPropagation();
                   setShowAll(false);
