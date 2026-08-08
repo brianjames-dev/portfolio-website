@@ -83,8 +83,7 @@ const CATEGORY_MAP = {
 const FEATURED_TAG_LIMIT = 5;
 const MIN_HIDDEN_TAGS = 2;
 const STACK_TOGGLE_DURATION = 0.28;
-const STACK_REVEAL_DELAY = 0.14;
-const STACK_GROUP_STAGGER = 0.035;
+const STACK_REVEAL_DELAY = 0.1;
 
 const FEATURED_PRIORITY = [
   "LangGraph",
@@ -227,13 +226,19 @@ export default function TechStackGroups({ id, stack = [] }) {
             className="stack-expanded-groups"
             key="expanded-stack"
             layout="position"
-            initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{
               layout: layoutTransition,
-              opacity: revealTransition,
-              y: revealTransition,
+              opacity: {
+                ...revealTransition,
+                delay: shouldReduceMotion ? 0 : STACK_REVEAL_DELAY,
+              },
+              y: {
+                ...revealTransition,
+                delay: shouldReduceMotion ? 0 : STACK_REVEAL_DELAY,
+              },
             }}
           >
             {visibleGroups.map((group, groupIndex) => (
@@ -247,15 +252,11 @@ export default function TechStackGroups({ id, stack = [] }) {
                   layout: layoutTransition,
                   opacity: {
                     ...revealTransition,
-                    delay: shouldReduceMotion
-                      ? 0
-                      : STACK_REVEAL_DELAY + groupIndex * STACK_GROUP_STAGGER,
+                    delay: shouldReduceMotion ? 0 : groupIndex * 0.025,
                   },
                   y: {
                     ...revealTransition,
-                    delay: shouldReduceMotion
-                      ? 0
-                      : STACK_REVEAL_DELAY + groupIndex * STACK_GROUP_STAGGER,
+                    delay: shouldReduceMotion ? 0 : groupIndex * 0.025,
                   },
                 }}
               >
@@ -277,25 +278,7 @@ export default function TechStackGroups({ id, stack = [] }) {
                 aria-expanded={showAll}
                 layout="position"
                 layoutId={`${stackLayoutId}-toggle`}
-                initial={shouldReduceMotion ? false : { opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  layout: layoutTransition,
-                  opacity: {
-                    ...revealTransition,
-                    delay: shouldReduceMotion
-                      ? 0
-                      : STACK_REVEAL_DELAY +
-                        visibleGroups.length * STACK_GROUP_STAGGER,
-                  },
-                  y: {
-                    ...revealTransition,
-                    delay: shouldReduceMotion
-                      ? 0
-                      : STACK_REVEAL_DELAY +
-                        visibleGroups.length * STACK_GROUP_STAGGER,
-                  },
-                }}
+                transition={{ layout: layoutTransition }}
                 onClick={(event) => {
                   event.stopPropagation();
                   setShowAll(false);
