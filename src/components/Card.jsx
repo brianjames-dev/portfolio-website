@@ -129,7 +129,7 @@ export default function Card({
       shouldReduceMotion ||
       Math.abs(initialTargetTop - startTop) < 2
     ) {
-      window.scrollTo({ top: initialTargetTop, behavior: "auto" });
+      window.scrollTo({ top: initialTargetTop, behavior: "instant" });
       return;
     }
 
@@ -141,7 +141,9 @@ export default function Card({
 
       window.scrollTo({
         top: startTop + (targetTop - startTop) * easedProgress,
-        behavior: "auto",
+        // This loop provides the easing. "auto" inherits the site's CSS
+        // smooth scrolling and delays each frame while the card collapses.
+        behavior: "instant",
       });
 
       if (progress < 1) {
@@ -151,7 +153,7 @@ export default function Card({
 
       // Re-read the live card position on the final frame. This keeps the
       // destination exact while the card's spring height is still settling.
-      window.scrollTo({ top: getTargetTop(), behavior: "auto" });
+      window.scrollTo({ top: getTargetTop(), behavior: "instant" });
       scrollAnimationFrameRef.current = null;
     };
 
